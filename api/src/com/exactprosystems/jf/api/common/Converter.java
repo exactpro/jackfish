@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.api.common;
 
 import com.exactprosystems.jf.api.app.IRemoteApplication;
+import com.exactprosystems.jf.api.common.i18n.R;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -71,7 +72,7 @@ public class Converter
 			ZipEntry nextEntry = zis.getNextEntry();
 			if (nextEntry == null)
 			{
-				throw new Exception("Not entry found");
+				throw new Exception(R.CONVERTER_NOT_ENTRY_FOUND.get());
 			}
 			String name = nextEntry.getName();
 			if (name.equals(XML_DOCUMENT))
@@ -87,7 +88,7 @@ public class Converter
 			}
 			else
 			{
-				throw new Exception("Now entry with name " + XML_DOCUMENT);
+				throw new Exception(String.format(R.CONVERTER_NO_ENTRY_WITH_NAME.get(), XML_DOCUMENT));
 			}
 		}
 	}
@@ -217,7 +218,7 @@ public class Converter
 					}
 					else
 					{
-						throw new Exception("Wrong structure");
+						throw new Exception(R.CONVERTER_WRONG_STRUCTURE.get());
 					}
 				}
 
@@ -447,7 +448,7 @@ public class Converter
 			}
 		}
 
-		throw new Exception("Cannot convert " + object + " of type " + object.getClass() + " to type " + type);
+		throw new Exception(String.format(R.CONVERTER_CANT_CONVERT_TYPE.get(), object, object.getClass(), type));
 	}
 
 	public static Date parseDate(String date) throws ParseException
@@ -470,7 +471,7 @@ public class Converter
 			}
 		}
 
-		throw new ParseException("Can not parse date from " + date, 0);
+		throw new ParseException(String.format(R.CONVERTER_CANT_PARSE_DATE.get(), date), 0);
 	}
 
 	/**

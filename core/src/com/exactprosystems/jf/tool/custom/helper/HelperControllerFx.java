@@ -198,7 +198,7 @@ public class HelperControllerFx implements Initializable, ContainingParent
 		//todo add more annotations for other types of classes
 		DescriptionAttribute description = clazz.getAnnotation(DescriptionAttribute.class);
 		if (description != null){
-			this.taDescription.setText(description.text());
+			this.taDescription.setText(description.text().get());
 		} else {this.taDescription.setText("");}
 	}
 

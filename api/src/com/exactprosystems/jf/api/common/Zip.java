@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.api.common;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -24,7 +26,7 @@ public class Zip
     {
     } 
     
-    @DescriptionAttribute(text = "Creates new Zip object.")
+    @DescriptionAttribute(text = R.ZIP_CREATE_DESCRIPTION)
     public static Zip create()
     {
         Zip zip = new Zip();
@@ -32,7 +34,7 @@ public class Zip
         return zip;
     }
     
-    @DescriptionAttribute(text = "Loads an archive from @path.")
+    @DescriptionAttribute(text = R.ZIP_LOAD_DESCRIPTION)
     public Zip load(String path) throws Exception
     {
         File file = new File(path);
@@ -59,13 +61,13 @@ public class Zip
                 }
             }
         } else {
-            throw new Exception(file.getName() + " is not exists or not a file");
+            throw new Exception(String.format(R.ZIP_NOT_EXISTS_OR_NOT_FILE.get(), file.getName()));
         }
         
         return this;
     }
 
-    @DescriptionAttribute(text = "Saves the archive to @path.")
+    @DescriptionAttribute(text = R.ZIP_SAVE_DESCRIPTION)
     public Zip save(String path) throws IOException, DataFormatException
     {
         Path pathToFile = Paths.get(path).toAbsolutePath();
@@ -86,7 +88,7 @@ public class Zip
         return this;
     }
     
-    @DescriptionAttribute(text = "Adds one file into zip archive from @path.")
+    @DescriptionAttribute(text = R.ZIP_ADD_DESCRIPTION)
     public Zip add(String path) throws Exception
     {
         File file = new File(path);
@@ -94,19 +96,19 @@ public class Zip
         if (file.isFile() && file.exists()){
             this.entries.put(file.getName(), compress(getBytesFromFile(file)));
         } else {
-            throw new Exception("File " + file.getName() + " is not exist or it is directory");
+            throw new Exception(String.format(R.ZIP_FILE_NOT_EXIST_OR_ITS_DIR.get(), file.getName()));
         }
         return this;
     }
 
-    @DescriptionAttribute(text = "Remove element from Zip by name")
+    @DescriptionAttribute(text = R.ZIP_REMOVE_DESCRIPTION)
     public Zip remove(String name)
     {
         this.entries.entrySet().removeIf(e-> e.getKey().equals(name));
         return this;
     }
 
-    @DescriptionAttribute(text = "Extracts one file with @name from zip archive to @path (directory).")
+    @DescriptionAttribute(text = R.ZIP_EXTRACT_DESCRIPTION)
     public Zip extract(String name, String path) throws Exception
     {
         if (this.entries.containsKey(name)) {
@@ -123,10 +125,10 @@ public class Zip
                     fos.close();
                 }
             } else {
-                throw new Exception("Path " + path + " is not exist or it's file");
+                throw new Exception(String.format(R.ZIP_PATH_NOT_EXIST_OR_ITS_FILE.get(), path));
             }
         } else {
-            throw new Exception("Zip not contains file " + name);
+            throw new Exception(String.format(R.ZIP_NOT_CONTAINS_FILE.get(), name));
         }
         return this;
     }

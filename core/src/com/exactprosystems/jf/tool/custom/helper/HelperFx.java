@@ -269,9 +269,15 @@ public class HelperFx
 		@Override
 		public String getDescription()
 		{
-			return Optional.ofNullable(this.method.getAnnotation(DescriptionAttribute.class))
-					.map(DescriptionAttribute::text)
-					.orElse(null);
+			DescriptionAttribute da = this.method.getAnnotation(DescriptionAttribute.class);
+			if(da != null)
+			{
+				return da.text().get();
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 
@@ -298,9 +304,15 @@ public class HelperFx
 		@Override
 		public String getDescription()
 		{
-			return Optional.ofNullable(this.field.getAnnotation(DescriptionAttribute.class))
-					.map(DescriptionAttribute::text)
-					.orElse(null);
+			DescriptionAttribute da = this.field.getAnnotation(DescriptionAttribute.class);
+			if(da != null)
+			{
+				return da.text().get();
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 

@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.api.common;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -29,13 +31,13 @@ public class Sys
     @HideAttribute
     public static String jfDir = ".";
     
-	@DescriptionAttribute(text = "Returns PID of current process (the tool itself).")
+	@DescriptionAttribute(text = R.SYS_CURRENT_PROCESS_ID_DESCRIPTION)
 	public static int currentProcessId()
 	{
 		return ProcessTools.currentProcessId();
 	}
 
-	@DescriptionAttribute(text = "Returns current host name")
+	@DescriptionAttribute(text = R.SYS_HOST_NAME)
 	public static String hostName()
 	{
 		String hostname = "Unknown";
@@ -53,27 +55,27 @@ public class Sys
 		return hostname;
 	}
 
-	@DescriptionAttribute(text = "Returns current user name")
+	@DescriptionAttribute(text = R.SYS_USER_NAME)
 	public static String userName()
 	{
 		return System.getProperty("user.name");
 	}
 
 
-	@DescriptionAttribute(text = "Returns OS name")
+	@DescriptionAttribute(text = R.SYS_OS_NAME)
 	public static String osName()
 	{
 		return System.getProperty("os.name");
 	}
 
-	@DescriptionAttribute(text = "Save @text to clipboard")
+	@DescriptionAttribute(text = R.SYS_COPY_TO_CLIPBOARD)
 	public static void copyToClipboard(@FieldParameter(name = "text") String text)
 	{
 		StringSelection stringSelection = new StringSelection(text);
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 	}
 
-	@DescriptionAttribute(text = "Return text from clipboard")
+	@DescriptionAttribute(text = R.SYS_GET_FROM_CLIPBOARD)
 	public static String getFromClipboard()
 	{
 		try
@@ -89,25 +91,25 @@ public class Sys
 		}
 	}
 
-	@DescriptionAttribute(text = "Checks if file with @paht exists")
+	@DescriptionAttribute(text = R.SYS_EXISTS)
 	public static boolean exists(@FieldParameter(name = "path") String path)
 	{
 		return Files.exists(Paths.get(path), LinkOption.NOFOLLOW_LINKS);
 	}
 
-	@DescriptionAttribute(text = "Copy file from @pathFrom to @pathTo")
+	@DescriptionAttribute(text = R.SYS_COPY_FILE)
 	public static void copyFile(@FieldParameter(name = "pathFrom") String pathFrom, @FieldParameter(name = "pathTo") String pathTo) throws IOException
 	{
 		Files.copy(Paths.get(pathFrom), Paths.get(pathTo), StandardCopyOption.COPY_ATTRIBUTES);
 	}
 
-	@DescriptionAttribute(text = "Move/rename file from @pathFrom to @pathTo")
+	@DescriptionAttribute(text = R.SYS_MOVE_FILE)
 	public static void moveFile(@FieldParameter(name = "pathFrom") String pathFrom, @FieldParameter(name = "pathTo") String pathTo) throws IOException
 	{
 		Files.move(Paths.get(pathFrom), Paths.get(pathTo), StandardCopyOption.ATOMIC_MOVE);
 	}
 	
-    @DescriptionAttribute(text = "Write data from byte array @buf to file @pathTo")
+    @DescriptionAttribute(text = R.SYS_WRITE_FILE)
     public static void writeFile(@FieldParameter(name = "buf") byte[] buf, @FieldParameter(name = "pathTo") String pathTo) throws IOException
     {
         try (InputStream in = new ByteArrayInputStream(buf))
@@ -116,7 +118,7 @@ public class Sys
         }
     }
 	
-    @DescriptionAttribute(text = "Read data as byte array from file @pathFrom")
+    @DescriptionAttribute(text = R.SYS_READ_FILE)
     public static byte[] readFile(@FieldParameter(name = "pathFrom") String pathFrom) throws IOException
     {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream())
@@ -126,7 +128,7 @@ public class Sys
         }
     }
     
-    @DescriptionAttribute(text = "Returns path to JF folder.") 
+    @DescriptionAttribute(text = R.SYS_JF_DIR)
     public static String jfDir()
     {
         return jfDir;

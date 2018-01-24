@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.SerializablePair;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -214,7 +215,7 @@ public abstract class ProxyApplication implements IApplication
 	    	{
 	    		throw lastException;
 	    	}
-	    	throw new Exception("The service can not start.");
+	    	throw new Exception(R.PROXY_APPLICATION_SERVICE_CANT_START_EXCEPTION.get());
 	    }
 	}
 

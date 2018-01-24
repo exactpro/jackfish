@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.api.common;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +18,7 @@ import java.util.regex.Pattern;
 public class Str
 {
 	@DescriptionAttribute(
-			text = "Return array of strings with groups, that were found in string @string with @pattern.\n" + "See also Regular expressions")
+			text = R.STR_GROUPS)
 	public static String[] groups(@FieldParameter(name = "string") String string, @FieldParameter(name = "pattern") String pattern)
 	{
 		ArrayList<String> res = new ArrayList<>();
@@ -29,7 +31,7 @@ public class Str
 		return res.toArray(new String[res.size()]);
 	}
 
-	@DescriptionAttribute(text = "Return true, if strings @s1 and @s2 are equivalents")
+	@DescriptionAttribute(text = R.STR_ARE_EQUAL)
     public static boolean areEqual(@FieldParameter(name = "s1") String s1, @FieldParameter(name = "s2") String s2)
     {
     	if (s1 == null)
@@ -40,7 +42,7 @@ public class Str
     	return s1.equals(s2);
     }
 
-	@DescriptionAttribute(text = "Return true, if string @s is empty or null, and false otherwise")
+	@DescriptionAttribute(text = R.STR_IS_NULL_OR_EMPTY)
     public static boolean IsNullOrEmpty(@FieldParameter(name = "s") String s)
     {
     	if (s == null)
@@ -51,7 +53,7 @@ public class Str
     	return s.isEmpty();
     }
 
-	@DescriptionAttribute(text = "Return String value of @object")
+	@DescriptionAttribute(text = R.STR_AS_STRING)
 	public static String asString(@FieldParameter(name = "object") Object object)
 	{
 		if (object == null)

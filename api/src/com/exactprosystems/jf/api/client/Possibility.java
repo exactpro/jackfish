@@ -9,25 +9,27 @@
 
 package com.exactprosystems.jf.api.client;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 public enum Possibility
 {
-	Receiving			("Receivingmessages"),
-	Sending				("Sending messages"),
-	RawSending			("Sending raw messages"),
-	Encoding			("Encoding to raw messages"),
-	Decoding 			("Decoding from raw messages"),
+	Receiving			(R.POSSIBILITY_RECEIVING_MESSAGES),
+	Sending				(R.POSSIBILITY_SENDING_MESSAGES),
+	RawSending			(R.POSSIBILITY_RAW_SENDING),
+	Encoding			(R.POSSIBILITY_ENCODING),
+	Decoding 			(R.POSSIBILITY_DECODING),
 	
 	;
 	
-	Possibility(String description)
+	Possibility(R description)
 	{
 		this.description = description;
 	}
 	
 	public String getDescription()
 	{
-		return this.description;
+		return this.description.get();
 	}
 	
-	private String description;
+	private R description;
 }

@@ -12,12 +12,13 @@ package com.exactprosystems.jf.api.app;
 import java.io.Serializable;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 public enum Visibility implements Serializable
 {
-    @DescriptionAttribute(text = "Make this element visible")
+    @DescriptionAttribute(text = R.VISIBILITY_VISIBLE)
 	Visible,
-	@DescriptionAttribute(text = "Make this element enabled")
+	@DescriptionAttribute(text = R.VISIBILITY_ENABLE)
     Enable;
     
 

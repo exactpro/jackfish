@@ -11,6 +11,7 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
 import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.io.Serializable;
 import java.util.List;
@@ -57,7 +58,7 @@ public class Part implements Serializable
 			IControl control = window.getControlForName(SectionKind.Run, this.locatorId);
 			if (control == null)
 			{
-				throw new Exception("Cannot find control in dialog='" + window +"' section='Run' name='" + this.locatorId + "'");
+				throw new Exception(String.format(R.PART_TUNE_EXCEPTION.get(), window, this.locatorId));
 			}
 			//b is true, when we use Do.use(locatorId, locatorKind) and we needn't find another locator
 			if (!b)

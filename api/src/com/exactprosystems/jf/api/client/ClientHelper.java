@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.api.client;
 
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.util.*;
 
@@ -78,7 +79,7 @@ public class ClientHelper
 	{
 		if (!Arrays.asList(clazz.getAnnotation(ClientAttribute.class).possibilities()).contains(possibility))
 		{
-			throw new PossibilityIsDisable("For client " + clazz.getSimpleName() + " possibility " + possibility.getDescription() + " is not allowed.");
+			throw new PossibilityIsDisable(String.format(R.CLIENT_HELPER_POSSIBILITY_IS_NOT_ALLOWED.get(), clazz.getSimpleName(), possibility.getDescription()));
 		}
 	}
 }

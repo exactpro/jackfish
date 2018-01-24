@@ -11,11 +11,12 @@ package com.exactprosystems.jf.api.conditions;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.io.Serializable;
 import java.util.Map;
 
-@DescriptionAttribute(text = "Returns rows which contains the given string")
+@DescriptionAttribute(text = R.STRING_CONDITION_DESCRIPTION)
 public class StringCondition extends Condition  implements Serializable
 {
 

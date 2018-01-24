@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.app.IWindow.SectionKind;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.awt.Color;
 import java.io.Serializable;
@@ -37,7 +38,7 @@ public class Piece implements Serializable
 			IControl control = window.getControlForName(SectionKind.Run, this.name);
 			if (control == null)
 			{
-				throw new Exception("Cannot find control in dialog='" + window +"' section='Run' name='" + this.name + "'");
+				throw new Exception(String.format(R.PIECE_TUNE_EXCEPTION.get(), window,this.name));
 			}
 			
 			this.locator = IControl.evaluateTemplate(control.locator(), templateEvaluator);

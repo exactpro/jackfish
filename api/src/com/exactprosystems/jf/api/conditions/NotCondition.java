@@ -10,10 +10,11 @@
 package com.exactprosystems.jf.api.conditions;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.util.Map;
 
-@DescriptionAttribute(text = "Returns rows that NOT satisfy the condition")
+@DescriptionAttribute(text = R.NOT_CONDITION_DESCRIPTION)
 
 public class NotCondition extends Condition
 {

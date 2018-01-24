@@ -11,6 +11,7 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
 import com.exactprosystems.jf.api.error.app.ProxyException;
 import org.w3c.dom.Document;
@@ -42,7 +43,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		{
 			if (args.length < 2)
 			{
-				throw new Exception("Too few arguments :" + args.length);
+				throw new Exception(String.format(R.REMOTE_APPLICATION_TOO_FEW_ARGUMENTS.get(), args.length));
 			}
 			System.err.println(time() + " Starting remote");
 
@@ -118,7 +119,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error createLogger(%s, %s, %s)", logName, serverLogLevel, serverLogPattern);
+			String msg = String.format(R.REMOTE_APPLICATION_CREATE_LOGGER_EXCEPTION.get(), logName, serverLogLevel, serverLogPattern);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -138,7 +139,7 @@ public abstract class RemoteApplication implements IRemoteApplication
         }
         catch (Exception e)
         {
-            String msg = String.format("Error setPluginInfo(%s)", info);
+            String msg = String.format(R.REMOTE_APPLICATION_SET_PLUGIN_INFO_EXCEPTION.get(), info);
             throw new ProxyException(msg, e.getMessage(), e);
         }
     }
@@ -164,7 +165,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error connect(%s)", args == null ? "null" : Arrays.toString(args.entrySet().toArray()));
+			String msg = String.format(R.REMOTE_APPLICATION_CONNECT_EXCEPTION.get(), args == null ? "null" : Arrays.toString(args.entrySet().toArray()));
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -190,7 +191,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error run(%s)", args == null ? "null" : Arrays.toString(args.entrySet().toArray()));
+			String msg = String.format(R.REMOTE_APPLICATION_RUN_EXCEPTION.get(), args == null ? "null" : Arrays.toString(args.entrySet().toArray()));
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -208,7 +209,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error stop()");
+			String msg = String.format(R.REMOTE_APPLICATION_STOP_ERROR.get());
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -227,7 +228,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error refresh()");
+			String msg = String.format(R.REMOTE_APPLICATION_REFRESH_ERROR.get());
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -245,7 +246,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error getAlertText()");
+			String msg = String.format(R.REMOTE_APPLICATION_GET_ALERT_TEXT_EXCEPTION.get());
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -263,7 +264,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error navigate(%s)", kind);
+			String msg = String.format(R.REMOTE_APPLICATION_NAVIGATE_EXCEPTION.get(), kind);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -281,7 +282,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error setAlertText(%s, %s)", text, performKind.toString());
+			String msg = String.format(R.REMOTE_APPLICATION_SET_ALERT_TEXT_EXCEPTION.get(), text, performKind.toString());
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -305,7 +306,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error titles()");
+			String msg = String.format(R.REMOTE_APPLICATION_TITLES_EXCEPTION.get());
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -325,7 +326,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error newInstance(%s)", args == null ? "null" : Arrays.toString(args.entrySet().toArray()));
+			String msg = String.format(R.REMOTE_APPLICATION_NEW_INSTANCE_EXCEPTION.get(), args == null ? "null" : Arrays.toString(args.entrySet().toArray()));
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -346,7 +347,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error switchTo(%s)", criteria);
+			String msg = String.format(R.REMOTE_APPLICATION_SWITCH_TO_EXCEPTION.get(), criteria);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -364,7 +365,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error switchToFrame(%s)", element);
+			String msg = String.format(R.REMOTE_APPLICATION_SWITCH_TO_FRAME_EXCEPTION.get(), element);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -382,7 +383,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error resize(%s, %d, %d)", resize, height, width);
+			String msg = String.format(R.REMOTE_APPLICATION_RESIZE_EXCEPTION.get(), resize, height, width);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -403,7 +404,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error findAll(%s, %s)", owner, element);
+			String msg = String.format(R.REMOTE_APPLICATION_FIND_ALL_EXCEPTION.get(), owner, element);
 			throw new ElementNotFoundException(msg, element);
 		}
 	}
@@ -421,7 +422,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error operate(%s, %s)", owner, element);
+			String msg = String.format(R.REMOTE_APPLICATION_OPERATE_EXCEPTION.get(), owner, element);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -439,7 +440,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error operate(%s, %s)", owner, element);
+			String msg = String.format(R.REMOTE_APPLICATION_OPERATE_EXCEPTION.get(), owner, element);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -460,7 +461,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error operate(%s, %s, %s)", owner, element, operation);
+			String msg = String.format(R.REMOTE_APPLICATION_OPERATE_ERROR.get(), owner, element, operation);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -481,7 +482,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error checkLayout(%s, %s, %s)", owner, element, spec);
+			String msg = String.format(R.REMOTE_APPLICATION_CHECK_LAYOUT_EXCEPTION.get(), owner, element, spec);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -502,7 +503,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error closeAll(%s, %s)", element, Arrays.toString(operations.toArray()));
+			String msg = String.format(R.REMOTE_APPLICATION_CLOSE_ALL_EXCEPTION.get(), element, Arrays.toString(operations.toArray()));
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -520,7 +521,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error closeWindow");
+			String msg = String.format(R.REMOTE_APPLICATION_CLOSE_WINDOW_EXCEPTION.get());
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -539,7 +540,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error getTreeBytes(%s)", owner);
+			String msg = String.format(R.REMOTE_APPLICATION_GET_TREE_BYTES_EXCEPTION.get(), owner);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -557,7 +558,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error start new dialog");
+			String msg = String.format(R.REMOTE_APPLICATION_START_NEW_DIALOG_EXCEPTION.get());
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -575,7 +576,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error on moveWindow(%s,%s)", x, y);
+			String msg = String.format(R.REMOTE_APPLICATION_MOVE_WINDOW_EXCEPTION.get(), x, y);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -593,7 +594,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error on moveDialog(%s, %s,%s)", owner, x, y);
+			String msg = String.format(R.REMOTE_APPLICATION_MOVE_DIALOG_EXCEPTION.get(), owner, x, y);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -611,7 +612,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error on resizeDialog(%s, %s, %s,%s)", owner, resize, height, width);
+			String msg = String.format(R.REMOTE_APPLICATION_RESIZE_DIALOG_EXCEPTION.get(), owner, resize, height, width);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -629,7 +630,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error on getDialogSize(%s)", owner);
+			String msg = String.format(R.REMOTE_APPLICATION_GET_DIALOG_SIZE_EXCEPTION.get(), owner);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -648,7 +649,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		catch (Exception e)
 		{
-			String msg = String.format("Error on getDialogPosition(%s)", owner);
+			String msg = String.format(R.REMOTE_APPLICATION_GET_DIALOG_POSITION_EXCEPTION.get(), owner);
 			throw new ProxyException(msg, e.getMessage(), e);
 		}
 	}
@@ -756,7 +757,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		}
 		if (!ok)
 		{
-			throw new Exception("No one free port in range " + startPort + "-" + (startPort + 1000));
+			throw new Exception(String.format(R.REMOTE_APPLICATION_FIRST_FREE_PORT_EXCEPTION.get(), startPort, (startPort + 1000)));
 		}
 
 		return port;
@@ -797,7 +798,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 		
 		if (!baseType.isAssignableFrom(type))
 		{
-			throw new Exception("class '" + name + "' is not assignable from " + baseType.getName());
+			throw new Exception(String.format(R.REMOTE_APPLICATION_CLASS_EXCEPTION.get(), name, baseType.getName()));
 		}
 
 		return (T)type.newInstance();
@@ -807,7 +808,7 @@ public abstract class RemoteApplication implements IRemoteApplication
 	{
 		if (object == null)
 		{
-			throw new NullPointerException("Parameter '" + message + "' is null in call '" + methodName + "'");
+			throw new NullPointerException(String.format(R.REMOTE_APPLICATION_PARAMETER_NULL_EXCEPTION.get(), message, methodName));
 		}
 	}
 

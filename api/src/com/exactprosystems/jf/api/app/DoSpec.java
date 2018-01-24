@@ -11,33 +11,33 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.FieldParameter;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.awt.*;
 
 public class DoSpec
 {
 	//region CheckProvider functions
-	private static final String checkProviderSeeMethods = "See DoSpec.less(number), DoSpec.great(number), DoSpec.about(number), DoSpec.between(number,number)";
 
-	@DescriptionAttribute(text = "Check, that a number is less than passed number @n")
+	@DescriptionAttribute(text = R.DOSPEC_LESS)
 	public static  CheckProvider less(@FieldParameter(name = "n") Number n)
 	{
 		return  (kind) -> new Piece(kind).setRange(Range.LESS).setA(n.longValue()); 
 	}
 
-	@DescriptionAttribute(text = "Check, that a number is great than passed number @n")
+	@DescriptionAttribute(text = R.DOSPEC_GREAT)
 	public static CheckProvider great(@FieldParameter(name = "n") Number n)
 	{
 		return  (kind) -> new Piece(kind).setRange(Range.GREAT).setA(n.longValue()); 
 	}
 
-	@DescriptionAttribute(text = "Check, that a number about passed number @n. The error is 10%")
+	@DescriptionAttribute(text = R.DOSPEC_ABOUT)
 	public static CheckProvider about(@FieldParameter(name = "n") Number n)
 	{
 		return  (kind) -> new Piece(kind).setRange(Range.ABOUT).setA(n.longValue()); 
 	}
 
-	@DescriptionAttribute(text = "Check, that a number is in the range from min(@n,@m) to max(@n, @m)")
+	@DescriptionAttribute(text = R.DOSPEC_BETWEEN)
 	public static CheckProvider between(@FieldParameter(name = "n") Number n, @FieldParameter(name = "n") Number m)
 	{
 		return  (kind) -> new Piece(kind).setRange(Range.BETWEEN).setA(n.longValue()).setB(m.longValue()); 
@@ -46,29 +46,25 @@ public class DoSpec
 
 	//region attributes
 
-	static final String text = "Check, that text @text equals text of the control";
-	@DescriptionAttribute(text = DoSpec.text)
+	@DescriptionAttribute(text = R.DOSPEC_TEXT)
 	public static Spec text(@FieldParameter(name = "text") String text)
 	{
 		return new Spec().text(text);
 	}
 
-	static final String color = "Check, that color @color equals color of the control";
-	@DescriptionAttribute(text = DoSpec.color)
+	@DescriptionAttribute(text = R.DOSPEC_COLOR)
 	public static Spec color(@FieldParameter(name = "color") Color color)
 	{
 		return new Spec().color(color);
 	}
 
-	static final String bgColor = "Check, that color @color equals background color of the control";
-	@DescriptionAttribute(text = DoSpec.bgColor)
+	@DescriptionAttribute(text = R.DOSPEC_DBCOLOR)
 	public static Spec backColor(@FieldParameter(name = "color") Color color)
 	{
 		return new Spec().backColor(color);
 	}
 
-	static final String attr = "Check, that attribute @name of the control has value @value";
-	@DescriptionAttribute(text = DoSpec.color)
+	@DescriptionAttribute(text = R.DOSPEC_ATTR)
 	public static Spec attr(@FieldParameter(name = "name") String name, @FieldParameter(name = "value") String value)
 	{
 		return new Spec().attr(name, value);
@@ -78,15 +74,13 @@ public class DoSpec
 
 	//region visible
 
-	static final String visible = "Check, that the control is visible";
-	@DescriptionAttribute(text = DoSpec.visible)
+	@DescriptionAttribute(text = R.DOSPEC_VISIBLE)
 	public static Spec visible()
 	{
 		return new Spec().visible();
 	}
 
-	static final String invisible = "Check, that the control is invisible";
-	@DescriptionAttribute(text = DoSpec.invisible)
+	@DescriptionAttribute(text = R.DOSPEC_INVISIBLE)
 	public static Spec invisible()
 	{
 		return new Spec().invisible();
@@ -95,15 +89,13 @@ public class DoSpec
 	//endregion
 
 	//region count
-	static final String count = "Check, that found @count items of the control";
-	@DescriptionAttribute(text = DoSpec.count)
+	@DescriptionAttribute(text = R.DOSPEC_COUNT)
 	public static Spec count(@FieldParameter(name = "count") Number count)
 	{
 		return new Spec().count(count);
 	}
 
-	static  final String countWithProvider = "Check, that a count of find items to the control is satisfy by passed CheckProvider @func.\n" + checkProviderSeeMethods;
-	@DescriptionAttribute(text = DoSpec.countWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_COUNT_WITH_PROVIDER)
 	public static Spec count(@FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().count(func);
@@ -111,15 +103,13 @@ public class DoSpec
 	//endregion
 
 	//region width
-	static final String width = "Check, that current control has width @width";
-	@DescriptionAttribute(text = DoSpec.width)
+	@DescriptionAttribute(text = R.DOSPEC_WIDTH)
 	public static Spec width(@FieldParameter(name = "width") Number dist)
 	{
 		return new Spec().width(dist);
 	}
 
-	static final String widthWithProvider = "Check, that a width of the control is satisfy by passed CheckProvider @func.\n" + checkProviderSeeMethods;
-	@DescriptionAttribute(text = DoSpec.widthWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_WIDTH_WITH_PROVIDER)
 	public static Spec width(@FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().width(func);
@@ -127,15 +117,13 @@ public class DoSpec
 	//endregion
 	
 	//region height
-	static final String height = "Check, that current control has a height @height";
-	@DescriptionAttribute(text = DoSpec.height)
+	@DescriptionAttribute(text = R.DOSPEC_HEIGHT)
 	public static Spec height(@FieldParameter(name="height") Number dist)
 	{
 		return new Spec().height(dist);
 	}
 
-	static final String heightWithProvider = "Check, that a height of the control is satisfy by passed CheckProvider @func.\n" + checkProviderSeeMethods;
-	@DescriptionAttribute(text = DoSpec.heightWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_HEIGHT_WITH_PROVIDER)
 	public static Spec height(@FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().height(func);
@@ -143,48 +131,32 @@ public class DoSpec
 	//endregion
 	
 	//region contains
-	static final String contains = "Check, that current control fully contains inside on self a element with id @another from a dictionary";
-	@DescriptionAttribute(text = DoSpec.contains)
+	@DescriptionAttribute(text = R.DOSPEC_CONTAINS)
 	public static Spec contains(@FieldParameter(name = "another") String another)
 	{
 		return new Spec().contains(another);
 	}
 	//endregion
 
-	private static final String checkThat = "Check, that the control ";
-	private static final String another = " from a control with id @another from a dictionary.";
-	private static final String locator = " from a dynamic control with locator @locator.";
-
-	private static final String atADistance  = " at a distance @dist";
-	private static final String atADistanceWithProvider = " at distance, evaluating via CheckProvider @func";
-
-	//region left
-	private static final String leftDistance = " on the left" + atADistance;
-	private static final String leftProvider = " on the left" + atADistanceWithProvider;
-
-	static final String leftAnother = checkThat + leftDistance + another;
-	@DescriptionAttribute(text = DoSpec.leftAnother)
+	@DescriptionAttribute(text = R.DOSPEC_LEFT_ANOTHER)
 	public static Spec left(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().left(another, dist);
 	}
 
-	static final String leftAnotherWithProvider = checkThat + leftProvider + another + "\n" + checkProviderSeeMethods;
-	@DescriptionAttribute(text = DoSpec.leftAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_LEFT_ANOTHER_WITH_PROVIDER)
 	public static Spec left(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().left(another, func);
 	}
 
-	static final String leftLocator = checkThat + leftDistance + locator;
-	@DescriptionAttribute(text = DoSpec.leftLocator)
+	@DescriptionAttribute(text = R.DOSPEC_LEFT_LOCATOR)
 	public static Spec left(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().left(locator, dist);
 	}
 
-	static final String leftLocatorWithProvider = checkThat + leftProvider + locator + "\n" + checkProviderSeeMethods;
-	@DescriptionAttribute(text = DoSpec.leftLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_LEFT_LOCATOR_WITH_PROVIDER)
 	public static Spec left(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().left(locator, func);
@@ -192,32 +164,26 @@ public class DoSpec
 	//endregion
 
 	//region right
-	private static final String rightDistance = " on the right" + atADistance;
-	private static final String rightProvider = " on the right" + atADistanceWithProvider;
 
-	static final String rightAnother = checkThat + rightDistance + another;
-	@DescriptionAttribute(text = rightAnother)
+	@DescriptionAttribute(text = R.DOSPEC_RIGHT_ANOTHER)
 	public static Spec right(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().right(another, dist);
 	}
 
-	static final String rightAnotherWithProvider = checkThat + rightProvider + another;
-	@DescriptionAttribute(text = rightAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_RIGHT_ANOTHER_WITH_PROVIDER)
 	public static Spec right(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().right(another, func);
 	}
 
-	static final String rightLocator = checkThat + rightDistance + locator;
-	@DescriptionAttribute(text = rightLocator)
+	@DescriptionAttribute(text = R.DOSPEC_RIGHT_LOCATOR)
 	public static Spec right(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().right(locator, dist);
 	}
 
-	static final String rightLocatorWithProvider = checkThat + rightProvider + locator;
-	@DescriptionAttribute(text = rightLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_RIGHT_LOCATOR_WITH_PROVIDER)
 	public static Spec right(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().right(locator, func);
@@ -225,32 +191,26 @@ public class DoSpec
 	//endregion
 
 	//region top
-	private static final String topDistance = " on the top" + atADistance;
-	private static final String topProvider = " on the top" + atADistanceWithProvider;
 
-	static final String topAnother = checkThat + topDistance + another;
-	@DescriptionAttribute(text = topAnother)
+	@DescriptionAttribute(text = R.DOSPEC_TOP_ANOTHER)
 	public static Spec top(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().top(another, dist);
 	}
 
-	static final String topAnotherWithProvider = checkThat + topProvider + another;
-	@DescriptionAttribute(text = topAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_TOP_ANOTHER_WITH_PROVIDER)
 	public static Spec top(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().top(another, func);
 	}
 
-	static final String topLocator = checkThat + topDistance + locator;
-	@DescriptionAttribute(text = topLocator)
+	@DescriptionAttribute(text = R.DOSPEC_TOP_LOCATOR)
 	public static Spec top(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().top(locator, dist);
 	}
 
-	static final String topLocatorWithProvider = checkThat + topProvider + locator;
-	@DescriptionAttribute(text = topLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_TOP_LOCATOR_WITH_PROVIDER)
 	public static Spec top(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().top(locator, func);
@@ -258,74 +218,52 @@ public class DoSpec
 	//endregion
 
 	//region bottom
-	private static final String bottomDistance = " on the bottom" + atADistance;
-	private static final String bottomProvider = " on the bottom" + atADistanceWithProvider;
 
-	static final String bottomAnother = checkThat + bottomDistance + another;
-	@DescriptionAttribute(text = bottomAnother)
+	@DescriptionAttribute(text = R.DOSPEC_BOTTOM_ANOTHER)
 	public static Spec bottom(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().bottom(another, dist);
 	}
 
-	static final String bottomAnotherWithProvider = checkThat + bottomProvider + another;
-	@DescriptionAttribute(text = bottomAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_BOTTOM_ANOTHER_WITH_PROVIDER)
 	public static Spec bottom(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().bottom(another, func);
 	}
 
-	static final String bottomLocator = checkThat + bottomDistance + locator;
-	@DescriptionAttribute(text = bottomLocator)
+	@DescriptionAttribute(text = R.DOSPEC_BOTTOM_LOCATOR)
 	public static Spec bottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().bottom(locator, dist);
 	}
 
-	static final String bottomLocatorWithProvider = checkThat + bottomProvider + locator;
-	@DescriptionAttribute(text = bottomLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_BOTTOM_LOCATOR_WITH_PROVIDER)
 	public static Spec bottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().bottom(locator, func);
 	}
 	//endregion
 
-	private static final String leftBorders = " left borders ";
-	private static final String rightBorders = "right borders";
-	private static final String topBorders = "top borders";
-	private static final String bottomBorders = "bottom borders";
-
-	private static final String equalsDistance   = " equals value @dist.";
-	private static final String providerDistance = " evaluating via CheckProvider @func.";
-
-
-	private static final String insideFromAnother = " inside from a control with id @another from a dictionary and distance between ";
-	private static final String insideFromLocator = " inside from a dynamic control with locator @locator and distance between ";
-
 	//region inLeft
-	static final String insideLeftAnother = checkThat + insideFromAnother + leftBorders + equalsDistance;
-	@DescriptionAttribute(text = insideLeftAnother)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_LEFT_ANOTHER)
 	public static Spec inLeft(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().inLeft(another, dist);
 	}
 
-	static final String insideLeftAnotherWithProvider = checkThat + insideFromAnother + leftBorders + providerDistance;
-	@DescriptionAttribute(text = insideLeftAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_LEFT_ANOTHER_WITH_PROVIDER)
 	public static Spec inLeft(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().inLeft(another, func);
 	}
 
-	static final String insideLeftLocator = checkThat + insideFromLocator + leftBorders + equalsDistance;
-	@DescriptionAttribute(text = insideLeftLocator)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_LEFT_LOCATOR)
 	public static Spec inLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().inLeft(locator, dist);
 	}
 
-	static final String insideLeftLocatorWithProvider = checkThat + insideFromLocator + leftBorders + insideFromLocator;
-	@DescriptionAttribute(text = insideLeftLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_LEFT_LOCATOR_WITH_PROVIDER)
 	public static Spec inLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().inLeft(locator, func);
@@ -333,29 +271,25 @@ public class DoSpec
 	//endregion
 
 	//region inRight
-	static final String insideRightAnother = checkThat + insideFromAnother + rightBorders + equalsDistance;
-	@DescriptionAttribute(text = insideRightAnother)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_RIGHT_ANOTHER)
 	public static Spec inRight(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().inRight(another, dist);
 	}
 
-	static final String insideRightAnotherWithProvider = checkThat + insideFromAnother + rightBorders + providerDistance;
-	@DescriptionAttribute(text = insideRightAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_RIGHT_ANOTHER_WITH_PROVIDER)
 	public static Spec inRight(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().inRight(another, func);
 	}
 
-	static final String insideRightLocator = checkThat + insideFromLocator + rightBorders + equalsDistance;
-	@DescriptionAttribute(text = insideRightLocator)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_RIGHT_LOCATOR)
 	public static Spec inRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().inRight(locator, dist);
 	}
 
-	static final String insideRightLocatorWithProvider = checkThat + insideFromLocator + rightBorders + providerDistance;
-	@DescriptionAttribute(text = insideRightLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_RIGHT_LOCATOR_WITH_PROVIDER)
 	public static Spec inRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().inRight(locator, func);
@@ -364,29 +298,25 @@ public class DoSpec
 
 	//region inTop
 
-	static final String insideTopAnother = checkThat + insideFromAnother + topBorders + equalsDistance;
-	@DescriptionAttribute(text = insideTopAnother)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_TOP_ANOTHER)
 	public static Spec inTop(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().inTop(another, dist);
 	}
 
-	static final String insideTopAnotherWithProvider = checkThat + insideFromAnother + topBorders + providerDistance;
-	@DescriptionAttribute(text = insideTopAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_TOP_ANOTHER_WITH_PROVIDER)
 	public static Spec inTop(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().inTop(another, func);
 	}
 
-	static final String insideTopLocator = checkThat + insideFromLocator + topBorders + equalsDistance;
-	@DescriptionAttribute(text = insideTopLocator)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_TOP_LOCATOR)
 	public static Spec inTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().inTop(locator, dist);
 	}
 
-	static final String insideTopLocatorWithProvider = checkThat + insideFromLocator + topBorders + providerDistance;
-	@DescriptionAttribute(text = insideTopLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_TOP_LOCATOR_WITH_PROVIDER)
 	public static Spec inTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().inTop(locator, func);
@@ -395,62 +325,51 @@ public class DoSpec
 
 	//region inBottom
 
-	static final String insideBottomAnother = checkThat + insideFromAnother + bottomBorders + equalsDistance;
-	@DescriptionAttribute(text = insideBottomAnother)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_BOTTOM_ANOTHER)
 	public static Spec inBottom(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().inBottom(another, dist);
 	}
 
-	static final String insideBottomAnotherWithProvider = checkThat + insideFromAnother + bottomBorders + providerDistance;
-	@DescriptionAttribute(text = insideBottomAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_BOTTOM_ANOTHER_WITH_PROVIDER)
 	public static Spec inBottom(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().inBottom(another, func);
 	}
 
-	static final String insideBottomLocator = checkThat + insideFromLocator + bottomBorders + equalsDistance;
-	@DescriptionAttribute(text = insideBottomLocator)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_BOTTOM_LOCATOR)
 	public static Spec inBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().inBottom(locator, dist);
 	}
 
-	static final String insideBottomLocatorWithProvider = checkThat + insideFromLocator + bottomBorders + providerDistance;
-	@DescriptionAttribute(text = insideBottomLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_BOTTOM_LOCATOR_WITH_PROVIDER)
 	public static Spec inBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().inBottom(locator, func);
 	}
 	//endregion
 
-	private static final String outsideFromAnother = " outside from a control with id @another from a dictionary and distance between ";
-	private static final String outsideFromLocator = " outside from a dynamic control with locator @locator and distance between ";
-
 	//region onLeft
-	static final String outsideLeftAnother = checkThat + outsideFromAnother + leftBorders + equalsDistance;
-	@DescriptionAttribute(text = outsideLeftAnother)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_LEFT_ANOTHER)
 	public static Spec onLeft(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().onLeft(another, dist);
 	}
 
-	static final String outsideLeftAnotherWithProvider = checkThat + outsideFromAnother + leftBorders + providerDistance;
-	@DescriptionAttribute(text = outsideLeftAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_LEFT_ANOTHER_WITH_PROVIDER)
 	public static Spec onLeft(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().onLeft(another, func);
 	}
 
-	static final String outsideLeftLocator = checkThat + outsideFromLocator + leftBorders + equalsDistance;
-	@DescriptionAttribute(text = outsideLeftLocator)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_LEFT_LOCATOR)
 	public static Spec onLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().onLeft(locator, dist);
 	}
 
-	static final String outsideLeftLocatorWithProvider = checkThat + outsideFromLocator + leftBorders + outsideFromLocator;
-	@DescriptionAttribute(text = outsideLeftLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_LEFT_LOCATOR_WITH_PROVIDER)
 	public static Spec onLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().onLeft(locator, func);
@@ -458,29 +377,25 @@ public class DoSpec
 	//endregion
 
 	//region onRight
-	static final String outsideRightAnother = checkThat + outsideFromAnother + rightBorders + equalsDistance;
-	@DescriptionAttribute(text = outsideRightAnother)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_RIGHT_ANOTHER)
 	public static Spec onRight(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().onRight(another, dist);
 	}
 
-	static final String outsideRightAnotherWithProvider = checkThat + outsideFromAnother + rightBorders + providerDistance;
-	@DescriptionAttribute(text = outsideRightAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_RIGHT_ANOTHER_WITH_PROVIDER)
 	public static Spec onRight(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().onRight(another, func);
 	}
 
-	static final String outsideRightLocator = checkThat + outsideFromLocator + rightBorders + equalsDistance;
-	@DescriptionAttribute(text = outsideRightLocator)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_RIGHT_LOCATOR)
 	public static Spec onRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().onRight(locator, dist);
 	}
 
-	static final String outsideRightLocatorWithProvider = checkThat + outsideFromLocator + rightBorders + providerDistance;
-	@DescriptionAttribute(text = outsideRightLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_RIGHT_LOCATOR_WITH_PROVIDER)
 	public static Spec onRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().onRight(locator, func);
@@ -488,29 +403,25 @@ public class DoSpec
 	//endregion
 
 	//region onTop
-	static final String outsideTopAnother = checkThat + outsideFromAnother + topBorders + equalsDistance;
-	@DescriptionAttribute(text = outsideTopAnother)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_TOP_ANOTHER)
 	public static Spec onTop(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().onTop(another, dist);
 	}
 
-	static final String outsideTopAnotherWithProvider = checkThat + outsideFromAnother + topBorders + providerDistance;
-	@DescriptionAttribute(text = outsideTopAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_TOP_ANOTHER_WITH_PROVIDER)
 	public static Spec onTop(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().onTop(another, func);
 	}
 
-	static final String outsideTopLocator = checkThat + outsideFromLocator + topBorders + equalsDistance;
-	@DescriptionAttribute(text = outsideTopLocator)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_TOP_LOCATOR)
 	public static Spec onTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().onTop(locator, dist);
 	}
 
-	static final String outsideTopLocatorWithProvider = checkThat + outsideFromLocator + topBorders + providerDistance;
-	@DescriptionAttribute(text = outsideTopLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_TOP_LOCATOR_WITH_PROVIDER)
 	public static Spec onTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().onTop(locator, func);
@@ -518,29 +429,25 @@ public class DoSpec
 	//endregion
 
 	//region onBottom
-	static final String outsideBottomAnother = checkThat + outsideFromAnother + bottomBorders + equalsDistance;
-	@DescriptionAttribute(text = outsideBottomAnother)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_BOTTOM_ANOTHER)
 	public static Spec onBottom(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().onBottom(another, dist);
 	}
 
-	static final String outsideBottomAnotherWithProvider = checkThat + outsideFromAnother + bottomBorders + providerDistance;
-	@DescriptionAttribute(text = outsideBottomAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_BOTTOM_ANOTHER_WITH_PROVIDER)
 	public static Spec onBottom(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().onBottom(another, func);
 	}
 
-	static final String outsideBottomLocator = checkThat + outsideFromLocator + bottomBorders + equalsDistance;
-	@DescriptionAttribute(text = outsideBottomLocator)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_BOTTOM_LOCATOR)
 	public static Spec onBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().onBottom(locator, dist);
 	}
 
-	static final String outsideBottomLocatorWithProvider = checkThat + outsideFromLocator + bottomBorders + providerDistance;
-	@DescriptionAttribute(text = outsideBottomLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_BOTTOM_LOCATOR_WITH_PROVIDER)
 	public static Spec onBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().onBottom(locator, func);
@@ -639,36 +546,28 @@ public class DoSpec
 		return new Spec().bAlign(locator, func);
 	}
 
-	private static final String anotherCentre   = " and a control with id @another from a dictionary are ";
-	private static final String locatorCentre   = " and a dynamic control with locator @locator are ";
-	private static final String centeredAndDiff = " centered and difference " ;
 
 	//region hCenter
-	private static final String horizontally    = "horizontally";
 
-	static final String hCenterAnother  = checkThat + anotherCentre + horizontally + centeredAndDiff + equalsDistance;
-	@DescriptionAttribute(text = hCenterAnother)
+	@DescriptionAttribute(text = R.DOSPEC_H_CENTRE_ANOTHER)
 	public static Spec hCenter(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().hCenter(another, dist);
 	}
 
-	static final String hCenterAnotherWithProvider  = checkThat + anotherCentre + horizontally + centeredAndDiff + providerDistance;
-	@DescriptionAttribute(text = hCenterAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_H_CENTRE_ANOTHER_WITH_PROVIDER)
 	public static Spec hCenter(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().hCenter(another, func);
 	}
 
-	static final String hCenterLocator  = checkThat + locatorCentre + horizontally + centeredAndDiff + equalsDistance;
-	@DescriptionAttribute(text = hCenterLocator)
+	@DescriptionAttribute(text = R.DOSPEC_H_CENTRE_LOCATOR)
 	public static Spec hCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().hCenter(locator, dist);
 	}
 
-	static final String hCenterLocatorWithProvider  = checkThat + locatorCentre + horizontally + centeredAndDiff + providerDistance;
-	@DescriptionAttribute(text = hCenterLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_H_CENTRE_LOCATOR_WITH_PROVIDER)
 	public static Spec hCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().hCenter(locator, func);
@@ -676,31 +575,26 @@ public class DoSpec
 	//endregion
 
 	//region vCenter
-	private static final String vertically    = "vertically";
 
-	static final String vCenterAnother  = checkThat + anotherCentre + vertically + centeredAndDiff + equalsDistance;
-	@DescriptionAttribute(text = vCenterAnother)
+	@DescriptionAttribute(text = R.DOSPEC_V_CENTRE_ANOTHER)
 	public static Spec vCenter(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().vCenter(another, dist);
 	}
 
-	static final String vCenterAnotherWithProvider  = checkThat + anotherCentre + vertically + centeredAndDiff + providerDistance;
-	@DescriptionAttribute(text = vCenterAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_V_CENTRE_ANOTHER_WITH_PROVIDER)
 	public static Spec vCenter(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().vCenter(another, func);
 	}
 
-	static final String vCenterLocator  = checkThat + locatorCentre + vertically + centeredAndDiff + equalsDistance;
-	@DescriptionAttribute(text = vCenterLocator)
+	@DescriptionAttribute(text = R.DOSPEC_V_CENTRE_LOCATOR)
 	public static Spec vCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		return new Spec().vCenter(locator, dist);
 	}
 
-	static final String vCenterLocatorWithProvider  = checkThat + locatorCentre + vertically + centeredAndDiff + providerDistance;
-	@DescriptionAttribute(text = vCenterLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_V_CENTRE_LOCATOR_WITH_PROVIDER)
 	public static Spec vCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		return new Spec().vCenter(locator, func);

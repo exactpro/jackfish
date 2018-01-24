@@ -56,7 +56,7 @@ public class HelpClass extends MatrixItem
         report.itemIntermediate(item);
         report.putMark(this.clazz.getSimpleName());
         report.outLine(this, null, "{{`{{3" + this.clazz.getSimpleName() + "3}}`}}", null);
-        report.outLine(this, null, "{{`" + classAttribute.text() + "`}}", null);
+        report.outLine(this, null, "{{`" + classAttribute.text().get() + "`}}", null);
 
         Method[] methods = clazz.getDeclaredMethods();
         if (methods.length != 0)
@@ -74,7 +74,7 @@ public class HelpClass extends MatrixItem
                 String s = Arrays.stream(method.getParameters()).map(c -> c.getName()).collect(Collectors.joining(", "));
             	String str = String.format("{{``}}{{`%s {{*%s*}}(%s)`}}", ret, name, s);
             	report.outLine(item, null, str, null);
-            	report.outLine(item, null, "{{`" + methodAttribute.text() + "`}}", null);
+            	report.outLine(item, null, "{{`" + methodAttribute.text().get() + "`}}", null);
             }
         }
     }

@@ -10,13 +10,14 @@
 package com.exactprosystems.jf.api.conditions;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@DescriptionAttribute(text = "Returns rows that satisfy at least one condition")
+@DescriptionAttribute(text = R.OR_CONDITION_DESCRIPTION)
 public class OrCondition extends Condition
 {
 	private static final long serialVersionUID = 7676146584103803972L;

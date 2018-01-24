@@ -10,11 +10,12 @@
 package com.exactprosystems.jf.api.conditions;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.io.Serializable;
 import java.util.Map;
 
-@DescriptionAttribute(text = "Returns false for any matches")
+@DescriptionAttribute(text = R.FALSE_CONDITION_DESCRIPTION)
 public class FalseCondition extends Condition  implements Serializable
 {
 

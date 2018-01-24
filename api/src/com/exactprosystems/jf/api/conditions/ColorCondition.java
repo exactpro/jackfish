@@ -12,12 +12,13 @@ package com.exactprosystems.jf.api.conditions;
 import com.exactprosystems.jf.api.app.InnerColor;
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.awt.*;
 import java.io.Serializable;
 import java.util.Map;
 
-@DescriptionAttribute(text = "Returns rows that satisfy the conditions applicable to color of text or background")
+@DescriptionAttribute(text = R.COLOR_CONDITION_DESCRIPTION)
 public class ColorCondition extends Condition implements Serializable
 {
 

@@ -9,11 +9,13 @@
 
 package com.exactprosystems.jf.api.common;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 public class Unique
 {
 	private Unique() {}
 
-	@DescriptionAttribute(text = "Get random string, which depends of current time")
+	@DescriptionAttribute(text = R.UNIQUE_STRING_DESCRIPTION)
 	public static String string()
 	{
 		char[] alphabet = 

@@ -9,6 +9,8 @@
 
 package com.exactprosystems.jf.api.client;
 
+import com.exactprosystems.jf.api.common.i18n.R;
+
 import java.util.Map;
 
 public abstract class AbstractDictionaryCodec implements ICodec
@@ -17,7 +19,7 @@ public abstract class AbstractDictionaryCodec implements ICodec
 	{
 		if (dictionary == null)
 		{
-			throw new Exception("The dictionary is null");
+			throw new Exception(R.ABSTRACT_DICTIONARY_CODEC_DICTIONARY_IS_NULL.get());
 		}
 		this.dictionary = dictionary;
 	}
@@ -58,7 +60,7 @@ public abstract class AbstractDictionaryCodec implements ICodec
 		IMessage mess = this.dictionary.getMessage(messageType);
 		if (mess == null)
 		{
-			throw new Exception("Unknown message type " + messageType);
+			throw new Exception(String.format(R.ABSTRACT_DICTIONARY_CODEC_UNKNOWN_MESSAGE_TYPE.get(), messageType));
 		}
 		
 		tune(messageType, message);

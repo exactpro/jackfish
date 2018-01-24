@@ -11,6 +11,7 @@ package com.exactprosystems.jf.api.app;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.FieldParameter;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.awt.Color;
 import java.io.Serializable;
@@ -69,28 +70,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	}
 
 	//region attributes
-	@DescriptionAttribute(text = DoSpec.text)
+	@DescriptionAttribute(text = R.DOSPEC_TEXT)
 	public Spec text(@FieldParameter(name = "text") String text)
 	{
 		this.list.add(new Piece(PieceKind.TEXT).setText(text));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.color)
+	@DescriptionAttribute(text = R.DOSPEC_COLOR)
 	public Spec color(@FieldParameter(name = "color") Color color)
 	{
 		this.list.add(new Piece(PieceKind.COLOR).setColor(color));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.bgColor)
+	@DescriptionAttribute(text = R.DOSPEC_DBCOLOR)
 	public Spec backColor(@FieldParameter(name = "color") Color color)
 	{
 		this.list.add(new Piece(PieceKind.BACK_COLOR).setColor(color));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.attr)
+	@DescriptionAttribute(text = R.DOSPEC_ATTR)
 	public Spec attr(@FieldParameter(name = "name") String name, @FieldParameter(name = "value") String value)
 	{
 		this.list.add(new Piece(PieceKind.ATTR).setText(name).setText2(value));
@@ -99,14 +100,14 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 	
 	//region visible
-	@DescriptionAttribute(text = DoSpec.visible)
+	@DescriptionAttribute(text = R.DOSPEC_VISIBLE)
 	public Spec visible()
 	{
 		this.list.add(new Piece(PieceKind.VISIBLE));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.invisible)
+	@DescriptionAttribute(text = R.DOSPEC_INVISIBLE)
 	public Spec invisible()
 	{
 		this.list.add(new Piece(PieceKind.INVISIBLE));
@@ -115,14 +116,14 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region count
-	@DescriptionAttribute(text = DoSpec.count)
+	@DescriptionAttribute(text = R.DOSPEC_COUNT)
 	public Spec count(@FieldParameter(name = "count") Number count)
 	{
 		this.list.add(new Piece(PieceKind.COUNT).setRange(Range.EQUAL).setA(count.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.countWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_COUNT_WITH_PROVIDER)
 	public Spec count(@FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.COUNT));
@@ -131,14 +132,14 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 	
 	//region width
-	@DescriptionAttribute(text = DoSpec.width)
+	@DescriptionAttribute(text = R.DOSPEC_WIDTH)
 	public Spec width(@FieldParameter(name = "width") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.WIDTH).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.widthWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_WIDTH_WITH_PROVIDER)
 	public Spec width(@FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.WIDTH));
@@ -147,14 +148,14 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 	
 	//region height
-	@DescriptionAttribute(text = DoSpec.height)
+	@DescriptionAttribute(text = R.DOSPEC_HEIGHT)
 	public Spec height(@FieldParameter(name="height") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.HEIGHT).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.heightWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_HEIGHT_WITH_PROVIDER)
 	public Spec height(@FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.HEIGHT));
@@ -163,7 +164,7 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region contains
-	@DescriptionAttribute(text = DoSpec.contains)
+	@DescriptionAttribute(text = R.DOSPEC_CONTAINS)
 	public Spec contains(@FieldParameter(name = "another") String another)
 	{
 		this.list.add(new Piece(PieceKind.CONTAINS).setName(another));
@@ -172,28 +173,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region left
-	@DescriptionAttribute(text = DoSpec.leftAnother)
+	@DescriptionAttribute(text = R.DOSPEC_LEFT_ANOTHER)
 	public Spec left(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.leftAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_LEFT_ANOTHER_WITH_PROVIDER)
 	public Spec left(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.LEFT).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.leftLocator)
+	@DescriptionAttribute(text = R.DOSPEC_LEFT_LOCATOR)
 	public Spec left(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.leftLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_LEFT_LOCATOR_WITH_PROVIDER)
 	public Spec left(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.LEFT).setLocator(null, locator));
@@ -202,28 +203,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region right
-	@DescriptionAttribute(text = DoSpec.rightAnother)
+	@DescriptionAttribute(text = R.DOSPEC_RIGHT_ANOTHER)
 	public Spec right(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.rightAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_RIGHT_ANOTHER_WITH_PROVIDER)
 	public Spec right(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.RIGHT).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.rightLocator)
+	@DescriptionAttribute(text = R.DOSPEC_RIGHT_LOCATOR)
 	public Spec right(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.rightLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_RIGHT_LOCATOR_WITH_PROVIDER)
 	public Spec right(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.RIGHT).setLocator(null, locator));
@@ -232,28 +233,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region top
-	@DescriptionAttribute(text = DoSpec.topAnother)
+	@DescriptionAttribute(text = R.DOSPEC_TOP_ANOTHER)
 	public Spec top(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.topAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_TOP_ANOTHER_WITH_PROVIDER)
 	public Spec top(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.TOP).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.topLocator)
+	@DescriptionAttribute(text = R.DOSPEC_TOP_LOCATOR)
 	public Spec top(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.topLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_TOP_LOCATOR_WITH_PROVIDER)
 	public Spec top(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.TOP).setLocator(null, locator));
@@ -262,28 +263,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region bottom
-	@DescriptionAttribute(text = DoSpec.bottomAnother)
+	@DescriptionAttribute(text = R.DOSPEC_BOTTOM_ANOTHER)
 	public Spec bottom(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.bottomAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_BOTTOM_ANOTHER_WITH_PROVIDER)
 	public Spec bottom(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.BOTTOM).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.bottomLocator)
+	@DescriptionAttribute(text = R.DOSPEC_BOTTOM_LOCATOR)
 	public Spec bottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.bottomLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_BOTTOM_LOCATOR_WITH_PROVIDER)
 	public Spec bottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.BOTTOM).setLocator(null, locator));
@@ -292,28 +293,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 	
 	//region inLeft
-	@DescriptionAttribute(text = DoSpec.insideLeftAnother)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_LEFT_ANOTHER)
 	public Spec inLeft(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideLeftAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_LEFT_ANOTHER_WITH_PROVIDER)
 	public Spec inLeft(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_LEFT).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideLeftLocator)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_LEFT_LOCATOR)
 	public Spec inLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideLeftLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_LEFT_LOCATOR_WITH_PROVIDER)
 	public Spec inLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_LEFT).setLocator(null, locator));
@@ -322,28 +323,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region inRight
-	@DescriptionAttribute(text = DoSpec.insideRightAnother)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_RIGHT_ANOTHER)
 	public Spec inRight(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideRightAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_RIGHT_ANOTHER_WITH_PROVIDER)
 	public Spec inRight(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_RIGHT).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideRightLocator)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_RIGHT_LOCATOR)
 	public Spec inRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideRightLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_RIGHT_LOCATOR_WITH_PROVIDER)
 	public Spec inRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_RIGHT).setLocator(null, locator));
@@ -352,28 +353,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region inTop
-	@DescriptionAttribute(text = DoSpec.insideTopAnother)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_TOP_ANOTHER)
 	public Spec inTop(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideTopAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_TOP_ANOTHER_WITH_PROVIDER)
 	public Spec inTop(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_TOP).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideTopLocator)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_TOP_LOCATOR)
 	public Spec inTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideTopLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_TOP_LOCATOR_WITH_PROVIDER)
 	public Spec inTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_TOP).setLocator(null, locator));
@@ -382,28 +383,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region inBottom
-	@DescriptionAttribute(text = DoSpec.insideBottomAnother)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_BOTTOM_ANOTHER)
 	public Spec inBottom(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideBottomAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_BOTTOM_ANOTHER_WITH_PROVIDER)
 	public Spec inBottom(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_BOTTOM).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideBottomLocator)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_BOTTOM_LOCATOR)
 	public Spec inBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.INSIDE_BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.insideBottomLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_INSIDE_BOTTOM_LOCATOR_WITH_PROVIDER)
 	public Spec inBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.INSIDE_BOTTOM).setLocator(null, locator));
@@ -412,28 +413,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region onLeft
-	@DescriptionAttribute(text = DoSpec.outsideLeftAnother)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_LEFT_ANOTHER)
 	public Spec onLeft(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_LEFT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideLeftAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_LEFT_ANOTHER_WITH_PROVIDER)
 	public Spec onLeft(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_LEFT).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideLeftLocator)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_LEFT_LOCATOR)
 	public Spec onLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_LEFT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideLeftLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_LEFT_LOCATOR_WITH_PROVIDER)
 	public Spec onLeft(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_LEFT).setLocator(null, locator));
@@ -442,28 +443,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region onRight
-	@DescriptionAttribute(text = DoSpec.outsideRightAnother)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_RIGHT_ANOTHER)
 	public Spec onRight(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_RIGHT).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideRightAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_RIGHT_ANOTHER_WITH_PROVIDER)
 	public Spec onRight(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_RIGHT).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideRightLocator)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_RIGHT_LOCATOR)
 	public Spec onRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_RIGHT).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideRightLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_RIGHT_LOCATOR_WITH_PROVIDER)
 	public Spec onRight(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_RIGHT).setLocator(null, locator));
@@ -472,28 +473,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region onTop
-	@DescriptionAttribute(text = DoSpec.outsideTopAnother)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_TOP_ANOTHER)
 	public Spec onTop(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_TOP).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideTopAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_TOP_ANOTHER_WITH_PROVIDER)
 	public Spec onTop(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_TOP).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideTopLocator)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_TOP_LOCATOR)
 	public Spec onTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_TOP).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideTopLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_TOP_LOCATOR_WITH_PROVIDER)
 	public Spec onTop(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_TOP).setLocator(null, locator));
@@ -502,28 +503,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 
 	//region onBottom
-	@DescriptionAttribute(text = DoSpec.outsideBottomAnother)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_BOTTOM_ANOTHER)
 	public Spec onBottom(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_BOTTOM).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideBottomAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_BOTTOM_ANOTHER_WITH_PROVIDER)
 	public Spec onBottom(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_BOTTOM).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideBottomLocator)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_BOTTOM_LOCATOR)
 	public Spec onBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.ON_BOTTOM).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.outsideBottomLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_OUTSIDE_BOTTOM_LOCATOR_WITH_PROVIDER)
 	public Spec onBottom(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.ON_BOTTOM).setLocator(null, locator));
@@ -640,28 +641,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	}
 	
 	//region hCenter
-	@DescriptionAttribute(text = DoSpec.hCenterAnother)
+	@DescriptionAttribute(text = R.DOSPEC_H_CENTRE_ANOTHER)
 	public Spec hCenter(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.HORIZONTAL_CENTERED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.hCenterAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_H_CENTRE_ANOTHER_WITH_PROVIDER)
 	public Spec hCenter(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.HORIZONTAL_CENTERED).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.hCenterLocator)
+	@DescriptionAttribute(text = R.DOSPEC_H_CENTRE_LOCATOR)
 	public Spec hCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.HORIZONTAL_CENTERED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.hCenterLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_H_CENTRE_LOCATOR_WITH_PROVIDER)
 	public Spec hCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.HORIZONTAL_CENTERED).setLocator(null, locator));
@@ -670,28 +671,28 @@ public class Spec implements Iterable<Piece>, Serializable
 	//endregion
 	
 	//region vCenter
-	@DescriptionAttribute(text = DoSpec.vCenterAnother)
+	@DescriptionAttribute(text = R.DOSPEC_V_CENTRE_ANOTHER)
 	public Spec vCenter(@FieldParameter(name="another") String another, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.VERTICAL_CENTERED).setName(another).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.vCenterAnotherWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_V_CENTRE_ANOTHER_WITH_PROVIDER)
 	public Spec vCenter(@FieldParameter(name="another") String another, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.VERTICAL_CENTERED).setName(another));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.vCenterLocator)
+	@DescriptionAttribute(text = R.DOSPEC_V_CENTRE_LOCATOR)
 	public Spec vCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name="dist") Number dist)
 	{
 		this.list.add(new Piece(PieceKind.VERTICAL_CENTERED).setLocator(null, locator).setRange(Range.EQUAL).setA(dist.longValue()));
 		return this;
 	}
 
-	@DescriptionAttribute(text = DoSpec.vCenterLocatorWithProvider)
+	@DescriptionAttribute(text = R.DOSPEC_V_CENTRE_LOCATOR_WITH_PROVIDER)
 	public Spec vCenter(@FieldParameter(name="locator") Locator locator, @FieldParameter(name = "func") CheckProvider func)
 	{
 		this.list.add(func.provide(PieceKind.VERTICAL_CENTERED).setLocator(null, locator));

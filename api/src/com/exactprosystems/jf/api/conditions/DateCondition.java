@@ -12,11 +12,12 @@ package com.exactprosystems.jf.api.conditions;
 import com.exactprosystems.jf.api.common.Converter;
 import com.exactprosystems.jf.api.common.DateTime;
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@DescriptionAttribute(text = "Returns rows that satisfy the given date")
+@DescriptionAttribute(text = R.DATE_CONDITION_DESCRIPTION)
 public class DateCondition extends RelativeCondition  implements Serializable
 {
 	//TODO this pattern used in win side. If you want to change it, don't forget change on win side.
@@ -141,7 +142,7 @@ public class DateCondition extends RelativeCondition  implements Serializable
 					return precision; 
 				}
 			}
-			throw new Exception("Unknown precision: " + alias);
+			throw new Exception(String.format(R.DATE_CONDITION_PRECISION_BY_NAME_EXCEPTION.get(), alias));
 		}
 		
 		public static Precision byName(String alias) throws Exception

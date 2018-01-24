@@ -12,6 +12,7 @@ package com.exactprosystems.jf.api.conditions;
 import com.exactprosystems.jf.api.client.ICondition;
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.HideAttribute;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -20,8 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-@DescriptionAttribute(text = "Base class for all conditions. Conditions are special functional classes which allow to search "
-        + "different elements by desired criterias. ")
+@DescriptionAttribute(text = R.CONDITION_DESCRIPTION)
 public abstract class Condition implements ICondition, Serializable
 {
 	private static final long	serialVersionUID	= -7581472488041624617L;
@@ -90,69 +90,67 @@ public abstract class Condition implements ICondition, Serializable
 		return new StringCondition(name, "" + expectedValue);
 	}
 	
-	@DescriptionAttribute(text = "creates instance of AndCondition. You may enumerate several parameters "
-	        + "each of them should be derived from Condition class. ")
+	@DescriptionAttribute(text = R.CONDITION_AND_DESCRIPTION)
 	public static AndCondition and(Condition ... cond) throws Exception
 	{
 		return new AndCondition(cond);
 	}
 	
-    @DescriptionAttribute(text = "creates instance of OrCondition. You may enumerate several parameters "
-            + "each of them should be derived from Condition class. ")
+    @DescriptionAttribute(text = R.CONDITION_OR_DESCRIPTION)
 	public static OrCondition or(Condition ... cond) throws Exception
 	{
 		return new OrCondition(cond);
 	}
 	
-    @DescriptionAttribute(text = "creates instance of NotCondition. Parameter @cond will be passed to constructor.")
+    @DescriptionAttribute(text = R.CONDITION_NOT_DESCRIPTION)
 	public static NotCondition not(Condition cond)
 	{
 		return new NotCondition(cond);
 	}
 
-	@DescriptionAttribute(text = "creates instance of TrueCondition.")
+	@DescriptionAttribute(text = R.CONDITION_TRUE_DESCRIPTION)
 	public static TrueCondition True()
 	{
 		return new TrueCondition();
 	}
 
-	@DescriptionAttribute(text = "creates instance of FalseCondition.")
+	@DescriptionAttribute(text = R.CONDITION_FALSE_DESCRIPTION)
 	public static FalseCondition False()
 	{
 		return new FalseCondition();
 	}
 
-    @DescriptionAttribute(text = "creates instance of StringCondition. Parameter @name will be passed to constructor.")
+    @DescriptionAttribute(text = R.CONDITION_EMPTY_DESCRIPTION)
 	public static EmptyCondition empty(String name)
 	{
 	    return new EmptyCondition(name);
 	}
 	
-    @DescriptionAttribute(text = "creates instance of RegexpCondition. Parameters @name and @pattern will be passed to constructor.")
+    @DescriptionAttribute(text = R.CONDITION_REGEXP_DESCRIPTION)
     public static RegexpCondition regexp(String name, String pattern)
     {
         return new RegexpCondition(name, pattern);
     }
 	
-    @DescriptionAttribute(text = "creates instance of StringCondition. Parameters @name, @pattern and @ignoreCase will be passed to constructor.")
+    @DescriptionAttribute(text = R.CONDITION_STRING_DESCRIPTION)
     public static StringCondition string(String name, String value, boolean ignoreCase)
     {
         return new StringCondition(name, value, ignoreCase);
     }
     
-    @DescriptionAttribute(text = "creates instance of DateCondition. Parameters @name, @ralationStr, @value and @precision will be passed to constructor.")
+    @DescriptionAttribute(text = R.CONDITION_DATE_DESCRIPTION)
     public static DateCondition date(String name, String ralationStr, Date value, String precision) throws Exception
     {
         return new DateCondition(name, ralationStr, value, precision);
     }
     
-    @DescriptionAttribute(text = "creates instance of NumberCondition. Parameters @name, @relationStr and @value will be passed to constructor.")
+    @DescriptionAttribute(text = R.CONDITION_NUMBER_DESCRIPTION)
     public static NumberCondition number(String name, String relationStr, Number value) throws Exception
     {
         return new NumberCondition(name, relationStr, value);
     }
     
-    @DescriptionAttribute(text = "creates instance of ColorCondition. Parameters @name and @color will be passed to constructor.")
+    @DescriptionAttribute(text = R.CONDITION_COLOR_DESCRIPTION)
     public static ColorCondition color(String name, Color color)
     {
         return new ColorCondition(name, color);

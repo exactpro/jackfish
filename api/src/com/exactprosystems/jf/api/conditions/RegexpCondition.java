@@ -11,12 +11,13 @@ package com.exactprosystems.jf.api.conditions;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-@DescriptionAttribute(text = "Returns rows that satisfy the given regular expression")
+@DescriptionAttribute(text = R.REGEXP_CONDITION_DESCRIPTION)
 public class RegexpCondition extends Condition implements Serializable
 {
 	private static final long serialVersionUID = -1292265002640952551L;

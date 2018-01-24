@@ -11,11 +11,12 @@ package com.exactprosystems.jf.api.conditions;
 
 import com.exactprosystems.jf.api.common.DescriptionAttribute;
 import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 import java.io.Serializable;
 import java.util.Map;
 
-@DescriptionAttribute(text = "Return true if the desired value is null or empty")
+@DescriptionAttribute(text = R.EMPTY_CONDITION_DESCRIPTION)
 public class EmptyCondition extends Condition  implements Serializable
 {
 

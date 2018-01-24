@@ -10,6 +10,7 @@
 package com.exactprosystems.jf.api.client;
 
 import com.exactprosystems.jf.api.common.IContext;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.conditions.Condition;
 import com.exactprosystems.jf.api.error.client.ClientException;
 
@@ -112,7 +113,7 @@ public abstract class AbstractClient implements IClient
 	{
 		if (timeout < 0)
 		{
-			throw new Exception("timeout must be a positive number.");
+			throw new Exception(R.ABSTRACT_CLIENT_TIMEOUT_MUST_BE_POSITIVE.get());
 		}
 
 		Condition[] parametersConditions = Condition.convertToCondition(parameters);
