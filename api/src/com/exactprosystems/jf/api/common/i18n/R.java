@@ -13,14 +13,13 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
-import java.util.Locale;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 //this class contains i18n constants
 public enum R
 {
+	//region values
+
 	//region general
 	DEFAULT,
 	DRAG_N_DROP_LIST_TOOLTIP,
@@ -2809,13 +2808,14 @@ public enum R
 	COMMON_OK,
 
 
+	//endregion
 	;
 
 
 
 	public static final String RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/api/ToolResourceBundle";
 	private static final ResourceBundle bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH, new UTF8Control());
-
+	private static final String replaceSymbol = "88005553535";
 
 	/**
 	 * use this method for I18n
@@ -2832,10 +2832,10 @@ public enum R
 		return this.toString();
 	}
 
-	/*
-	private static void exportToCSV() throws IOException
+
+	private static void exportToCSV(String fileName) throws IOException
 	{
-		File file = new File("ExportR.csv");
+		File file = new File(fileName);
 		boolean result = Files.deleteIfExists(file.toPath());
 		PrintWriter pw = new PrintWriter(file);
 		StringBuilder sb = new StringBuilder();
@@ -2843,8 +2843,8 @@ public enum R
 		System.out.println("Start export!");
 		for (R r : R.values())
 		{
-			sb.append(r.toString()).append(",");
-			sb.append(r.get()).append("\n");
+			sb.append(r.name()).append("\t");
+			sb.append(r.get().replaceAll("\\n", replaceSymbol)).append("\n");
 			pw.write(sb.toString());
 			sb.setLength(0);
 		}
@@ -2852,36 +2852,45 @@ public enum R
 		System.out.println("Finish export!");
 	}
 
-	private static void importFromCSV(String fileName)
+	private static void importFromCSV(String fileName) throws IOException
 	{
 		BufferedReader br = null;
 		String line = "";
-		String cvsSplitBy = ",";
+		String cvsSplitBy = "\\t";
+		Properties prop = new Properties();
+		OutputStream output = null;
 
 		System.out.println("Start import from CSV!");
 		Set<String> currentKeys =  bundle.keySet();
 		try
 		{
+			output = new FileOutputStream("test.properties");
 			br = new BufferedReader(new FileReader(fileName));
 			while ((line = br.readLine()) != null) {
 				String[] split = line.split(cvsSplitBy);
 				String name = split[0];
 				currentKeys.remove(name);
-				String value = split[1];
+				String value = split[1].replaceAll(replaceSymbol, "\n");
+
+				prop.setProperty(name, value);
 			}
+			prop.store(output, null);
 			if(!currentKeys.isEmpty())
 			{
 				System.out.println("Missing key|values for " + currentKeys);
 			}
 		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 		finally {
 			if (br != null) {
 				try {
 					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (output != null) {
+				try {
+					output.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -2894,14 +2903,16 @@ public enum R
 	{
 		try
 		{
-			exportToCSV();
+			String fileName = "Export_R.csv";
+			exportToCSV(fileName);
+			importFromCSV(fileName);
 		}
 		catch (IOException ioe)
 		{
-			System.out.println("Exception");
+			System.out.println(ioe.getMessage());
 		}
 	}
-	*/
+
 
 	@Override
 	public String toString()
