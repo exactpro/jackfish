@@ -9,14 +9,14 @@
 
 package com.exactprosystems.jf.api.common.i18n;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 //this class contains i18n constants
 public enum R
@@ -387,7 +387,6 @@ public enum R
 	DIALOG_GET_PROPERTIES_GENERAL_DESC,
 	DIALOG_GET_PROPERTIES_OUTPUT_DESC,
 	DIALOG_GET_PROPERTIES_EXAMPLE,
-	DIALOG_GET_PROPERTIES_ADDITIONAL_DESC,
 	DIALOG_GET_PROPERTIES_APP_CONNECTION,
 	DIALOG_GET_PROPERTIES_DIALOG,
 	DIALOG_GET_PROPERTIES_SIZE,
@@ -2832,6 +2831,77 @@ public enum R
 	{
 		return this.toString();
 	}
+
+	/*
+	private static void exportToCSV() throws IOException
+	{
+		File file = new File("ExportR.csv");
+		boolean result = Files.deleteIfExists(file.toPath());
+		PrintWriter pw = new PrintWriter(file);
+		StringBuilder sb = new StringBuilder();
+
+		System.out.println("Start export!");
+		for (R r : R.values())
+		{
+			sb.append(r.toString()).append(",");
+			sb.append(r.get()).append("\n");
+			pw.write(sb.toString());
+			sb.setLength(0);
+		}
+		pw.close();
+		System.out.println("Finish export!");
+	}
+
+	private static void importFromCSV(String fileName)
+	{
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+
+		System.out.println("Start import from CSV!");
+		Set<String> currentKeys =  bundle.keySet();
+		try
+		{
+			br = new BufferedReader(new FileReader(fileName));
+			while ((line = br.readLine()) != null) {
+				String[] split = line.split(cvsSplitBy);
+				String name = split[0];
+				currentKeys.remove(name);
+				String value = split[1];
+			}
+			if(!currentKeys.isEmpty())
+			{
+				System.out.println("Missing key|values for " + currentKeys);
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		System.out.println("Finish import from CSV!");
+	}
+
+	public static void main(String[] str)
+	{
+		try
+		{
+			exportToCSV();
+		}
+		catch (IOException ioe)
+		{
+			System.out.println("Exception");
+		}
+	}
+	*/
 
 	@Override
 	public String toString()
