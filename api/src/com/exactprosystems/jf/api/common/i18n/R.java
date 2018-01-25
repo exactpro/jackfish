@@ -2815,7 +2815,7 @@ public enum R
 
 	public static final String RESOURCE_BUNDLE_PATH = "com/exactprosystems/jf/api/ToolResourceBundle";
 	private static final ResourceBundle bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH, new UTF8Control());
-	private static final String replaceSymbol = "88005553535";
+	private static final String replaceSymbol = " \\\\n";
 
 	/**
 	 * use this method for I18n
@@ -2857,40 +2857,27 @@ public enum R
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = "\\t";
-		Properties prop = new Properties();
-		OutputStream output = null;
+		File result = new File("new_bundle.properties");
+		boolean delete = Files.deleteIfExists(result.toPath());
+		OutputStream out = new FileOutputStream(result);
+		BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(out, "8859_1"));
 
 		System.out.println("Start import from CSV!");
-		Set<String> currentKeys =  bundle.keySet();
 		try
 		{
-			output = new FileOutputStream("test.properties");
 			br = new BufferedReader(new FileReader(fileName));
 			while ((line = br.readLine()) != null) {
 				String[] split = line.split(cvsSplitBy);
-				String name = split[0];
-				currentKeys.remove(name);
-				String value = split[1].replaceAll(replaceSymbol, "\n");
-
-				prop.setProperty(name, value);
+				bf.write(split[0] + "=" + split[1]);
+				bf.newLine();
 			}
-			prop.store(output, null);
-			if(!currentKeys.isEmpty())
-			{
-				System.out.println("Missing key|values for " + currentKeys);
-			}
+			bf.flush();
+			bf.close();
 		}
 		finally {
 			if (br != null) {
 				try {
 					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (output != null) {
-				try {
-					output.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -2903,7 +2890,7 @@ public enum R
 	{
 		try
 		{
-			String fileName = "Export_R.csv";
+			String fileName = "JF_export_R.csv";
 			exportToCSV(fileName);
 			importFromCSV(fileName);
 		}
