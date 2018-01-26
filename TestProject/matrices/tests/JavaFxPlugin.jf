@@ -200,3 +200,70 @@ DialogMove;;;
     #EndStep
 
 
+#TestCase;#Kind;#Depends;#For
+Application get properties;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Let
+        x;100
+
+        #Id;#Let
+        y;200
+
+        #Id;#Let
+        width;555
+
+        #Id;#Let
+        height;555
+
+        #Id;#Action;Position;Size;$AppConnection
+        APPPAR2;ApplicationGetProperties;;;appCon
+
+        #Id;#Action;$Position;$Size;$Dialog;$AppConnection
+        DLGGP1;DialogGetProperties;;;'Main';appCon
+
+        #Assert;#Message
+        APPPAR2.Out.Position.getX() == DLGGP1.Out.Position.getX() && APPPAR2.Out.Position.getY() == DLGGP1.Out.Position.getY();'Wrong position!'
+
+        #Assert;#Message
+        APPPAR2.Out.Size.getWidth() == DLGGP1.Out.Size.getWidth() && APPPAR2.Out.Size.getHeight() == DLGGP1.Out.Size.getHeight();'Wrong size'
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Main';x;y;appCon
+
+        #Action;$Height;$Width;$Dialog;$AppConnection
+        DialogResize;height;width;'Main';appCon
+
+        #Id;#Action;#Assert;Position;Size;$AppConnection
+        APPPAR11;ApplicationGetProperties;This.Result == Result.Passed && This.Out.Size.getWidth() == width && This.Out.Size.getHeight() == height  && This.Out.Position.getX() == x && This.Out.Position.getY() == y;;;appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;Position;Size;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Id;#Action;#Assert;Position;$AppConnection
+        APPPAR3;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;jvdfvjkvhfjh;appCon
+
+        #Id;#Action;#Assert;Title;$AppConnection
+        APPPAR4;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;;any
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
