@@ -85,9 +85,22 @@ public class FxRemoteApplication extends RemoteApplication
 		{
 			if (this.isInit)
 			{
+				Stage mainStage = UtilsFx.mainStage();
 				if (Str.areEqual(name, FxAppFactory.propertyTitle))
 				{
-					return UtilsFx.mainStage().getTitle();
+					return mainStage.getTitle();
+				}
+				if (Str.areEqual(name, FxAppFactory.propertyPosition))
+				{
+					int x = (int) mainStage.getX();
+					int y = (int) mainStage.getY();
+					return new Point(x, y);
+				}
+				if (Str.areEqual(name, FxAppFactory.propertySize))
+				{
+					int width = (int) mainStage.getWidth();
+					int height = (int) mainStage.getHeight();
+					return new Dimension(width, height);
 				}
 			}
 			return null;

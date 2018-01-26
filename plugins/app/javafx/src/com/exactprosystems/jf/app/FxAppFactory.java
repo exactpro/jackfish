@@ -49,6 +49,12 @@ public class FxAppFactory extends AbstractApplicationFactory
 	@PluginFieldDescription(parameter = "Title", description = R.JAVAFX_PLUGIN_TITLE, example = "'Title'")
 	public static final String propertyTitle = "Title";
 
+	@PluginFieldDescription(parameter = "Size", description = R.JAVAFX_PLUGIN_SIZE, example = "'Size'")
+	public static final String propertySize = "Size";
+
+	@PluginFieldDescription(parameter = "Position", description = R.JAVAFX_PLUGIN_POSITION, example = "'Position'")
+	public static final String propertyPosition = "Position";
+
 	private static String[] empty = {};
 
 	private static PluginInfo info;
@@ -119,7 +125,7 @@ public class FxAppFactory extends AbstractApplicationFactory
 		{
 			case LOAD: return new String[]{jreExecName, jreArgsName, logLevel, trimTextName};
 			case START: return new String[] {jarName, argsName, mainClassName};
-			case GET_PROPERTY: return new String[] {propertyTitle};
+			case GET_PROPERTY: return new String[] {propertyTitle, propertyPosition, propertySize};
 			default: return empty;
 		}
 	}

@@ -133,7 +133,10 @@ public class Section implements ISection, Mutable
 			{
 				try
 				{
-					((AbstractControl) control).set(AbstractControl.idName, "self");
+					if(Str.IsNullOrEmpty(((AbstractControl) control).getID()))
+					{
+						((AbstractControl) control).set(AbstractControl.idName, "self");
+					}
 				}
 				catch (Exception ignored)
 				{}
