@@ -41,6 +41,9 @@ Dialog get properties;Never;;
         #Action;$Height;$Width;$Dialog;$AppConnection
         DialogResize;height;width;'Dialog';appCon
 
+        #Action;$Time
+        Wait;3000
+
         #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
         APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size.getWidth() == width && This.Out.Size.getWidth() == height  && This.Out.Position.getX() == x && This.Out.Position.getY() == y;;;'Dialog';appCon
 
@@ -181,6 +184,9 @@ DialogMove;;;
         #Action;$Dialog;$X;$Y;$AppConnection
         DialogMove;'Dialog';newX;newY;appCon
 
+        #Action;$Time
+        Wait;3000
+
         #Id;#Action;$Position;$Dialog;$AppConnection
         APPPAR6;DialogGetProperties;;'Dialog';appCon
 
@@ -223,23 +229,26 @@ Application get properties;;;
         #Id;#Let
         height;555
 
+        #Action;$Time
+        Wait;3000
+
         #Id;#Action;Position;Size;$AppConnection
         APPPAR2;ApplicationGetProperties;;;appCon
 
         #Id;#Action;$Position;$Size;$Dialog;$AppConnection
         DLGGP1;DialogGetProperties;;;'Main';appCon
 
-        #Assert;#Message
-        APPPAR2.Out.Position.getX() == DLGGP1.Out.Position.getX() && APPPAR2.Out.Position.getY() == DLGGP1.Out.Position.getY();'Wrong position!'
-
-        #Assert;#Message
-        APPPAR2.Out.Size.getWidth() == DLGGP1.Out.Size.getWidth() && APPPAR2.Out.Size.getHeight() == DLGGP1.Out.Size.getHeight();'Wrong size'
+        #Id;#Action;#Assert;Position;Size;$AppConnection
+        APPPAR2;ApplicationGetProperties;This.Out.Position.getX() == DLGGP1.Out.Position.getX() && This.Out.Position.getY() == DLGGP1.Out.Position.getY() && This.Out.Size.getWidth() == DLGGP1.Out.Size.getWidth() && This.Out.Size.getHeight() == DLGGP1.Out.Size.getHeight();;;appCon
 
         #Action;$Dialog;$X;$Y;$AppConnection
         DialogMove;'Main';x;y;appCon
 
         #Action;$Height;$Width;$Dialog;$AppConnection
         DialogResize;height;width;'Main';appCon
+
+        #Action;$Time
+        Wait;3000
 
         #Id;#Action;#Assert;Position;Size;$AppConnection
         APPPAR11;ApplicationGetProperties;This.Result == Result.Passed && This.Out.Size.getWidth() == width && This.Out.Size.getHeight() == height  && This.Out.Position.getX() == x && This.Out.Position.getY() == y;;;appCon
