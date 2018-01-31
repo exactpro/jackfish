@@ -636,13 +636,20 @@ public class DictionaryFx extends GuiDictionary
 					}
 
 					Collection<IControl> testElements = window.getControls(section);
-					if (testElements.isEmpty())
+					List<IControl> listControls = new ArrayList<IControl>();
+					testElements.forEach(listControls::add);
+					if (listControls.isEmpty())
 					{
 						return;
 					}
 					Set<ControlKind> supported = DictionaryFx.this.applicationConnector.getAppConnection().getApplication().getFactory().supportedControlKinds();
 					for (IControl element : testElements)
 					{
+						DictionaryFx.this.testingElements.add(new ControlWithState(element, "", DictionaryFxController.Result.NOT_ALLOWED));
+					}
+					for (int i = 0; i < listControls.size(); i++)
+					{
+						IControl element = listControls.get(i);
 						try
 						{
 							if (this.isCancelled())
@@ -651,7 +658,7 @@ public class DictionaryFx extends GuiDictionary
 							}
 							if (!supported.contains(element.getBindedClass()))
 							{
-								DictionaryFx.this.testingElements.add(new ControlWithState(element, R.DICTIONARY_FX_NOT_ALLOWED.get(), DictionaryFxController.Result.NOT_ALLOWED));
+								DictionaryFx.this.testingElements.set(i, new ControlWithState(element, R.DICTIONARY_FX_NOT_ALLOWED.get(), DictionaryFxController.Result.NOT_ALLOWED));
 								continue;
 							}
 							Locator ownerLocator = Optional.ofNullable(window.getOwnerControl(element))
@@ -669,11 +676,11 @@ public class DictionaryFx extends GuiDictionary
 							{
 								result = DictionaryFxController.Result.FAILED;
 							}
-							DictionaryFx.this.testingElements.add(new ControlWithState(element, Integer.toString(all.size()), result));
+							DictionaryFx.this.testingElements.set(i, new ControlWithState(element, Integer.toString(all.size()), result));
 						}
 						catch (Exception e)
 						{
-							DictionaryFx.this.testingElements.add(new ControlWithState(element, R.COMMON_ERROR.get(), DictionaryFxController.Result.FAILED));
+							DictionaryFx.this.testingElements.set(i, new ControlWithState(element, R.COMMON_ERROR.get(), DictionaryFxController.Result.FAILED));
 						}
 					}
 				});

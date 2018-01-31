@@ -128,6 +128,7 @@ public class DictionaryFxController extends AbstractDocumentController<Dictionar
 		super.model.currentElements().setOnAddAllListener((integer, collection) -> this.navigationController.displayElements(collection));
 		super.model.currentElements().setOnChangeListener((integer, collection) -> this.navigationController.clearElements());
 		super.model.testingControls().setOnAddListener((integer, controlWithState) -> this.navigationController.displayTestingControls(controlWithState));
+		super.model.testingControls().setOnSetListener((integer, controlWithState) -> this.navigationController.displayTestingControls(controlWithState));
 
 		//endregion
 
