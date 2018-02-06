@@ -5,7 +5,7 @@ The file with test scenarios has the following csv format:
 Login
 
 	#Id;#Action;#AppId;#Browser;#URL
-	APPSTR1;ApplicationStart;'EC';'Firefox';'https://www.google.com'
+	APPSTR1;ApplicationStart;'EC';'Firefox';'https://some.site.com'
 
 	#Global;#Action;#AppCon;#User;#Password
 	1;Vars;APPSTR1.Out;user;password
