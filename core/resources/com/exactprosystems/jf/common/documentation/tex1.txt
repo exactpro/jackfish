@@ -59,7 +59,7 @@
 %%color for code examples
 \definecolor{codecolor}{RGB}{0, 100, 0}
 \definecolor{ExactLinkColor}{RGB}{15, 15, 189}
-\definecolor{ExactColor}{RGB}{206, 105, 69}
+\definecolor{ExactColor}{RGB}{15, 15, 189}
 
 \usepackage{sectsty}
 \sectionfont{\fontsize{25}{10}\selectfont}

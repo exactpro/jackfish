@@ -110,7 +110,7 @@ public class DocumentationBuilder
         addTable(help, "\\Abbreviations",           false,  table3, new int[] { 50, 50 },  evaluator);
         addTextLine(help, newPage);
         
-        addContent(help, "{{*Table of contenst*}}", new Content());
+        addContent(help, "{{*Table of contents*}}", new Content());
         addTextLine(help, newPage);
 
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
