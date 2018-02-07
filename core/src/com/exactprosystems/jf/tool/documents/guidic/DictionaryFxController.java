@@ -83,6 +83,8 @@ public class DictionaryFxController extends AbstractDocumentController<Dictionar
 	{
 		super.init(model, customTab);
 
+		this.mainGridPane.getChildren().clear();
+
 		this.navigationController = Common.loadController(NavigationController.class.getResource("Navigation.fxml"));
 		this.navigationController.init(super.model, this, pane -> this.mainGridPane.add(pane, 0, 0));
 
