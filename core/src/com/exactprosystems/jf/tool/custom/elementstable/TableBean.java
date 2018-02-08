@@ -9,6 +9,7 @@
 
 package com.exactprosystems.jf.tool.custom.elementstable;
 
+import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.documents.guidic.controls.AbstractControl;
 import org.w3c.dom.Node;
@@ -91,5 +92,10 @@ public class TableBean
 	public void setOption(TableBean option)
 	{
 		this.option = option;
+	}
+
+	public ControlKind getControlKind()
+	{
+		return this.abstractControl.getBindedClass();
 	}
 }
