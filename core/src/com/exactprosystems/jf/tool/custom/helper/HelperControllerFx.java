@@ -95,7 +95,9 @@ public class HelperControllerFx implements Initializable, ContainingParent
 				new MenuItem(Str.class.getSimpleName()),
 				new MenuItem(Sys.class.getSimpleName()),
 				new MenuItem(Do.class.getSimpleName()),
-				new MenuItem(DoSpec.class.getSimpleName())
+				new MenuItem(DoSpec.class.getSimpleName()),
+				new MenuItem(Zip.class.getSimpleName()),
+				new MenuItem(ProcessTools.class.getSimpleName())
 		);
 		this.smbClass.getItems().forEach(item -> item.setOnAction(event -> this.styleClassedTextArea.appendText(item.getText())));
 	}

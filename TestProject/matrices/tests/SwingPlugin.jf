@@ -377,3 +377,61 @@ Appliaction connect;;;
     #EndStep
 
 
+#TestCase;#Kind;#Depends;#For
+Do;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Off;#Step;#Kind;#For;#Depends
+    Positive;1;;;;
+        #Id;#Global;#Let
+        cell1;1;'tr_1_td_1'
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;This.Result == Result.Passed && This.Out != '';Do.use(0,0,new Locator().kind(ControlKind.Label).text(cell1).visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL2;DialogFill;This.Result == Result.Passed && This.Out != '';Do.use(0, 0, 'cell1').getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL3;DialogFill;This.Result == Result.Passed && This.Out != '';Do.use(0,new Locator().kind(ControlKind.Label).text(cell1).visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL4;DialogFill;This.Result == Result.Passed && This.Out != '';Do.use(0, 'cell1').getValue();'Main';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0,0,new Locator().kind(ControlKind.Label).text('any_wrong_text').visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL2;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0, -1, new Locator().kind(ControlKind.Label).text('tr_1_td_1').visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL3;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0,0, 'any_wrong_id_without_locator').getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL4;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0, -1, 'any_wrong_id_without_locator').getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL5;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0, new Locator().kind(ControlKind.Label).text('any_wrong_text').visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use( -1, 'any_wrong_id_without_locator').getValue();'Main';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+

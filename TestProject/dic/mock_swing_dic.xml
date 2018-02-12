@@ -57,6 +57,7 @@
             <label id="selectLabel" owner="owner" name="selectLabel"/>
             <textBox id="protocolText" uid="" owner="" name="protocolText"/>
             <button id="protocolClear" uid="" owner="" name="protocolClear"/>
+            <label id="cell1" owner="owner" text="tr_1_td_1" visibility="Visible"/>
         </run>
         <onClose/>
         <close/>

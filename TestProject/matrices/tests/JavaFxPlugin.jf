@@ -276,3 +276,106 @@ Application get properties;;;
     #EndStep
 
 
+#TestCase;#Kind;#Depends;#For
+Do;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;TextBox;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;Do.script('any string');'Main';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;FeatureNotSupported;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    ;;;
+        #Id;#Action;#Assert;$AppConnection;$AppId
+        APPSTR1;ApplicationConnectTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;appCon;'JAVAFX'
+
+        #Action;$Time
+        Wait;1000
+
+        #Action;#Assert;$AppConnection
+        ApplicationRefresh;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSW1;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;#Assert;$Perform;$AppConnection
+        DLGALRT1;DialogAlert;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;PerformKind.Accept;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Action;#Assert;$AppConnection
+        DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Action;#Assert;$AppConnection
+        ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Action;#Assert;$Navigate;$AppConnection
+        ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;NavigateKind.BACK;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;#Assert;$Text;$Perform;$AppConnection
+        DLGALRT2;DialogAlert;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;'any text';PerformKind.Accept;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;#Assert;$AppConnection
+        APPCW1;ApplicationCloseWindow;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;3000
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
