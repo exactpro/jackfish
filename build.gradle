@@ -64,7 +64,7 @@ dependencies {
 }
 
 rootProject.ext {
-	jfVersion = '4.5.11'
+	jfVersion = '4.5.12'
 	version = jfVersion + '.' + (System.getProperty('revision') ?: 'local_build')
 	println version
 
