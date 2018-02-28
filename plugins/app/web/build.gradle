@@ -14,7 +14,7 @@ archivesBaseName = 'jackfish-app-web'
 
 dependencies {
 	compile project(':api')
-	compile ('org.seleniumhq.selenium:selenium-java:3.8.1') {
+	compile ('org.seleniumhq.selenium:selenium-java:3.9.1') {
 		exclude group: 'xerces'
 	}
 	compile ('com.codeborne:phantomjsdriver:1.4.3')	{

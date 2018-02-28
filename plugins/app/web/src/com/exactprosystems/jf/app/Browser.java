@@ -120,33 +120,21 @@ public enum Browser
 				{
 					throw new Exception(R.BROWSER_SET_IE_PATH_EXCEPTION.get());
 				}
+
+				InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+				ieOptions.setCapability("ie.enableFullPageScreenshot", false);
+				ieOptions.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
+				if(isDriverLogging)
+				{
+					ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
+					ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
+				}
 				if (usePrivateMode)
 				{
-					CustomInternetExplorerOptions ieOptions = new CustomInternetExplorerOptions();
-					ieOptions.setCapability("ie.enableFullPageScreenshot", false);
-					ieOptions.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
-					if(isDriverLogging)
-					{
-						ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
-						ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
-					}
 					ieOptions.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
 					ieOptions.setCapability(InternetExplorerDriver.IE_SWITCHES, "-private");
-					return new CustomInternetExplorerDriver(ieOptions);
 				}
-				else
-				{
-					InternetExplorerOptions ieOptions = new InternetExplorerOptions();
-					ieOptions.setCapability("ie.enableFullPageScreenshot", false);
-					ieOptions.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
-					if(isDriverLogging)
-					{
-						ieOptions.setCapability(InternetExplorerDriver.LOG_FILE, logFile("ieDriver.log"));
-						ieOptions.setCapability(InternetExplorerDriver.LOG_LEVEL, "DEBUG");
-					}
-					return new InternetExplorerDriver(ieOptions);
-				}
-
+				return new InternetExplorerDriver(ieOptions);
 
 			case OPERA:
 				return new OperaDriver();
