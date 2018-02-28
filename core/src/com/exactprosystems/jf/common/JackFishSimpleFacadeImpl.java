@@ -8,24 +8,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.exactprosystems.jf.common;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.exactprosystems.jf.api.common.i18n.R;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionsList;
 import com.exactprosystems.jf.actions.app.ApplicationConnectTo;
 import com.exactprosystems.jf.actions.app.ApplicationStart;
 import com.exactprosystems.jf.actions.app.ApplicationStop;
+import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.common.NullParameterException;
 import com.exactprosystems.jf.common.report.ContextHelpBuilder;
 import com.exactprosystems.jf.common.report.ReportBuilder;
@@ -37,12 +25,22 @@ import com.exactprosystems.jf.documents.config.Context;
 import com.exactprosystems.jf.documents.matrix.parser.Parameter;
 import com.exactprosystems.jf.documents.matrix.parser.Parameters;
 import com.exactprosystems.jf.documents.matrix.parser.items.ActionItem;
+import org.apache.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JackFishSimpleFacadeImpl implements IJackFishSimpleFacade {
 
 	private static final Parameter assertBool = new Parameter("assertBool", null);
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass().getName() + "@" + Integer.toHexString(hashCode()));
+	private final Logger logger = Logger.getLogger(this.getClass().getName() + "@" + Integer.toHexString(hashCode()));
 
 	// allow to have only one instance of JF
 	private static final JackFishSimpleFacadeImpl INSTANCE = new JackFishSimpleFacadeImpl();
