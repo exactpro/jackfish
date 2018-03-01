@@ -119,7 +119,9 @@ Shift+Ctrl+Z</attr>
         <self>
             <any id="Self" xpath=".//MenuBar"/>
         </self>
-        <onOpen/>
+        <onOpen>
+            <wait id="wait" owner="Self" ref="menuFile" addition="WaitToAppear" timeout="10000"/>
+        </onOpen>
         <run>
             <button id="menuFile" uid="menuFile" owner="self" rows="" header="" columns="">
                 <info>
@@ -183,7 +185,9 @@ Shift+Ctrl+Z</attr>
         <self>
             <any id="self" xpath=".//Pane[@class=&amp;quot;root popup&amp;quot;]"/>
         </self>
-        <onOpen/>
+        <onOpen>
+            <wait id="wait" owner="self" ref="openProject" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
         <run>
             <any id="openProject" xpath=".//MenuItemContainer[contains(.,&amp;quot;Open project&amp;quot;)]" owner="self" rows="" header="" columns="">
                 <info>
@@ -1763,6 +1767,36 @@ Shift+Ctrl+Z</attr>
         <self/>
         <onOpen/>
         <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="NewDialog">
+        <self>
+            <panel id="self" uid="" xpath=".//GridPane[@id=&amp;quot;mainGridPane&amp;quot;]/HBox"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="btnWizardElement" xpath=".//HBox[@id=&amp;quot;hBoxElement&amp;quot;]/WizardButton" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[2]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton</xpath>
+                    <rectangle x1="0.35218783351120597" y1="0.34440753045404204" x2="0.36926360725720386" y2="0.3798449612403101"/>
+                    <node>WizardButton</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnWizard</attr>
+                    <attr name="tooltip">Wizards</attr>
+                </info>
+            </button>
+            <button id="btnWizardWindow" xpath=".//HBox[@id=&amp;quot;hBoxWindow&amp;quot;]/WizardButton" owner="Self" rows="" header="" columns="">
+                <info>
+                    <xpath>/SplitPane/Content[1]/ScrollPane/com.sun.javafx.scene.control.skin.ScrollPaneSkin_3/com.sun.javafx.scene.control.skin.ScrollPaneSkin_4/GridPane/HBox/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1[1]/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/com.exactprosystems.jf.tool.custom.BorderWrapper_StrokeBorder_1/VBox/HBox/WizardButton</xpath>
+                    <rectangle x1="0.09498399146211313" y1="0.34440753045404204" x2="0.112059765208111" y2="0.3798449612403101"/>
+                    <node>WizardButton</node>
+                    <attr name="class">button transparentBackground</attr>
+                    <attr name="id">btnWizard</attr>
+                    <attr name="tooltip">Wizards</attr>
+                </info>
+            </button>
+        </run>
         <onClose/>
         <close/>
     </window>

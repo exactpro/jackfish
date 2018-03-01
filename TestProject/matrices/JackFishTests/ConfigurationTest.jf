@@ -1,3 +1,9 @@
 #TestCase;#Kind;#Depends;#For
-Test case;Never;;
+startApplication;Never;;
+    #Id;#Call;args
+    CALL_1;jf.startApp;
+
+    #Id;#Call;appCon
+    CALL_2;jf.stopApp;CALL_1
+
 
