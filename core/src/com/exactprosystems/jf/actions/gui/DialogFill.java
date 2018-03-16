@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.exactprosystems.jf.actions.gui.Helper.cutMessage;
 import static com.exactprosystems.jf.actions.gui.Helper.message;
 
 @ActionAttribute(
@@ -264,7 +265,7 @@ public class DialogFill extends AbstractAction
 				else
 				{
 					super.setErrors(errorsValue);
-					super.setError(msg.length() > 35 ? msg.split(" ")[0] + msg.substring(0, 35) + " ... See log for more details" : msg, errorKind);
+					super.setError(cutMessage(msg), errorKind);
 					return;
 				}
 			}
@@ -273,10 +274,12 @@ public class DialogFill extends AbstractAction
 				logger.error(e.getMessage(), e);
 				ErrorKind errorKind = ErrorKind.EXCEPTION;
 				String msg = message(id, window, run, control, null, e.getMessage());
-
-				if (e.getCause() instanceof IErrorKind)
+				if (e.getCause() != null)
 				{
-					errorKind = ((IErrorKind) e.getCause()).getErrorKind();
+					if (e.getCause() instanceof IErrorKind)
+					{
+						errorKind = ((IErrorKind) e.getCause()).getErrorKind();
+					}
 					msg = message(id, window, run, control, null, e.getCause().getMessage());
 				}
 
@@ -288,7 +291,7 @@ public class DialogFill extends AbstractAction
 				else
 				{
 					super.setErrors(errorsValue);
-					super.setError(msg.length() > 35 ? msg.split(" ")[0] + msg.substring(0, 35) + " ... See log for more details" : msg, errorKind);
+					super.setError(cutMessage(msg), errorKind);
 					return;
 				}
 			}

@@ -87,6 +87,10 @@ class Helper
                 + msg;
 	}
 
+	public static String cutMessage(String msg) {
+		return msg.length() > 150 ? msg.substring(0, 150) + " ... See log for more details" : msg;
+	}
+
 	/**
 	 * @return IWindow from the passed dictionary by passed window name
 	 * @throws DialogNotFoundException if dialog not found in the dictionary by passed name
