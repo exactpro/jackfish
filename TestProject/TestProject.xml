@@ -70,7 +70,7 @@
         <name>WEB_Unix</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver-linux-2.33-x64.</value>
+            <value>unix/chromedriver-linux-2.37-x64.</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -122,7 +122,7 @@
         <name>WEB_Windows</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>win/chromedriver-win-2.33-x86.exe</value>
+            <value>win/chromedriver-win-2.37-x86.exe</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
