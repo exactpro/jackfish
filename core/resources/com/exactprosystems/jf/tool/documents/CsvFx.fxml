@@ -23,7 +23,7 @@
 				<text>
 					<R fx:constant="CSV_FX_DELIMITER"/>
 				</text>
-			</Label>>
+			</Label>
 			<ComboBox id="cbDelimiter" fx:id="cbDelimiter" onAction="#setDelimiter"/>
 		</ToolBar>
 	</top>
