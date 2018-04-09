@@ -598,7 +598,7 @@ public enum OperationKind
 		@Override
 		protected String formulaTemplate(Part part)
 		{
-			return ".click()";
+			return ".click(" + part.mouse + ")";
 		}
 
 		@Override
@@ -696,7 +696,7 @@ public enum OperationKind
 		@Override
 		protected String formulaTemplate(Part part)
 		{
-			return ".toogle(%6$b)";
+			return ".toggle(%6$b)";
 		}
 
 		@Override
