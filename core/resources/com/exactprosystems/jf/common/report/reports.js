@@ -1,10 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2009-2017, Exactpro Systems
-// Quality Assurance & Related Software Development for Innovative Trading Systems.
-// London Stock Exchange Group.
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
 // All rights reserved.
 // This is unpublished, licensed software, confidential and proprietary
-// information which is the property of Exactpro Systems or its licensors.
+// information which is the property of Exactpro Systems LLC or its licensors.
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function(){
 	var comment = function(arr, func) {
