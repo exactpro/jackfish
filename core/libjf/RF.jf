@@ -380,7 +380,7 @@ RF;RegressionFramework
                 ~;"    ON d.scenario_id = s.id "
                 ~;"    WHERE s.id in ("
                 ~;"        SELECT id FROM scenarios "
-                ~;"        WHERE  id in ("
+                ~;"        WHERE  run_id in ("
                 ~;"             SELECT run_id "
                 ~;"             FROM scenarios AS s "
                 ~;"             LEFT JOIN runs AS r "
