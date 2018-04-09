@@ -598,7 +598,7 @@ public enum OperationKind
 		@Override
 		protected String formulaTemplate(Part part)
 		{
-			return ".click(" + part.mouse + ")";
+			return ".click(" + (part.mouse == MouseAction.LeftClick ? "" : part.mouse.toString()) + ")";
 		}
 
 		@Override
