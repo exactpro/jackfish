@@ -161,12 +161,13 @@ public class SwingRemoteApplication extends RemoteApplication
 	protected int runDerived(Map<String, String> args) throws Exception
 	{
 		String mainClass = args.get(SwingAppFactory.mainClassName);
-		if (Str.IsNullOrEmpty(mainClass))
+		if (Str.IsNullOrEmpty(mainClass) || mainClass.equals("null"))
 		{
 			throw new NullParameterException("MainClass");
 		}
+
 		String jar = args.get(SwingAppFactory.jarName);
-		if (Str.IsNullOrEmpty(jar))
+		if (Str.IsNullOrEmpty(jar) || jar.equals("null"))
 		{
 			throw new NullParameterException("Jar");
 		}

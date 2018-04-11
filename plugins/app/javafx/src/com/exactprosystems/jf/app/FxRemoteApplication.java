@@ -131,13 +131,13 @@ public class FxRemoteApplication extends RemoteApplication
 	protected int runDerived(Map <String, String> args) throws Exception
 	{
 		String mainClass = args.get(FxAppFactory.mainClassName);
-		if (Str.IsNullOrEmpty(mainClass))
+		if (Str.IsNullOrEmpty(mainClass) || mainClass.equals("null"))
 		{
 			throw new NullParameterException("MainClass");
 		}
 
 		String jarName = args.get(FxAppFactory.jarName);
-		if (Str.IsNullOrEmpty(jarName))
+		if (Str.IsNullOrEmpty(jarName) || jarName.equals("null"))
 		{
 			throw new NullParameterException("Jar");
 		}
