@@ -1166,7 +1166,7 @@ public class LayoutWizard extends AbstractWizard
 			VBox.setVgrow(sp, Priority.ALWAYS);
 
 			Button btnCheck = new Button(R.WIZARD_CHECK.get());
-			Button btnSave = new Button(R.WIZARD_CHECK.get());
+			Button btnSave = new Button(R.WIZARD_SAVE.get());
 			HBox checkBox = new HBox();
 			checkBox.setAlignment(Pos.CENTER_RIGHT);
 			checkBox.getChildren().add(btnCheck);
