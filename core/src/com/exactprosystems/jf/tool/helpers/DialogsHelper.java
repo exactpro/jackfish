@@ -742,7 +742,6 @@ public abstract class DialogsHelper
 			report.reportStarted(null, VersionInfo.getVersion());
 			help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
 			report.reportFinished(0, 0, null, null);
-			//report.printOut();
 			displayHelp(report.getContent());
 		}
 		catch (Exception e)

@@ -86,7 +86,7 @@ public class HelpBuilder extends ReportBuilder {
 	@Override
 	protected String decorateLink(String name, String link)
 	{
-		return String.format("<a href='#%s'>%s</a>", name, link);
+		return String.format("<a href='#MoveTo%s'>%s</a>", name, link);
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class HelpBuilder extends ReportBuilder {
 	@Override
 	protected void putMark(ReportWriter writer, String mark) throws IOException
 	{
-		writer.newline().fwrite("<div id=\"%s\"></div>", mark).newline();
+		writer.newline().fwrite("<div id=\"MoveTo%s\"></div>", mark).newline();
 	}
 
 	@Override

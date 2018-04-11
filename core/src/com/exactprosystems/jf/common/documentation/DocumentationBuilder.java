@@ -455,7 +455,7 @@ public class DocumentationBuilder
             String.format("<a href='#'>%s<span class='caret'></span></a>\n</li>\n", s) +
             String.format("<ul class='nav nav-pills nav-stacked deepNav navChild' id='%s_child'>\n",s);
         } else {
-            return String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n", s, s);
+            return String.format("<li role='presentation'>\n<a href='#MoveTo%s'>%s</a>\n", s, s);
         }
     }
 
@@ -483,7 +483,7 @@ public class DocumentationBuilder
                     .replace("{{2", "").replace("2}}", "");
 
             content.add(new ContentItem(
-                    String.format("<li role='presentation'>\n<a href='#%s'>%s</a>\n", mark.replaceAll("\\s+", "").toLowerCase(), mark))
+                    String.format("<li role='presentation'>\n<a href='#MoveTo%s'>%s</a>\n", mark.replaceAll("\\s+", "").toLowerCase(), mark))
             );
         }
     }
