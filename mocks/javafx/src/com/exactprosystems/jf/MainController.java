@@ -163,6 +163,7 @@ public class MainController implements Initializable
 					click.setOnAction(e ->
 					{
 						printColors();
+						CentralLabel.setText("ColorTable_" + item + "_click");
 					});
 					pane.setRight(click);
 					setGraphic(pane);

@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
-  ~ www.exactpro.com
-  ~ Build Software to Test Software
-  ~
-  ~ All rights reserved.
-  ~ This is unpublished, licensed software, confidential and proprietary
-  ~ information which is the property of Exactpro Systems LLC or its licensors.
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
 <dictionary>
     <window name="Main">
         <self>
@@ -68,6 +58,8 @@
             <textBox id="protocolText" uid="Protocol" owner="" name=""/>
             <button id="protocolClear" uid="ProtocolClear" owner="" name=""/>
             <button id="slider_bar" xpath=".//com.sun.javafx.scene.control.skin.SliderSkin_1[contains(@class,&amp;quot;thumb&amp;quot;)]" owner="owner"/>
+            <button id="cell" owner="owner" text="Click"/>
+            <table id="colorTable" xpath="./BorderPane/VBox/TableView[contains(@class,&amp;quot;table-view&amp;quot;)]" owner="owner"/>
         </run>
         <onClose/>
         <close/>

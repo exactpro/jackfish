@@ -1,13 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2009-2018, Exactpro Systems LLC
 // www.exactpro.com
 // Build Software to Test Software
-//
+// 
 // All rights reserved.
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems LLC or its licensors.
-////////////////////////////////////////////////////////////////////////////////
-
+// //////////////////////////////////////////////////////////////////////////////
 #TestCase;#Kind;#Depends;#For
 Prepare;;;
     #Id;#Global;#Let
@@ -287,14 +286,58 @@ Do;;;
 
     #EndStep
 
+    // x - column
+    // y - row
     #Id;#Step;#Kind;#For;#Depends
     Positive;;;;
+        #Id;#Action;colorTable;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;Do.use(1,0,new Locator().kind(ControlKind.Button).text('Click').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;centralLabel;$Dialog;$AppConnection
+        DLGFLL5;DialogFill;This.Result == Result.Passed && This.Out.centralLabel == 'ColorTable_2_click';Do.getValue();'Main';appCon
+
+        #Id;#Action;colorTable;$Dialog;$AppConnection
+        DLGFLL2;DialogFill;Do.use(1, 1, 'cell').click();'Main';appCon
+
+        #Id;#Action;#Assert;centralLabel;$Dialog;$AppConnection
+        DLGFLL6;DialogFill;This.Result == Result.Passed && This.Out.centralLabel == 'ColorTable_4_click';Do.getValue();'Main';appCon
+
+        #Id;#Action;colorTable;$Dialog;$AppConnection
+        DLGFLL3;DialogFill;Do.use(2,new Locator().kind(ControlKind.Button).text('Click').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;centralLabel;$Dialog;$AppConnection
+        DLGFLL7;DialogFill;This.Result == Result.Passed && This.Out.centralLabel == 'ColorTable_6_click';Do.getValue();'Main';appCon
+
+        #Id;#Action;colorTable;$Dialog;$AppConnection
+        DLGFLL4;DialogFill;Do.use(0, 'cell').click();'Main';appCon
+
+        #Id;#Action;#Assert;centralLabel;$Dialog;$AppConnection
+        DLGFLL8;DialogFill;This.Result == Result.Passed && This.Out.centralLabel == 'ColorTable_2_click';Do.getValue();'Main';appCon
+
     #EndStep
 
     #Id;#Step;#Kind;#For;#Depends
     Negative;;;;
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0,0,new Locator().kind(ControlKind.Button).text('any_wrong_text').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL2;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0, -1, new Locator().kind(ControlKind.Button).text('tr_1_td_1').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL3;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0,0, 'any_wrong_id_without_locator').click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL4;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0, -1, 'any_wrong_id_without_locator').click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL5;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0, new Locator().kind(ControlKind.Button).text('any_wrong_text').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use( -1, 'any_wrong_id_without_locator').click();'Main';appCon
+
         #Id;#Action;#Assert;TextBox;$Dialog;$AppConnection
-        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;Do.script('any string');'Main';appCon
+        DLGFLL7;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;Do.script('any string');'Main';appCon
 
     #EndStep
 
