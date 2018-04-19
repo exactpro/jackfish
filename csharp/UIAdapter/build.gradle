@@ -1,0 +1,28 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2018, Exactpro Systems LLC
+ * www.exactpro.com
+ * Build Software to Test Software
+ *
+ * All rights reserved.
+ * This is unpublished, licensed software, confidential and proprietary
+ * information which is the property of Exactpro Systems LLC or its licensors.
+ ******************************************************************************/
+import com.ullink.Msbuild
+
+description = "UIAdapter"
+
+task buildUIAdapter(type: Msbuild){
+    projectFile = 'UIAdapter/UIAdapter.csproj'
+	platform = "x64"
+	configuration = "Debug"
+    verbosity = 'detailed'
+    ext["flp1"] = "LogFile=" + file("${project.name}.errors.log").path + ";ErrorsOnly;Verbosity=diag"
+}
+
+String osName = System.getProperty("os.name").toLowerCase()
+if (osName.contains("windows")) {
+    distribute.dependsOn.add(buildUIAdapter)
+} else
+{
+    println "task 'buildUIAdapter' doesn't run because your actual OS is '" + osName + "' but expected 'Windows'"
+}
