@@ -1,0 +1,199 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+EXPECTED;;;;
+    #Id;#Global;#RawTable
+    table;1;Table
+    @;On;name;operation;result
+    0;x;Button10;Do.get();'Button'
+    1;x;Button11;Do.get();'Button'
+    2;x;Button12;Do.get();'Button'
+    3;x;Button13;Do.get();'Button'
+    4;x;Button20;Do.get();'Button'
+    5;x;Button21;Do.get();'Button'
+    6;x;Button22;Do.get();'Button'
+    7;x;Button23;Do.get();'Button'
+    8;x;Button30;Do.get();'Button'
+    9;x;Button31;Do.get();'Button'
+    10;x;Button32;Do.get();'Button'
+    11;x;Button33;Do.get();'Button'
+    12;x;uidTemplate;Do.get();'Button'
+    13;x;xpathTemplate;Do.get();'Button'
+    14;;xpathTemplateNotFound;Do.get();ErrorKind.ELEMENT_NOT_FOUND
+    15;;ButtonMany;Do.count();2
+    16;;ButtonManyNotPass;Do.count();1
+    17;;ButtonManyNotFail;Do.count();ErrorKind.ELEMENT_NOT_FOUND
+    18;x;ListBoxVisibility;Do.scrollTo(30).delay(1000).getList();'[29, 30, 31, 32, 33, 34, 35]'
+    19;x;ListBoxNormal;Do.scrollTo(30).delay(1000).getList();'[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]'
+    #EndRawTable
+
+    #Action;$Table;$Expression
+    TableConsiderColumnsAs;table;'result'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;;;;
+    #Call;plugin
+    RUN;'Web'
+
+    #Call;plugin
+    RUN;'Swing'
+
+    #Off;#Call;plugin
+    1;RUN;'Win'
+
+    #Id;#Action;$Decoraded
+    RESTBL1;ResultTable;true
+
+    #Action;$Table;$Title;$BeforeTestCase
+    TableReport;RESTBL1.Out;'result';'INIT'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+SUBCASES;;;;
+    #Id;#SubCase;plugin
+    CLOSE;close;plugin
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+        #Action;$Table;$Title;$BeforeTestCase
+        TableReport;table_result;'Result';'INIT'
+
+    #EndSubCase
+
+    #Id;#SubCase;plugin
+    START;start;plugin
+        #Id;#Action;Plugin;Control;Operation;Expected;Actual;Result
+        TBL1;TableCreate;;;;;;
+
+        #Id;#Global;#Let
+        table_result;1;TBL1.Out
+
+        #If
+        plugin == 'Web'
+            #Id;#Action;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+            #Id;#Global;#Let
+            appCon;1;APPSTR1.Out
+
+        #EndIf
+
+        #If
+        plugin == 'Swing'
+            #Id;#Action;$AppId;Jar;Args;MainClass
+            APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;'';mockSwingClass
+
+            #Id;#Global;#Let
+            appCon;1;APPSTR1.Out
+
+        #EndIf
+
+        #If
+        plugin == 'Win'
+            #Id;#Action;$AppId;Exec;WorkDir;Args
+            APPSTR1;ApplicationStart;mockWinApp;mockWinExec;mockWinDir;''
+
+            #Id;#Global;#Let
+            appCon;1;APPSTR1.Out
+
+        #EndIf
+
+        #Id;#Global;#Let
+        failed;1;false
+
+    #EndSubCase
+
+    #Id;#SubCase;plugin
+    RUN;Run;'Swing'
+        #Call;plugin
+        START;plugin
+
+        #Step;#Kind;#For;#Depends
+        '\'' + plugin + '\' plugin';;;
+            #Id;#Let
+            map;new LinkedHashMap()
+
+            #Id;#Let
+            xpathTemplate;'Button'
+
+            #Id;#Let
+            nameTemplate;'Button'
+
+            #ForEach;#In
+            row;table
+                // //TODO delete in future
+                #If
+                row.operation.contains('getList') && !plugin.equals('Win')
+                    #Continue
+
+                #EndIf
+
+                #If
+                row.On.isEmpty()
+                    #Continue
+
+                #EndIf
+
+                #Let
+                map.put(row.name, row.operation)
+
+            #EndForEach
+
+            #Id;#IgnoreErr;#Action;$Dialog;$AppConnection;$Fields;$StopOnFail
+            DLG;1;DialogFill;'Matchers';appCon;map;false
+
+            #Id;#Let
+            resultMap;new LinkedHashMap()
+
+            #Let
+            resultMap.putAll(DLG.Out)
+
+            #If
+            DLG.Errors != null
+                #Let
+                resultMap.putAll(DLG.Errors)
+
+            #EndIf
+
+            #ForEach;#In
+            row;table
+                // //TODO delete in future
+                #If
+                row.operation.contains('getList') && !plugin.equals('Win')
+                    #Continue
+
+                #EndIf
+
+                #If
+                row.On.isEmpty()
+                    #Continue
+
+                #EndIf
+
+                #Id;#Let
+                expected;row.result
+
+                #Id;#Let
+                actual;resultMap.get(row.name)
+
+                #Assert;#Message
+                expected.toString() == actual.toString();expected.toString() + ' not equal ' + actual.toString()
+
+            #EndForEach
+
+        #EndStep
+
+        #Call;plugin
+        CLOSE;plugin
+
+    #EndSubCase
+
+

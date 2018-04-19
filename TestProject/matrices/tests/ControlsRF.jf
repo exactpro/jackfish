@@ -1,0 +1,53 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+Test;Controls;;;
+    #Call;testName;param
+    runControls;'Controls';'InternetExplorer'
+
+    #Call;testName;param
+    runControls;'Controls';'Chrome'
+
+    #Call;testName;param
+    runControls;'Controls';'Swing'
+
+    #Call;testName;param
+    runControls;'Controls';'Win'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Subs;;;;
+    #Id;#SubCase;testName;param
+    runControls;Running test;'Controls';'Win'
+        #Id;#Action;$Matrix;$Parameter
+        MXRN1;MatrixRun;matrixTestsPath + testName +  '.jf';param
+
+        #Id;#Action;$Matrix
+        MXWT1;MatrixWait;MXRN1.Out
+
+        #Id;#Action;$Table;Result
+        TBLSLCT1;TableSelect;MXRN1.Out.getTable();new StringCondition('Result','Failed')
+
+        #Action;$Colored;$Table
+        TableConsiderColumnsAs;{'Result'};TBLSLCT1.Out
+
+        #Action;$ReportValues;$Columns;$BeforeTestCase;$Table;$Title
+        TableReport;true;{'Result', 'Time', 'Error', 'Screenshot'};'Test';TBLSLCT1.Out;param + ' Controls'
+
+        #If
+        !TBLSLCT1.Out.isEmpty()
+            #Fail
+            'Controls failed'
+
+        #EndIf
+
+    #EndSubCase
+
+

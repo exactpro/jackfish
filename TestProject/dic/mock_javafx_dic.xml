@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dictionary>
+    <window name="Main">
+        <self>
+            <any id="owner" xpath=".//Stage[contains(@title,&amp;quot;JavaFx Mock&amp;quot;)]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button" uid="Button" owner="owner" class="" name="" action="" text="" addition="Many"/>
+            <textBox id="TextBox" uid="TextBox" owner="owner" class="" name="" text=""/>
+            <table id="Table" uid="Table" owner="owner" class="" name="" text="" addition="Many"/>
+            <table id="Table1" owner="owner" class="javax.swing.JTable" name="Table1" text="" addition="Many"/>
+            <checkBox id="CheckBox" uid="CheckBox" owner="owner" class="" action="" text="" addition="Many"/>
+            <slider id="Slider" uid="Slider" owner="owner" class="" addition="Many"/>
+            <scrollBar id="ScrollBar" uid="ScrollBar" owner="owner" class="" addition="Many"/>
+            <comboBox id="ComboBox" uid="ComboBox" owner="owner" class="" name="" action="" addition="Many"/>
+            <comboBox id="EditableComboBox" owner="owner" addition="Many"/>
+            <radioButton id="RadioButton" uid="RadioButton" owner="owner" class="" action="" text="" addition="Many"/>
+            <tree id="Tree" uid="TreeView" owner="owner" class="" addition="Many"/>
+            <tabPanel id="TabPanel" uid="TabPanel" owner="owner" addition="Many"/>
+            <label id="centralLabel" uid="CentralLabel" owner="owner" text="" addition="Many"/>
+            <toggleButton id="ToggleButton" uid="ToggleButton" owner="owner" addition="Many"/>
+            <frame id="Frame" owner="owner" class="javax.swing.JFrame" name="frame0" title="Mock swing app" addition="Many"/>
+            <label id="Label" uid="CentralLabel" owner="owner" text="" addition="Many"/>
+            <progressBar id="ProgressBar" uid="ProgressBar" owner="owner" addition="Many"/>
+            <panel id="Panel" uid="Panel" owner="owner" addition="Many"/>
+            <dialog id="Dialog" uid="" xpath="" title="Dialog" addition="Many"/>
+            <listView id="List" uid="List" owner="owner" addition="Many"/>
+            <menu id="Menu" uid="Menu" owner="owner" addition="Many"/>
+            <menuItem id="MenuItem" owner="owner" text="MenuItem" addition="Many"/>
+            <menu id="Menu1" owner="owner" text="JMenu 1"/>
+            <image id="Image" uid="Image" owner="owner" addition="Many"/>
+            <row id="Row" owner="owner"/>
+            <treeItem id="TreeItem" owner="owner"/>
+            <splitter id="Splitter" uid="Splitter" owner="owner" addition="Many"/>
+            <radioButton id="RadioButton1" owner="owner" class="javax.swing.JRadioButton" action="Yellow" text="Yellow" addition="Many"/>
+            <toolTip id="Tooltip" owner="owner" text="Tooltip" addition="Many"/>
+            <menu id="Menu2" xpath="" owner="owner" class="" name="menu2" action="" text=""/>
+            <any id="Any" uid="Any" owner="owner" addition="Many"/>
+            <wait id="Wait" owner="owner" addition="Many"/>
+            <label id="moveLabel" uid="moveLabel" owner="owner" text=""/>
+            <button id="Button1" owner="owner" class="javax.swing.JButton" name="ButtonMany" addition="Many"/>
+            <button id="buttonShowArea" uid="showButton" owner="owner" name="" text=""/>
+            <button id="buttonHideArea" uid="hideButton" owner="owner" name="" text=""/>
+            <button id="countButton" uid="plusButton" owner="" name=""/>
+            <button id="countButtonClear" uid="clearButton" owner="" name="countButtonClear"/>
+            <label id="countLabel" uid="countLabel" owner="" name=""/>
+            <label id="pressLabel" uid="pressLabel" owner="" name=""/>
+            <label id="downUpLabel" uid="downUpLabel" owner="" name=""/>
+            <button id="invisibleButton" uid="invisibleButton" name="" visibility="Visible"/>
+            <button id="notEnabledButton" uid="notEnabledButton" name=""/>
+            <label id="sliderLabel" uid="sliderLabel" name="" addition="Many"/>
+            <button id="colorButton" uid="colorButton" owner="owner" name=""/>
+            <label id="pushLabel" uid="pushLabel" owner="owner" name="" addition="Many"/>
+            <label id="checkedLabel" uid="checkedLabel" owner="owner" name=""/>
+            <spinner id="Spinner" uid="Spinner" owner="owner" name=""/>
+            <label id="selectLabel" uid="selectLabel" owner="owner" name=""/>
+            <textBox id="protocolText" uid="Protocol" owner="" name=""/>
+            <button id="protocolClear" uid="ProtocolClear" owner="" name=""/>
+            <button id="slider_bar" xpath=".//com.sun.javafx.scene.control.skin.SliderSkin_1[contains(@class,&amp;quot;thumb&amp;quot;)]" owner="owner"/>
+            <button id="cell" owner="owner" text="Click"/>
+            <table id="colorTable" xpath="./BorderPane/VBox/TableView[contains(@class,&amp;quot;table-view&amp;quot;)]" owner="owner"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DisabledComponents">
+        <self>
+            <any id="rootFrame" xpath="//JFrame"/>
+        </self>
+        <onOpen/>
+        <run>
+            <label id="label" xpath=".//JPanel[@action=&amp;quot;&amp;quot; and @class=&amp;quot;javax.swing.JPanel&amp;quot; and @name=&amp;quot;&amp;quot; and @title=&amp;quot;&amp;quot; and @tooltip=&amp;quot;&amp;quot;]//JLabel" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JLabel</xpath>
+                    <rectangle x1="0.42125" y1="0.9550000000000001" x2="0.45125" y2="0.975"/>
+                    <node>JLabel</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JLabel</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </label>
+            <checkBox id="checkBox" xpath=".//JCheckBox[@action=&amp;quot;&amp;quot; and @class=&amp;quot;javax.swing.JCheckBox&amp;quot; and @name=&amp;quot;&amp;quot; and @title=&amp;quot;&amp;quot; and @tooltip=&amp;quot;&amp;quot;]" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JCheckBox</xpath>
+                    <rectangle x1="0.55125" y1="0.9525" x2="0.5775" y2="0.97875"/>
+                    <node>JCheckBox</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JCheckBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </checkBox>
+            <comboBox id="comboBoxChanged" xpath=".//JComboBox[@action=&amp;quot;comboBoxChanged&amp;quot; and @class=&amp;quot;javax.swing.JComboBox&amp;quot; and @name=&amp;quot;&amp;quot; and @title=&amp;quot;&amp;quot; and @tooltip=&amp;quot;&amp;quot;]" owner="rootFrame" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel[19]/JPanel/JComboBox</xpath>
+                    <rectangle x1="0.4575" y1="0.9500000000000001" x2="0.545" y2="0.9812500000000001"/>
+                    <node>JComboBox</node>
+                    <attr name="action">comboBoxChanged</attr>
+                    <attr name="class">javax.swing.JComboBox</attr>
+                    <attr name="name"></attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </comboBox>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="Dialog">
+        <self>
+            <dialog id="DialogD" xpath="" title="Dialog" addition="Many"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="button" xpath=".//JButton" owner="DialogD"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="AdditionakFrame">
+        <self>
+            <frame id="additionalFrame" xpath="//JFrame[@name=&amp;quot;frame1&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="button" owner="additionalFrame" name="button" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JButton</xpath>
+                    <rectangle x1="0.3" y1="0.17500000000000002" x2="0.6971428571428572" y2="0.305"/>
+                    <node>JButton</node>
+                    <attr name="action">Open modal dialog</attr>
+                    <attr name="class">javax.swing.JButton</attr>
+                    <attr name="name">button</attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </button>
+            <textBox id="text" owner="additionalFrame" name="text" rows="" header="" columns="">
+                <info>
+                    <xpath>/JRootPane/JLayeredPane/JPanel/JPanel/JTextField</xpath>
+                    <rectangle x1="0.21428571428571427" y1="0.33" x2="0.7857142857142857" y2="0.45"/>
+                    <node>JTextField</node>
+                    <attr name="action"></attr>
+                    <attr name="class">javax.swing.JTextField</attr>
+                    <attr name="name">text</attr>
+                    <attr name="title"></attr>
+                    <attr name="tooltip"></attr>
+                </info>
+            </textBox>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DialogForTestWaitWithRef">
+        <self>
+            <panel id="owner" uid="" name="panelWithHiddenArea"/>
+        </self>
+        <onOpen>
+            <wait owner="owner" ref="buttonShowArea" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="buttonShowArea" uid="" owner="owner" name="showButton" text=""/>
+            <button id="buttonHideArea" uid="" owner="owner" name="hideButton" text=""/>
+        </run>
+        <onClose>
+            <wait owner="owner" ref="buttonHideArea" addition="WaitToDisappear" timeout="5000"/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="DialogForTestWaitWithoutRef">
+        <self>
+            <panel id="owner" uid="" name="panelWithHiddenArea"/>
+        </self>
+        <onOpen>
+            <wait owner="owner" name="showButton" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="buttonShowArea" uid="" owner="owner" name="showButton" text=""/>
+            <button id="buttonHideArea" uid="" owner="owner" name="hideButton" text=""/>
+        </run>
+        <onClose>
+            <wait owner="owner" name="hideButton" addition="WaitToDisappear" timeout="5000"/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="Matchers">
+        <self>
+            <frame id="Owner1" xpath="//JFrame[@name=&amp;quot;frame0&amp;quot;]"/>
+            <frame id="Owner2" uid="" xpath="" name="frame0"/>
+            <frame id="Owner3" uid="" xpath="" class="javax.swing.JFrame" name="" title="Mock swing app"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button10" uid="" name="Button"/>
+            <button id="Button11" uid="" owner="Owner1" name="Button"/>
+            <button id="Button12" uid="" owner="Owner2" name="Button"/>
+            <button id="Button13" uid="" owner="Owner3" name="Button"/>
+            <button id="Button20" uid="" xpath="//JButton[@name=&amp;quot;Button&amp;quot;]" name="" text=""/>
+            <button id="Button21" uid="" xpath=".//JButton[@name=&amp;quot;Button&amp;quot;]" owner="Owner1" name="" text=""/>
+            <button id="Button22" uid="" xpath=".//JButton[@name=&amp;quot;Button&amp;quot;]" owner="Owner2" name="" text=""/>
+            <button id="Button23" uid="" xpath=".//JButton[@name=&amp;quot;Button&amp;quot;]" owner="Owner3" name="" text=""/>
+            <button id="Button30" uid="" class="javax.swing.JButton" name="" title="" action="Button" text="Button" tooltip="Button"/>
+            <button id="Button31" uid="" owner="Owner1" class="javax.swing.JButton" name="" title="" action="Button" text="Button" tooltip="Button"/>
+            <button id="Button32" uid="" owner="Owner2" class="javax.swing.JButton" name="" title="" action="Button" text="Button" tooltip="Button"/>
+            <button id="Button33" uid="" owner="Owner3" class="javax.swing.JButton" name="" title="" action="Button" text="Button" tooltip="Button"/>
+            <button id="ButtonMany" uid="" xpath="//Button[@name=&amp;quot;Any&amp;quot; or @name=&amp;quot;Button&amp;quot;]" class="" name="" text="" addition="Many"/>
+            <button id="ButtonManyNotPass" uid="" class="" name="Button" text=""/>
+            <button id="ButtonManyNotFail" uid="" xpath="//Button[@name=&amp;quot;Any&amp;quot; or @name=&amp;quot;Button&amp;quot;]" class="" name="" text=""/>
+            <button id="ButtonNormal" uid="" class="" name="normalButton" text=""/>
+            <button id="ButtonNormalVisible" uid="" class="" name="normalButton" text="" visibility="Visible"/>
+            <button id="ButtonNormalEnable" uid="" class="" name="normalButton" text="" visibility="Enable"/>
+            <button id="ButtonNotEnabled" uid="" class="" name="notEnabledButton" text=""/>
+            <button id="ButtonNotEnabledVisible" uid="" class="" name="notEnabledButton" text="" visibility="Visible"/>
+            <button id="ButtonNotEnabledEnabled" uid="" class="" name="notEnabledButton" text="" visibility="Enable"/>
+            <label id="matchersLabel" uid="" name="matchersLabel"/>
+            <button id="matchersButtonClear" owner="Owner1" name="matchersButtonClear"/>
+            <button id="ButtonInvisible" uid="" class="" name="invisibleButton" text=""/>
+            <button id="ButtonInvisibleVisible" uid="" class="" name="invisibleButton" text="" visibility="Visible"/>
+            <button id="ButtonInvisibleEnabled" uid="" class="" name="invisibleButton" text="" visibility="Enable"/>
+            <button id="ButtonWeak" uid="" class="" name="Button" text="" weak="true"/>
+            <button id="ButtonWeakNot" uid="" class="" name="Button" text=""/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>

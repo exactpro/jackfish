@@ -1,0 +1,4165 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_ADD_COLUMNS;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Add a column in empty table';;;
+        #Id;#Action
+        TBL1;TableCreate
+
+        #Action;$Table;$Columns
+        TableAddColumns;TBL1.Out;'one'
+
+        #Assert;#Message
+        TBL1.Out.getHeader(0).equals('one');'the column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add a column in empty table by index 0';;;
+        #Id;#Action
+        TBL1;TableCreate
+
+        #Action;$Table;$Columns;$Index
+        TableAddColumns;TBL1.Out;'one';0
+
+        #Assert;#Message
+        TBL1.Out.getHeader(0).equals('one');'the column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add a column in table which one already has 2 columns';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;$Table;$Columns
+        TableAddColumns;TBL1.Out;'surname'
+
+        #Assert;#Message
+        TBL1.Out.getHeader(2).equals('surname');'the column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add array of columns in table which one already has 2 columns';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;$Table;$Columns
+        TableAddColumns;TBL1.Out;new String[]{'adress','postindex'}
+
+        #Assert;#Message
+        TBL1.Out.getHeader(2).equals('adress') && TBL1.Out.getHeader(3).equals('postindex');'the column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add a column by index 1 to table which one already has 2 columns';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;$Table;$Columns;$Index
+        TableAddColumns;TBL1.Out;'age';1
+
+        #Assert;#Message
+        TBL1.Out.getHeader(1).equals('age');'column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add a column by empty index to table which one already has 2 columns';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;$Table;$Columns
+        TableAddColumns;TBL1.Out;'town'
+
+        #Assert;#Message
+        TBL1.Out.getHeader(TBL1.Out.getHeaderSize() - 1).equals('town');'column was not added at the end'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Add array of columns by index to table which one already has 2 columns';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;$Table;$Columns;$Index
+        TableAddColumns;TBL1.Out;new String[]{'adress','postindex'};1
+
+        #Assert;#Message
+        TBL1.Out.getHeader(1).equals('adress') && TBL1.Out.getHeader(2).equals('postindex');'column was not added'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The table field has not fill';;;
+        // 
+        #Action;#Assert;$Table;$Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'name'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The column field has not fill';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        // 
+        #Action;#Assert;$Table;$Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TBL1.Out;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The column field has empty string value';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;$Table;$Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TBL1.Out;''
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The column field has array of strings which has an empty string';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;$Table;$Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TBL1.Out;new String[]{'adress','','postindex'}
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The index field has out of bound values';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;$Table;$Columns;$Index
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'minusOne';-1
+
+        #Action;#Assert;$Table;$Columns;$Index
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;'nineNineNine';999
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The table field has a value, but it is not a table value';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;$Table;$Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1;'someColumn'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The columns field has a value, but it is not a string or array of strings value';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;$Table;$Columns
+        TableAddColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TBL1.Out;5
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_SORT;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Sorting by default (ask) for sorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;$ColumnName;$Table
+        TableSort;'numbers';actual
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by default (ask) for unsorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;$ColumnName;$Table
+        TableSort;'numbers';actual
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = true for sorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;$ColumnName;$Table;$Ascending
+        TableSort;'numbers';actual;true
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = true for unsorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;$ColumnName;$Table;$Ascending
+        TableSort;'numbers';actual;true
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = false for sorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;$ColumnName;$Table;$Ascending
+        TableSort;'numbers';actual;false
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = false for unsorted column';;;
+        #Id;#RawTable
+        actual;Table
+        @;numbers
+        0;1
+        1;2
+        2;3
+        #EndRawTable
+
+        #Action;$ColumnName;$Table;$Ascending
+        TableSort;'numbers';actual;false
+
+        #Id;#RawTable
+        expected;Table
+        @;numbers
+        0;3
+        1;2
+        2;1
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = true for ingnore case';;;
+        #Id;#RawTable
+        actual;Table
+        @;letters
+        0;A
+        1;b
+        2;C
+        #EndRawTable
+
+        #Action;$IgnoreCase;$ColumnName;$Table;$Ascending
+        TableSort;true;'letters';actual;false
+
+        #Id;#RawTable
+        expected;Table
+        @;letters
+        0;C
+        1;b
+        2;A
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Sorting by ascending = false for ingnore case';;;
+        #Id;#RawTable
+        actual;Table
+        @;letters
+        0;A
+        1;b
+        2;C
+        #EndRawTable
+
+        #Action;$IgnoreCase;$ColumnName;$Table;$Ascending
+        TableSort;false;'letters';actual;false
+
+        #Id;#RawTable
+        expected;Table
+        @;letters
+        0;b
+        1;C
+        2;A
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'If one column has sorted, then other columns also has sorted';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;3;33
+        1;two;2;22
+        2;three;1;11
+        #EndRawTable
+
+        #Action;$ColumnName;$Table
+        TableSort;'numbers';actual
+
+        #Id;#RawTable
+        expected;Table
+        @;names;numbers;NewColumn
+        0;three;1;11
+        1;two;2;22
+        2;one;3;33
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The table field has not fill';;;
+        #Action;#Assert;$ColumnName;$Table;$Ascending
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'numbers';;true
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The table field has a value, but it is not a table value';;;
+        #Id;#Action;id;name
+        TBL1;TableCreate;;
+
+        #Action;#Assert;$ColumnName;$Table;$Ascending
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'numbers';TBL1;true
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The column with value from columnName does not exist in a table';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;3;33
+        1;two;2;22
+        2;three;1;11
+        #EndRawTable
+
+        #Action;#Assert;$ColumnName;$Table
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'age';actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The columnName field has not fill';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;3;33
+        1;two;2;22
+        2;three;1;11
+        #EndRawTable
+
+        #Action;#Assert;$ColumnName;$Table
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The Ascending field has not fill';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;3;33
+        1;two;2;22
+        2;three;1;11
+        #EndRawTable
+
+        #Action;#Assert;$ColumnName;$Table;$Ascending
+        TableSort;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'numbers';actual;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'The Ascending field has a wrong parameter';;;
+        #Id;#RawTable
+        actual;Table
+        @;names;numbers;NewColumn
+        0;one;1;11
+        1;two;2;22
+        2;three;3;33
+        #EndRawTable
+
+        #Action;$ColumnName;$Table;$Ascending
+        TableSort;'numbers';actual;'someValue'
+
+        #Id;#RawTable
+        expected;Table
+        @;names;numbers;NewColumn
+        0;three;3;33
+        1;two;2;22
+        2;one;1;11
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;actual
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_COLUMNS_AS_LIST;;;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Step;#Kind;#For;#Depends
+        'Without values';;;
+            #Id;#RawTable
+            DATA2;Table
+            @;A
+            0;1
+            1;2
+            2;3
+            3;4
+            4;5
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Table;$Column
+            TBL2;TableColumnAsList;This.Out.size() == 5 && This.Result == Result.Passed && This.Out[0] == '1';DATA2;'A'
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'With values';;;
+            #Id;#Let
+            v;13
+
+            #Id;#RawTable
+            DATA2;Table
+            @;A
+            0;v + 10
+            1;2
+            2;3
+            3;4
+            4;5
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;DATA2;'A'
+
+            #Id;#Action;#Assert;$Table;$Column;$GetValues
+            TBL2;TableColumnAsList;This.Out.size() == 5 && This.Result == Result.Passed && This.Out[0] == 23;DATA2;'A';true
+
+        #EndStep
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Step;#Kind;#For;#Depends
+        'With not existing column';;;
+            #Id;#RawTable
+            DATA2;Table
+            @;A
+            0;1
+            1;2
+            2;3
+            3;4
+            4;5
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Table;$Column
+            TBL2;TableColumnAsList;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DATA2;'B'
+
+        #EndStep
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_COMPARE_TWO;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Step;#Kind;#For;#Depends
+        'Plain testing';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH
+            0;1
+            1;2
+            2;3
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH
+            0;1
+            1;2
+            2;3
+            #EndRawTable
+
+            #Id;#Action;$Expected;$Actual
+            TBLCMP2;TableCompareTwo;expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparing with excluded columns';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;1;44
+            1;2;55
+            2;3;66
+            #EndRawTable
+
+            #Id;#RawTable
+            expected2;Table
+            @;newH;NewColumn;NewColumn2
+            0;1;;
+            1;2;;
+            2;3;;
+            #EndRawTable
+
+            #Id;#Action;$ExcludeColumns;$Expected;$Actual
+            TBLCMP2;TableCompareTwo;'NewColumn';expected;actual
+
+            #Id;#Action;$ExcludeColumns;$Expected;$Actual
+            TBLCMP10;TableCompareTwo;'NewColumn';actual;expected
+
+            #Id;#Action;$ExcludeColumns;$Expected;$Actual
+            TBLCMP10;TableCompareTwo;{'NewColumn','NewColumn2'};actual;expected
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparing with ignored rows order';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;2;5
+            1;1;4
+            2;3;6
+            #EndRawTable
+
+            #Id;#Action;$IgnoreRowsOrder;$Expected;$Actual
+            TBLCMP2;TableCompareTwo;true;expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparting with compareValues is true';;;
+            #Id;#Let
+            tmp;12
+
+            #Id;#Let
+            anotherTmp;10
+
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;anotherTmp+3;4
+            1;2;anotherTmp+5
+            2;3;6
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;actual;{'newH', 'NewColumn'}
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;expected;{'newH', 'NewColumn'}
+
+            #Id;#Action;$Expected;$Actual;$CompareValues
+            TBLCMP2;TableCompareTwo;expected;actual;true
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Compare with compareValues is false';;;
+            #Id;#Let
+            tmp;12
+
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;actual;{'newH', 'NewColumn'}
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;expected;{'newH', 'NewColumn'}
+
+            #Id;#Action;$Expected;$Actual;$CompareValues
+            TBLCMP2;TableCompareTwo;expected;actual;false
+
+        #EndStep
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Step;#Kind;#For;#Depends
+        'Plain testing';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH
+            0;1
+            1;2
+            2;3
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH
+            0;3
+            1;2
+            2;1
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Expected;$Actual
+            TBLCMP1;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual
+
+            #Id;#Action;#Assert;$Expected;$Actual
+            TBLCMP3;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+            #Id;#Action;#Assert;$Expected;$Actual
+            TBLCMP4;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;actual
+
+            #Id;#Action;#Assert;$Expected;$Actual
+            TBLCMP5;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;expected;
+
+            #Id;#Action;#Assert;$Expected;$Actual
+            TBLCMP7;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparing with excluded columns';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#Action;#Assert;$ExcludeColumns;$Expected;$Actual
+            TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;expected;actual
+
+            #Id;#Action;#Assert;$ExcludeColumns;$Expected;$Actual
+            TBLCMP6;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Comparing with ignored rows order';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;4
+            1;2;5
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;2;5
+            1;1;4
+            2;3;6
+            #EndRawTable
+
+            #Id;#Action;#Assert;$IgnoreRowsOrder;$Expected;$Actual
+            TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;expected;actual
+
+            #Id;#Action;#Assert;$IgnoreRowsOrder;$Expected;$Actual
+            TBLCMP8;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();expected;actual
+
+            #Id;#Action;#Assert;$IgnoreRowsOrder;$Expected;$Actual
+            TBLCMP9;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Different size of columns';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;1;2
+            1;2;3
+            2;3;3
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH
+            0;1
+            1;2
+            2;3
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Expected;$Actual
+            TBLCMP10;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;actual;expected
+
+            #Id;#Action;$ExcludeColumns;$Expected;$Actual
+            TBLCMP10;TableCompareTwo;'NewColumn';actual;expected
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Different size of columns and rows';;;
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn;NewColumn1
+            0;newR;;
+            1;;;
+            2;;;
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn;NewColumn2;NewColumn3
+            0;newR;;;
+            1;;;;
+            2;;;;
+            3;;;;
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Expected;$Actual
+            TBLCMP11;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;expected;actual
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Compare tables with compareValues is true, but cells not equals';;;
+            #Id;#Let
+            tmp;12
+
+            #Id;#Let
+            anotherTmp;5
+
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;anotherTmp+3;4
+            1;2;anotherTmp+5
+            2;3;6
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;actual;{'newH', 'NewColumn'}
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;expected;{'newH', 'NewColumn'}
+
+            #Id;#Action;#Assert;$Expected;$Actual;$CompareValues
+            TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual;true
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Compare tables with compareValues is false, but cells not equals';;;
+            #Id;#Let
+            tmp;12
+
+            #Id;#Let
+            anotherTmp;5
+
+            #Id;#RawTable
+            actual;Table
+            @;newH;NewColumn
+            0;tmp+1;4
+            1;2;tmp+3
+            2;3;6
+            #EndRawTable
+
+            #Id;#RawTable
+            expected;Table
+            @;newH;NewColumn
+            0;anotherTmp+3;4
+            1;2;anotherTmp+5
+            2;3;6
+            #EndRawTable
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;actual;{'newH', 'NewColumn'}
+
+            #Action;$Table;$Expression
+            TableConsiderColumnsAs;expected;{'newH', 'NewColumn'}
+
+            #Id;#Action;#Assert;$Expected;$Actual;$CompareValues
+            TBLCMP2;TableCompareTwo;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;expected;actual;false
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Compare and check message';;;
+            #Id;#RawTable
+            DATA1;Table
+            @;Col1;Col2
+            0;1;1
+            1;2;1
+            2;1;1
+            #EndRawTable
+
+            #Id;#RawTable
+            DATA2;Table
+            @;Col1;Col2
+            0;1;1
+            1;1;2
+            2;1;1
+            #EndRawTable
+
+            #Id;#Action;#Assert;$Expected;$Actual;$IgnoreRowsOrder
+            TBLCMP1;TableCompareTwo;This.Result == Result.Failed;DATA1;DATA2;true
+
+            #Assert;#Message
+            TBLCMP1.Out.size() == 2;'Expected 2, actual : ' + TBLCMP1.Out.size()
+
+            #Id;#Off;#RawTable
+            DATA3;1;Table
+            @;Description;Expected;Actual
+            0;Extra row[1];[ Col2 : 1, Col1 : 2 ];
+            1;Extra row[1];;[ Col1 : 1, Col2 : 2 ]
+            #EndRawTable
+
+            #Id;#Off;#Action;#Assert;$Expected;$Actual
+            TBLCMP16;1;TableCompareTwo;This.Result == Result.Passed && This.Out.size() == 0;DATA3;TBLCMP1.Out
+
+        #EndStep
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_LEFT_JOIN;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'left > right';;;
+        #Id;#RawTable
+        Left;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Right;Table
+        @;Name;LeftId
+        0;Andrey;1
+        1;Victor;2
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;PersonName
+        TBLJN1;TableLeftJoin;'left.id == right.LeftId';Left;'left';Right;'right';'right.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;id;Name;Language;PersonName
+        0;1;London;us;Andrey
+        1;2;Moscow;ru;Victor
+        2;3;France;fr;
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'left == right (equals id)';;;
+        #Id;#RawTable
+        Left;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        #EndRawTable
+
+        #Id;#RawTable
+        Right;Table
+        @;Name;LeftId
+        0;Andrey;1
+        1;Victor;2
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;PersonName
+        TBLJN1;TableLeftJoin;'left.id == right.LeftId';Left;'left';Right;'right';'right.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;id;Name;Language;PersonName
+        0;1;London;us;Andrey
+        1;2;Moscow;ru;Victor
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'left == right (not equals id)';;;
+        #Id;#RawTable
+        Left;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Right;Table
+        @;Name;LeftId
+        0;Andrey;1
+        1;Victor;2
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;PersonName
+        TBLJN1;TableLeftJoin;'left.id == right.LeftId';Left;'left';Right;'right';'right.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;id;Name;Language;PersonName
+        0;1;London;us;Andrey
+        1;3;France;fr;
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'left < right';;;
+        #Id;#RawTable
+        Left;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        #EndRawTable
+
+        #Id;#RawTable
+        Right;Table
+        @;Name;LeftId
+        0;Andrey;1
+        1;Victor;2
+        2;Alexander;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;PersonName
+        TBLJN1;TableLeftJoin;'left.id == right.LeftId';Left;'left';Right;'right';'right.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;id;Name;Language;PersonName
+        0;1;London;us;Andrey
+        1;2;Moscow;ru;Victor
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Join without additional parameters (only left Table)';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city'
+
+        #Action;$Table;$Title
+        TableReport;TBLJN1.Out;'After join'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Join with additional parameters (both tables)';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;CityName;Language
+        TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city';'city.Name';'city.Language'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;CityId;CityName;Language
+        0;Andrey;1;London;us
+        1;Victor;2;Moscow;ru
+        2;Aleksander;1;London;us
+        3;Valery;4;;
+        4;Kate;3;France;fr
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Join with additional parameters (Empty Title)';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;
+        TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city';'city.Name'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;CityId;
+        0;Andrey;1;London
+        1;Victor;2;Moscow
+        2;Aleksander;1;London
+        3;Valery;4;
+        4;Kate;3;France
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Join with additional parameters (Empty Value)';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias;CityName
+        TBLJN1;TableLeftJoin;'person.CityId == city.id';Person;'person';City;'city';
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;CityId;CityName
+        0;Andrey;1;
+        1;Victor;2;
+        2;Aleksander;1;
+        3;Valery;4;
+        4;Kate;3;
+        #EndRawTable
+
+        #Action;$Expected;$Actual
+        TableCompareTwo;expected;TBLJN1.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'wrong condition';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'person.CityId == de';Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'variable of left alias already exists';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Let
+        person;'1'
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'person.CityId == city.Id';Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'variable of right alias already exists';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Let
+        city;'1'
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'person.CityId == city.Id';Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty left alias parameter';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.Id';Person;;City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty right alias parameter';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.Id';Person;'person';City;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'left alias is empty string';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.Id';Person;'';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'right alias is empty string';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.Id';Person;'person';City;''
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty condition';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'condition is empty string';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';Person;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty Left Table parameter';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.id';;'person';City;'city'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty Right Table parameter';;;
+        #Id;#RawTable
+        City;Table
+        @;id;Name;Language
+        0;1;London;us
+        1;2;Moscow;ru
+        2;3;France;fr
+        #EndRawTable
+
+        #Id;#RawTable
+        Person;Table
+        @;Name;CityId
+        0;Andrey;1
+        1;Victor;2
+        2;Aleksander;1
+        3;Valery;4
+        4;Kate;3
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Condition;$LeftTable;$LeftAlias;$RightTable;$RightAlias
+        TBLJN1;TableLeftJoin;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'person.CityId == city.id';Person;'person';;'city'
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_ADD_VALUE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH
+        0;newR
+        #EndRawTable
+
+        #Action;#Assert;$Table
+        TableAddValue;This.Result == Result.Passed && myTable.size() == 2 && myTable[1].get('newH') == null;myTable
+
+        #Action;#Assert;$Table;newH
+        TableAddValue;This.Result == Result.Passed && myTable[2].get('newH') == 'new value';myTable;'new value'
+
+        #Action;#Assert;$Index;$Table;newH
+        TableAddValue;This.Result == Result.Passed && myTable[0].get('newH') == 'value for 0 row';0;myTable;'value for 0 row'
+
+        #Action;#Assert;$Index;$Table;newH
+        TableAddValue;This.Result == Result.Passed && myTable[myTable.size()-1].get('newH') == 'last row';Integer.MIN_VALUE;myTable;'last row'
+
+        #Action;#Assert;$Table;newH
+        TableAddValue;This.Result == Result.Passed && myTable[myTable.size()-1].get('newH') == null;myTable;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH
+        0;newR
+        #EndRawTable
+
+        #Action;#Assert;$Table;ColumnThatDoesNotExist
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;myTable;'my value'
+
+        #Action;#Assert;$Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Action;#Assert;$Index;$Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;myTable
+
+        #Action;#Assert;$Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Action;#Assert;$Index;$Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
+
+        #Action;#Assert;$Index;$Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;new Date();
+
+        #Action;#Assert;$Index;$Table
+        TableAddValue;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Integer.MAX_VALUE;myTable
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_COLUMN_RENAME;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#Let
+        column;'newName1'
+
+        #Id;#Let
+        column2;'newName2'
+
+        #Id;#Let
+        column3;'newName3'
+
+        #Id;#RawTable
+        myTable;Table
+        @;newH;NewColumn
+        0;newR;newR2
+        #EndRawTable
+
+        #Action;#Assert;$Table;newH
+        TableColumnRename;This.Result == Result.Passed && myTable[0].get(column) == 'newR';myTable;column
+
+        #Action;#Assert;$Table;newName1;NewColumn
+        TableColumnRename;This.Result == Result.Passed && myTable[0].get('newName2') == 'newR' && myTable[0].get('newName3') == 'newR2';myTable;column2;column3
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH
+        0;newR
+        #EndRawTable
+
+        #Action;#Assert;$Table
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Action;#Assert;$Table;
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;myTable;
+
+        #Action;#Assert;$Table;
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;$Table;newH
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;myTable;
+
+        #Action;#Assert;$Table;
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;myTable;'newName'
+
+        #Action;#Assert;$Table
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Action;#Assert;$Table;columnThatDoesntExist
+        TableColumnRename;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;myTable;'newName'
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_SAVE_TO_FILE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Step;#Kind;#For;#Depends
+        'Delimiters';;;
+            #Id;#RawTable
+            tableForSaving;Table
+            @;newH;NewColumn
+            0;1;2
+            1;3;4
+            #EndRawTable
+
+            #Action;$Table;$File
+            TableSaveToFile;tableForSaving;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;$File
+            TBL2;TableLoadFromFile;'testdata/ForTableTests.csv'
+
+            #Id;#Action;$Expected;$Actual
+            TBLCMP14;TableCompareTwo;tableForSaving;TBL2.Out
+
+            #Action;$Delimiter;$Table;$File
+            TableSaveToFile;',';tableForSaving;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;$Delimiter;$File
+            TBL3;TableLoadFromFile;',';'testdata/ForTableTests.csv'
+
+            #Id;#Action;$Expected;$Actual
+            TBLCMP15;TableCompareTwo;tableForSaving;TBL2.Out
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'SaveValues';;;
+            #Id;#Let
+            var1;100
+
+            #Id;#RawTable
+            myTable;Table
+            @;newH
+            0;var1/var1
+            #EndRawTable
+
+            #Action;$Expression;$Table
+            TableConsiderColumnsAs;'newH';myTable
+
+            #Action;$SaveValues;$Table;$File
+            TableSaveToFile;true;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;#Assert;$File
+            TBL3;TableLoadFromFile;This.Out[0].get('newH') == 1;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;$SaveValues;$Table;$File
+            TableSaveToFile;false;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;#Assert;$File
+            TBL3;TableLoadFromFile;This.Out[0].get('newH') == 'var1/var1';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Complex';;;
+            #Id;#Let
+            var1;100
+
+            #Id;#RawTable
+            myTable;Table
+            @;newH
+            0;var1/var1
+            #EndRawTable
+
+            #Action;$Expression;$Table
+            TableConsiderColumnsAs;'newH';myTable
+
+            #Action;$Delimiter;$SaveValues;$Table;$File
+            TableSaveToFile;',';true;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Id;#Action;#Assert;$Delimiter;$File
+            TBL3;TableLoadFromFile;This.Out[0].get('newH') == 1;',';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #EndStep
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Step;#Kind;#For;#Depends
+        'Empty parameters';;;
+            #Id;#RawTable
+            myTable;Table
+            @;newH
+            0;newR
+            #EndRawTable
+
+            #Action;#Assert;$Delimiter;$SaveValues;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;;
+
+            #Action;#Assert;$SaveValues;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+            #Action;#Assert;$Delimiter;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+            #Action;#Assert;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;myTable;
+
+            #Action;#Assert;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;#Assert;$Delimiter;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;#Assert;$SaveValues;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;#Assert;$Delimiter;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;myTable;
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Wrong parameters';;;
+            #Id;#RawTable
+            myTable;Table
+            @;newH;NewColumn
+            0;1;2
+            1;3;4
+            #EndRawTable
+
+            #Action;#Assert;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+            #Action;#Assert;$SaveValues;$Table;$File
+            TableSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #EndStep
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_LOAD_FROM_FILE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Action;$Table;$File
+        TableSaveToFile;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;$File
+        loadedTable;TableLoadFromFile;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP12;TableCompareTwo;myTable;loadedTable.Out
+
+        #Action;$Delimiter;$Table;$File
+        TableSaveToFile;',';myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;$Delimiter;$File
+        TBL5;TableLoadFromFile;',';new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP13;TableCompareTwo;myTable;TBL5.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Action;$Table;$File
+        TableSaveToFile;myTable;new File('').getAbsolutePath().replace(File.separator, '/') + '/testdata/ForTableTests.csv'
+
+        #Id;#Action;#Assert;$File
+        TBL4;TableLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$File
+        TBL4;TableLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'sdf'
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_REMOVE_COLUMNS;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Id;#RawTable
+        myTable1;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Id;#RawTable
+        myTable2;Table
+        @;newH;NewColumn
+        0;1;2
+        1;3;4
+        #EndRawTable
+
+        #Action;#Assert;$Table;$Columns
+        TableRemoveColumns;myTable.getHeaderSize() == 1;myTable;'NewColumn'
+
+        #Action;#Assert;$Table;$Columns
+        TableRemoveColumns;myTable1.getHeaderSize() == 0;myTable1;{'NewColumn','newH'}
+
+        #Action;#Assert;$Table;$Columns
+        TableRemoveColumns;myTable2.getHeaderSize() == 1;myTable2;{'NewColumn','DoesNotExist'}
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing';;;
+        #Id;#RawTable
+        myTable;Table
+        @;newH
+        0;newR
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Columns
+        tt;TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS && myTable.getHeaderSize() == 1;myTable;new Date()
+
+        #Action;#Assert;$Table;$Columns
+        TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER && myTable.getHeaderSize() == 1;myTable;
+
+        #Action;#Assert;$Table;$Columns
+        TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER && myTable.getHeaderSize() == 1;;'newH'
+
+        #Action;#Assert;$Table;$Columns
+        TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER && myTable.getHeaderSize() == 1;;
+
+        #Action;#Assert;$Table;$Columns
+        TableRemoveColumns;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS && myTable.getHeaderSize() == 1;new Date();'newH'
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_CONSIDER_COLUMNS_AS;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Field of table name was not filled';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;#Assert;$Table;$Integer
+        TableConsiderColumnsAs;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'Column'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Was introduced column name which there is not in a table';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;#Assert;$Table;$Integer
+        TableConsiderColumnsAs;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;TC;'wrongColumn'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Converter field was not filled';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;#Assert;$Table;$Integer
+        TableConsiderColumnsAs;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TC;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert with column with empty cells';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Action;$Table;$Title
+        TableReport;TC;'table before'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Action;#Assert;
+        Print;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;TC[0].Column
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert with wrong types';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;true
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Action;$Table;$Title
+        TableReport;TC;'table before'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Action;#Assert;
+        Print;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;TC[0].Column
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert some columns';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;ColumnInt;ColumnBoolean;ColumnString
+        0;Mike;42;true;a
+        1;John;32;false;b
+        2;Fred;21;false;c
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].ColumnInt.getClass() == String && TC[0].ColumnBoolean.getClass() == String && TC[0].ColumnString.getClass() == String;
+
+        #Action;$Table;$Integer;$String;$Boolean
+        TableConsiderColumnsAs;TC;'ColumnInt';'ColumnString';'ColumnBoolean'
+
+        #Assert;#Message
+        TC[0].ColumnInt.getClass() == Integer && TC[0].ColumnBoolean.getClass() == Boolean && TC[0].ColumnString.getClass() == String;
+
+        #Assert;#Message
+        TC[0].ColumnInt == 42 && TC[0].ColumnBoolean == true && TC[0].ColumnString.equals('a');
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Integer';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;42
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Integer && TC[0].Column == 42;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == Integer && TC[TC.size()-1].Column == 21;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to String';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;7
+        1;John;a
+        2;Fred;21
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Integer;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == Integer;
+
+        #Action;$Table;$String
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String && TC[0].Column.equals('7');
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == String && TC[TC.size()-1].Column.equals('21');
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Boolean';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;true
+        1;John;false
+        2;Fred;false
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Boolean
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Boolean && TC[0].Column == true;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == Boolean && TC[TC.size()-1].Column == false;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Double';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;1.02
+        1;John;5.0008
+        2;Fred;6
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Double
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Double && TC[0].Column == 1.02;
+
+        #Assert;#Message
+        TC[1].Column.getClass() == Double && TC[1].Column == 5.0008;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == Double && TC[TC.size()-1].Column == 6;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to BigDecimal';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;1.02
+        1;John;5.0008
+        2;Fred;6
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$BigDecimal
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == BigDecimal && TC[0].Column == 1.02 && TC[0].Column.scale() == 2;
+
+        #Assert;#Message
+        TC[1].Column.getClass() == BigDecimal && TC[1].Column == 5.0008 && TC[1].Column.scale() == 4;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column.getClass() == BigDecimal && TC[TC.size()-1].Column == 6 && TC[TC.size()-1].Column.scale() == 0;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Date';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;12/7/2007
+        1;John;10/10/2002
+        2;Fred;12/2/1999
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Date
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column.getClass() == Date && DateTime.getYears(TC[0].Column) == 2007 && DateTime.getMonths(TC[0].Column) == 6 && DateTime.getDays(TC[0].Column) == 12\u003b;
+
+        #Assert;#Message
+        TC[1].Column.getClass() == Date && DateTime.getYears(TC[1].Column) == 2002 && DateTime.getMonths(TC[1].Column) == 9 && DateTime.getDays(TC[1].Column) == 10\u003b;
+
+        #Assert;#Message
+        TC[2].Column.getClass() == Date && DateTime.getYears(TC[2].Column) == 1999 && DateTime.getMonths(TC[2].Column) == 1 && DateTime.getDays(TC[2].Column) == 12\u003b;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Convert to Expression';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;5 * 4
+        1;John;'a'.equals('a')
+        2;Fred;10 < 2
+        #EndRawTable
+
+        #Assert;#Message
+        TC[0].Column.getClass() == String;
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Assert;#Message
+        TC[0].Column == 20;
+
+        #Assert;#Message
+        TC[1].Column == true;
+
+        #Assert;#Message
+        TC[TC.size()-1].Column == false;
+
+    #EndStep
+
+    // TODO write later, make help example
+    #Step;#Kind;#For;#Depends
+    'Convert to Group';;;
+    #EndStep
+
+    // TODO write later, make help example
+    #Step;#Kind;#For;#Depends
+    'Convert to Hyperlink';;;
+    #EndStep
+
+    // TODO write later, make help example
+    #Step;#Kind;#For;#Depends
+    'Convert to Colored';;;
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_GET_ROW_INDEXES;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Field of table name was not filled';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table
+        TBLIDX1;TableGetRowIndexes;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Find row index of table where is condition is string';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;$Table;Column
+        TBLIDX1;TableGetRowIndexes;TC;'32'
+
+        #Assert;#Message
+        TBLIDX1.Out == [1];
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Find row index of table where is condition is int';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Id;#Action;$Table;Column
+        TBLIDX1;TableGetRowIndexes;TC;21
+
+        #Assert;#Message
+        TBLIDX1.Out == [2];
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Find several row indexes of table at one column';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;2
+        #EndRawTable
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Id;#Action;$Table;Column
+        TBLIDX1;TableGetRowIndexes;TC;2
+
+        #Assert;#Message
+        TBLIDX1.Out == [0,2];
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Find row index of table by several conditions';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;2
+        3;Mike;1
+        4;Mike;3
+        #EndRawTable
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Id;#Action;$Table;Column;Name
+        TBLIDX1;TableGetRowIndexes;TC;2;'Mike'
+
+        #Assert;#Message
+        TBLIDX1.Out == [0];
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Find row indexes of table with empy value (not fill value)';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;
+        2;Fred;
+        3;Mike;1
+        4;Mike;3
+        #EndRawTable
+
+        #Id;#Action;$Table;Column
+        TBLIDX1;TableGetRowIndexes;TC;
+
+        #Assert;#Message
+        TBLIDX1.Out == [1,2];
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Find row indexes of table with empy value (empty string)';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;
+        2;Fred;
+        3;Mike;1
+        4;Mike;3
+        #EndRawTable
+
+        #Id;#Action;$Table;Column
+        TBLIDX1;TableGetRowIndexes;TC;''
+
+        #Assert;#Message
+        TBLIDX1.Out == [1,2];
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Find row indexes of table where is condition is expression';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;Mike;2
+        1;John;32
+        2;Fred;2
+        3;Mike;1
+        4;Angel;10
+        5;John;40
+        #EndRawTable
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Column'
+
+        #Id;#Action;$Table;Column;Name
+        TBLIDX1;TableGetRowIndexes;TC;new NumberCondition('Column','>',2);'John'
+
+        #Assert;#Message
+        TBLIDX1.Out == [1,5];
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_REPLACE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'Regex - one column';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Mail
+        0;John;c0nst@money.simply.net
+        1;Mike;somebody@dev.com.ua
+        2;Bruce;Name.Sur_name@gmail.com
+        3;Anna;user33@somewhere.in.the.net
+        #EndRawTable
+
+        #Action;$Regexp;$Replace;$Table;$Columns
+        TableReplace;'[a-zA-Z]{1}[a-zA-Z\\d\\.\\_]+@([a-zA-Z]+\\.){1,2}((net)|(com)|(org))';'passed';TC;'Mail'
+
+        #Assert;#Message
+        TC.get(0).get('Mail') == 'passed'&& TC.get(2).get('Mail') == 'passed';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Regex - several columns';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;WorkMail;HomeMail
+        0;John;c0nst@money.simply.net;somebody@dev.com.ua
+        1;Mike;somebody@dev.com.ua;c0nst@money.simply.net
+        2;Bruce;Name.Sur_name@gmail.com;user33@somewhere.in.the.net
+        3;Anna;user33@somewhere.in.the.net;Name.Sur_name@gmail.com
+        #EndRawTable
+
+        #Action;$Regexp;$Replace;$Table;$Columns
+        TableReplace;'[a-zA-Z]{1}[a-zA-Z\\d\\.\\_]+@([a-zA-Z]+\\.){1,2}((net)|(com)|(org))';'passed';TC;{'WorkMail','HomeMail'}
+
+        #Assert;#Message
+        TC[0].WorkMail == 'passed' && TC[1].WorkMail == 'somebody@dev.com.ua' && TC[2].WorkMail == 'passed' && TC[3].WorkMail == 'user33@somewhere.in.the.net';'Replacement was not made'
+
+        #Assert;#Message
+        TC[0].HomeMail == 'somebody@dev.com.ua' && TC[1].HomeMail == 'passed' && TC[2].HomeMail == 'user33@somewhere.in.the.net' && TC[3].HomeMail == 'passed';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Replace empty cells';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;10
+        1;Mike;
+        2;Bruce;
+        3;Anna;30
+        #EndRawTable
+
+        #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+        TableReplace;'0';TC;'Column';true;''
+
+        #Assert;#Message
+        TC[0].Column == '10' && TC[1].Column == '0' && TC[2].Column == '0' && TC[3].Column == '30';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'MatchCell field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;10
+        1;Mike;
+        2;Bruce;
+        3;Anna;30
+        #EndRawTable
+
+        #Action;#Assert;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'0';TC;'Column';'';
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'MatchCell field Boolean.TRUE';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;'X';TC;'Column';'3';Boolean.TRUE
+
+        #Assert;#Message
+        TC[0].Column == '0' && TC[1].Column == 'X' && TC[2].Column == '30' && TC[3].Column == '300';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'MatchCell field Boolean.FALSE';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;'X';TC;'Column';'3';Boolean.FALSE
+
+        #Assert;#Message
+        TC[0].Column == '0' && TC[1].Column == 'X' && TC[2].Column == 'X0' && TC[3].Column == 'X00';'Replacement was not made'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Replace field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;#Assert;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;TC;'Column';'3';Boolean.FALSE
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Table field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;#Assert;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'X';;'Column';'3';Boolean.FALSE
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Columns field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Column
+        0;John;0
+        1;Mike;3
+        2;Bruce;30
+        3;Anna;300
+        #EndRawTable
+
+        #Action;#Assert;$Replace;$Table;$Columns;$Search;$MatchCell
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'X';TC;;'3';Boolean.FALSE
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Regex field can not be null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Mail
+        0;John;c0nst@money.simply.net
+        1;Mike;somebody@dev.com.ua
+        2;Bruce;Name.Sur_name@gmail.com
+        3;Anna;user33@somewhere.in.the.net
+        #EndRawTable
+
+        #Action;#Assert;$Regexp;$Replace;$Table;$Columns
+        TableReplace;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'passed';TC;'Mail'
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_LOAD_FROM_DIR;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'correct full way';;;
+        #Id;#Action;$Dir
+        actual;TableLoadFromDir;new File('').getAbsolutePath() + "/testdata/loadfromdir"
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Is directory;Hidden
+        0;main.log;false;false
+        1;matrix.jf;false;false
+        2;dir;true;false
+        3;table.csv;false;false
+        #EndRawTable
+
+        #Action;$Table;$Columns
+        TableRemoveColumns;actual.Out;{'Size','Date'}
+
+        #Action;$Table;$Title
+        TableReport;actual.Out;'dirs'
+
+        #Action;$Expected;$Actual;$IgnoreRowsOrder
+        TableCompareTwo;expected;actual.Out;true
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'correct short way';;;
+        #Id;#Action;$Dir
+        actual;TableLoadFromDir;'testdata/loadfromdir'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Is directory;Hidden
+        0;main.log;false;false
+        1;matrix.jf;false;false
+        2;dir;true;false
+        3;table.csv;false;false
+        #EndRawTable
+
+        #Action;$Table;$Columns
+        TableRemoveColumns;actual.Out;{'Size','Date'}
+
+        #Action;$Table;$Title
+        TableReport;actual.Out;'dirs'
+
+        #Action;$Expected;$Actual;$IgnoreRowsOrder
+        TableCompareTwo;expected;actual.Out;true
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'incorrect way';;;
+        #Id;#Action;#Assert;$Dir
+        actual;TableLoadFromDir;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new File('').getAbsolutePath() + '/testdata/loadfromdir' + '/folderwhichisnot'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty dir';;;
+        #Id;#Action;#Assert;$Dir
+        actual;TableLoadFromDir;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_CREATE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'create a table with several columns';;;
+        #Id;#Action;Name;Age
+        TC;TableCreate;;
+
+        #Assert;#Message
+        TC.Out.getHeader(0) == 'Name' && TC.Out.getHeader(1) == 'Age' && TC.Out.getHeaderSize == 2;'Table is not correct'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'column name is empty';;;
+        #Id;#Action;#Assert;Name;;Age
+        TC;TableCreate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'replace existing table';;;
+        #Id;#Action;Name;Age;City
+        TC;TableCreate;;;
+
+        #Id;#Action;N;A
+        TC;TableCreate;;
+
+        #Assert;#Message
+        TC.Out.getHeader(0) == 'N' && TC.Out.getHeader(1) == 'A' && TC.Out.getHeaderSize() == 2;'Table is not correct'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'create several tables';;;
+        #Id;#Action;Name;Age;City
+        TC;TableCreate;;;
+
+        #Id;#Action;N;A
+        TC1;TableCreate;;
+
+        #Assert;#Message
+        TC.Out.getHeader(0) == 'Name' && TC.Out.getHeader(1) == 'Age' && TC.Out.getHeader(2) == 'City' && TC.Out.getHeaderSize() == 3;'Table is not correct'
+
+        #Assert;#Message
+        TC1.Out.getHeader(0) == 'N' && TC1.Out.getHeader(1) == 'A' && TC1.Out.getHeaderSize() == 2;'Table is not correct'
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_SET_VALUE;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'change several cells in row';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;$Table;$Index;Name;Age
+        TableSetValue;TC;0;'John';'42'
+
+        #Assert;#Message
+        TC.get(0).get('Name') == 'John'&& TC.get(0).get('Age') == '42';
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'change one cell in row';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;$Table;$Index;Name
+        TableSetValue;TC;0;'John'
+
+        #Assert;#Message
+        TC.get(0).get('Name') == 'John'&& TC.get(0).get('Age') == '25';
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'wrong column';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;#Assert;$Table;$Index;City
+        TableSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TC;0;'John'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'empty column';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;#Assert;$Table;$Index;
+        TableSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TC;0;'John'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'index is out of bound > size';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;#Assert;$Table;$Index;Name
+        TableSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TC;1;'John'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'index is out of bound < 0';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;#Assert;$Table;$Index;Name
+        TableSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TC;-1;'John'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'index does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;#Assert;$Table;$Index;Name
+        TableSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TC;;'John'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'table field does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;#Assert;$Table;$Index;Name
+        TableSetValue;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;0;'John'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'change cell value to null';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;$Table;$Index;Name;Age
+        TableSetValue;TC;0;'John';
+
+        #Assert;#Message
+        TC.get(0).get('Name') == 'John'&& TC.get(0).get('Age') == null;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'change cell value to empty string';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;$Table;$Index;Name;Age
+        TableSetValue;TC;0;'John';''
+
+        #Assert;#Message
+        TC.get(0).get('Name') == 'John'&& TC.get(0).get('Age').isEmpty();
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'change value in considered column';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Age'
+
+        #Assert;#Message
+        TC[0].Age.getClass() == Integer;
+
+        #Action;$Table;$Index;Name;Age
+        TableSetValue;TC;0;'John';2
+
+        #Assert;#Message
+        TC[0].Age.getClass() == Integer && TC.get(0).get('Age') == 2 && TC.get(0).get('Age').getClass() == Integer;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'change cell value to incorrect type';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        #EndRawTable
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Age'
+
+        #Assert;#Message
+        TC[0].Age.getClass() == Integer;
+
+        #Action;$Table;$Index;Name;Age
+        TableSetValue;TC;0;'John';'a'
+
+        #Action;#Assert;
+        Print;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;TC[0].Age
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_EDIT;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'table field does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;Jane;21
+        2;Ann;19
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Title;Name;Age
+        TBEDT1;TableEdit;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'Title';;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'title field does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;Jane;21
+        2;Ann;19
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Title;Name;Age
+        TBEDT1;TableEdit;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TC;;;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'wrong boolean parameters';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;Jane;21
+        2;Ann;19
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Title;Name;Age
+        TBEDT1;TableEdit;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TC;'Title';'true';'false'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'example';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age;City
+        0;Mike;25;London
+        1;Jane;21;Moscow
+        2;Ann;19;France
+        #EndRawTable
+
+        #Action;$Table;$Title;Name;Age;City
+        TableEdit;TC;'Title';true;false;true
+
+        #Action;$Table;$Title
+        TableReport;TC;'table after edit'
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_SELECT;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'table field does not fill';;;
+        #Id;#Action;#Assert;$Table;Age
+        TS;TableSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;new StringCondition('Name','Mike')
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'select by expression';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;32
+        2;Fred;21
+        #EndRawTable
+
+        #Action;$Table;$Integer
+        TableConsiderColumnsAs;TC;'Age'
+
+        #Id;#Action;$Table;Age
+        actual;TableSelect;TC;new NumberCondition('Age','>',25)
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;32
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'select by condition for another column';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;$Table;Age
+        actual;TableSelect;TC;new StringCondition('Name','Mike')
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;42
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'simple select';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;$Table;Name
+        actual;TableSelect;TC;'Mike'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;42
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
+    #Off;#Step;#Kind;#For;#Depends
+    1;'column does not exist in table';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;Age;City
+        actual;TableSelect;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;TC;42;'Mike'
+
+    #EndStep
+
+    #Off;#Step;#Kind;#For;#Depends
+    1;'column does not have name';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;42
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;Age;
+        actual;TableSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;TC;42;'Mike'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'there is not coincidence';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;43
+        1;John;42
+        2;Fred;21
+        #EndRawTable
+
+        #Id;#Action;$Table;Age;Name
+        actual;TableSelect;TC;42;'Fred'
+
+        #Id;#Action;Name;Age
+        expected;TableCreate;;
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected.Out;actual.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'select by several column values';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;43
+        1;John;42
+        2;Fred;21
+        3;John;43
+        4;John;42
+        #EndRawTable
+
+        #Id;#Action;$Table;Age;Name
+        actual;TableSelect;TC;42;'John'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;John;42
+        1;John;42
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'OR condition';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;43
+        1;John;42
+        2;Fred;21
+        3;John;43
+        4;John;42
+        #EndRawTable
+
+        #Id;#Action;$Table;
+        actual;TableSelect;TC;new OrCondition(new StringCondition('Name','Fred'), new NumberCondition('Age','>',42))
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;43
+        1;Fred;21
+        2;John;43
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual.Out
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_UNION;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'there is not have any coincidenced columns';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;NameName;AgeAge
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;$UnitedTable;$MainTable
+        TableUnion;additional;main
+
+        #Action;$Table;$Title
+        TableReport;main;'dfdf'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;main
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Untitled table field does not fill';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;#Assert;$UnitedTable;$MainTable
+        TableUnion;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;main
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Main table field does not fill';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;#Assert;$UnitedTable;$MainTable
+        TableUnion;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;additional;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'main has columns > then additional';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;$UnitedTable;$MainTable
+        TableUnion;additional;main
+
+        #Action;$Table;$Title
+        TableReport;main;'dfdf'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age;Gender
+        0;Mike;42;Male
+        1;Anna;21;Female
+        2;Fred;28;
+        3;Carl;10;
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;main
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'main has columns == then additional';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age
+        0;Mike;42
+        1;Anna;21
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age
+        0;Fred;28
+        1;Carl;10
+        #EndRawTable
+
+        #Action;$UnitedTable;$MainTable
+        TableUnion;additional;main
+
+        #Action;$Table;$Title
+        TableReport;main;'dfdf'
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;42
+        1;Anna;21
+        2;Fred;28
+        3;Carl;10
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;main
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'main has columns < then additional';;;
+        #Id;#RawTable
+        main;Table
+        @;Name;Age
+        0;Mike;42
+        1;Anna;21
+        #EndRawTable
+
+        #Id;#RawTable
+        additional;Table
+        @;Name;Age;Gender
+        0;Fred;28;Male
+        1;Carl;10;Female
+        #EndRawTable
+
+        #Action;#Assert;$UnitedTable;$MainTable
+        TableUnion;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;additional;main
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_REPORT;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'numbers == true';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#RawTable"
+        ~;"TC;Table"
+        ~;"@;Name;Age"
+        ~;"0;Mike;25"
+        ~;"1;John;23"
+        ~;"#EndRawTable"
+        ~;""
+        ~;""
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};true;true;"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Call;appCon
+        CALL_1;expand;appCon
+
+        // check that report contains 'report name'
+        #Id;#Action;#Assert;$Dialog;$AppConnection;numbers
+        DLGFLL1;DialogFill;This.Out.numbers == 1;'DialogForTestTableReport';appCon;Do.count()
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'numbers == false';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#RawTable"
+        ~;"TC;Table"
+        ~;"@;Name;Age"
+        ~;"0;Mike;25"
+        ~;"1;John;23"
+        ~;"#EndRawTable"
+        ~;""
+        ~;""
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};false;true"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Call;appCon
+        CALL_1;expand;appCon
+
+        // check that report contains 'report name'
+        #Id;#Action;#Assert;$Dialog;$AppConnection;numbers
+        DLGFLL1;DialogFill;This.Out.numbers == 0;'DialogForTestTableReport';appCon;Do.count()
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'reportValues == true';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#RawTable"
+        ~;"TC;Table"
+        ~;"@;Name;Age"
+        ~;"0;Mike;25 * 2"
+        ~;"1;John;3 + 3"
+        ~;"#EndRawTable"
+        ~;""
+        ~;""
+        ~;"#Action;$Table;$Expression"
+        ~;"TableConsiderColumnsAs;TC;'Age'"
+        ~;""
+        ~;""
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};true;true"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Call;appCon
+        CALL_1;expand;appCon
+
+        // 
+        #Id;#Action;$Dialog;$AppConnection;table
+        DLGFLL1;DialogFill;'DialogForTestTableReport';appCon;Do.getValue(1,0)
+
+        #Assert;#Message
+        DLGFLL1.Out.table.equals('50');
+
+        // 
+        #Id;#Action;#Assert;$Dialog;$AppConnection;table
+        DLGFLL2;DialogFill;This.Out.table.equals('6');'DialogForTestTableReport';appCon;Do.getValue(1,1)
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'reportValues == false';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#RawTable"
+        ~;"TC;Table"
+        ~;"@;Name;Age"
+        ~;"0;Mike;25 * 2"
+        ~;"1;John;3 + 3"
+        ~;"#EndRawTable"
+        ~;""
+        ~;""
+        ~;"#Action;$Table;$Expression"
+        ~;"TableConsiderColumnsAs;TC;'Age'"
+        ~;""
+        ~;""
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person'};true;false"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Call;appCon
+        CALL_1;expand;appCon
+
+        // 
+        #Id;#Action;#Assert;$Dialog;$AppConnection;table
+        DLGFLL1;DialogFill;This.Out.table.equals('25 * 2');'DialogForTestTableReport';appCon;Do.getValue(1,0)
+
+        // 
+        #Id;#Action;#Assert;$Dialog;$AppConnection;table
+        DLGFLL2;DialogFill;This.Out.table.equals('3 + 3');'DialogForTestTableReport';appCon;Do.getValue(1,1)
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'columns == hashmap';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#RawTable"
+        ~;"TC;Table"
+        ~;"@;Name;Age;City"
+        ~;"0;Mike;25 * 2;Kostroma"
+        ~;"1;John;3 + 3;Saratov"
+        ~;"#EndRawTable"
+        ~;""
+        ~;""
+        ~;"#Action;$Table;$Expression"
+        ~;"TableConsiderColumnsAs;TC;'Age'"
+        ~;""
+        ~;""
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';{'Age' : 'Age of person', 'City' : 'Team cities'};true;true"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Call;appCon
+        CALL_1;expand;appCon
+
+        // 
+        #Id;#Action;$Dialog;$AppConnection;table
+        DLG;DialogFill;'DialogForTestTableReport';appCon;Do.getTable()
+
+        #Id;#Let
+        table;DLG.Out.table
+
+        #Assert;#Message
+        table.getHeader(1) == 'Age of person';
+
+        #Assert;#Message
+        table.getHeader(2) == 'Team cities';
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'columns == array';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#RawTable"
+        ~;"TC;Table"
+        ~;"@;Name;Age;City"
+        ~;"0;Mike;25 * 2;Kostroma"
+        ~;"1;John;3 + 3;Saratov"
+        ~;"#EndRawTable"
+        ~;""
+        ~;""
+        ~;"#Action;$Table;$Expression"
+        ~;"TableConsiderColumnsAs;TC;'Age'"
+        ~;""
+        ~;""
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'Test';TC;'Title';['Age','City'];true;true"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Call;appCon
+        CALL_1;expand;appCon
+
+        // 
+        #Id;#Action;$Dialog;$AppConnection;table
+        DLG;DialogFill;'DialogForTestTableReport';appCon;Do.getTable()
+
+        #Id;#Let
+        table;DLG.Out.table
+
+        #Assert;#Message
+        table.getHeader(1) == 'Age';
+
+        #Assert;#Message
+        table.getHeader(2) == 'City';
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'before == true';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"TABLE_REPORT;Test case;Never;;"
+        ~;"#Id;#RawTable"
+        ~;"TC;Table"
+        ~;"@;Name;Age;City"
+        ~;"0;Mike;25 * 2;Kostroma"
+        ~;"1;John;3 + 3;Saratov"
+        ~;"#EndRawTable"
+        ~;""
+        ~;""
+        ~;"#Action;$Table;$Expression"
+        ~;"TableConsiderColumnsAs;TC;'Age'"
+        ~;""
+        ~;""
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'TABLE_REPORT';TC;'Title';['Age', 'City'];true;true"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        // 
+        #Id;#Action;#Assert;$Dialog;$AppConnection;table
+        DLG;DialogFill;DLG.Out.table == 1;'DialogForTestTableReport';appCon;Do.count()
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'before == false';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"TABLE_REPORT;Test case;Never;;"
+        ~;"#Id;#RawTable"
+        ~;"TC;Table"
+        ~;"@;Name;Age;City"
+        ~;"0;Mike;25 * 2;Kostroma"
+        ~;"1;John;3 + 3;Saratov"
+        ~;"#EndRawTable"
+        ~;""
+        ~;""
+        ~;"#Action;$Table;$Expression"
+        ~;"TableConsiderColumnsAs;TC;'Age'"
+        ~;""
+        ~;""
+        ~;"#Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues"
+        ~;"tt;TableReport;'';TC;'Title';['Age', 'City'];true;true"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        // 
+        #Id;#Action;#Assert;$Dialog;$AppConnection;table
+        DLG;DialogFill;DLG.Out.table == 0;'DialogForTestTableReport';appCon;Do.count()
+
+        #Id;#Call;appCon
+        CALL_1;expandTestcase;appCon
+
+        // 
+        #Id;#Action;#Assert;$Dialog;$AppConnection;table
+        DLG;DialogFill;DLG.Out.table == 1;'DialogForTestTableReport';appCon;Do.count()
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'before == true and before inside library';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"TCName;Test case;Never;;"
+        ~;"    #Id;#Call;TCName"
+        ~;"    CALL_1;testLib.testReportTableInsideLibrary;'TCName'"
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;TEXT1
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        // 
+        #Id;#Action;#Assert;$Dialog;$AppConnection;table
+        DLG;DialogFill;DLG.Out.table == 1;'DialogForTestTableReport';appCon;Do.count()
+
+        #Id;#Call;appCon
+        CALL_2;stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'table field does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;John;23
+        #EndRawTable
+
+        #Id;#Action;#Assert;$BeforeTestCase;$Table;$Title;$Columns
+        tt;TableReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Test';;'Table title';{'Age' : 'Age of person'}
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'title field does not fill';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age
+        0;Mike;25
+        1;John;23
+        #EndRawTable
+
+        #Id;#Action;#Assert;$BeforeTestCase;$Table;$Title;$Columns
+        tt;TableReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Test';TC;;{'Age' : 'Age of person'}
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'example';;;
+        #Id;#RawTable
+        TC;Table
+        @;Name;Age;City
+        0;Mike;25 * 2;Kostroma
+        1;John;3 + 3;Saratov
+        #EndRawTable
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;TC;'Age'
+
+        #Id;#Action;$BeforeTestCase;$Table;$Title;$Columns;$Numbers;$ReportValues
+        tt;TableReport;'';TC;'Title';['Age', 'City'];true;true
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+TABLE_REMOVE_ROW;Test case;Never;;
+    #Step;#Kind;#For;#Depends
+    'remove first row';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;$Table;$Index
+        TBLRR1;TableRemoveRow;actual;0
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Anna;20
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'remove last row';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        2;Kate;21
+        #EndRawTable
+
+        #Id;#Action;$Table;$Index
+        TBLRR1;TableRemoveRow;actual;2
+
+        #Id;#RawTable
+        expected;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;$Expected;$Actual
+        TBLCMP1;TableCompareTwo;expected;actual
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'table field does not fill';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Index
+        TBLRR1;TableRemoveRow;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'index is out of bound > size';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Index
+        TBLRR1;TableRemoveRow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;actual;2
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'index is out of bound < 0';;;
+        #Id;#RawTable
+        actual;Table
+        @;Name;Age
+        0;Mike;25
+        1;Anna;20
+        #EndRawTable
+
+        #Id;#Action;#Assert;$Table;$Index
+        TBLRR1;TableRemoveRow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;actual;-1
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+MVEL;Test case;;;
+    #Step;#Kind;#For;#Depends
+    'linear sequence';;;
+        #Id;#Let
+        name1;'D'
+
+        #Id;#Let
+        name;'B'
+
+        #Id;#RawTable
+        TBL1;Table
+        @;Column
+        0;'A' + name + 'C'
+        #EndRawTable
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;TBL1;'Column'
+
+        #Action;
+        Print;TBL1[0].Column
+
+        #Assert;#Message
+        TBL1[0].Column == 'ABC';
+
+        #Action;
+        Print;TBL1[0].Column
+
+        #Assert;#Message
+        TBL1[0].Column == 'ABC';
+
+        #Action;
+        Print;TBL1[0].Column = name1
+
+        #Action;#Assert;
+        Print;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;TBL1[0].Column
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'foreach';;;
+        #Id;#Let
+        name1;100
+
+        #Id;#Let
+        name;'abc'
+
+        #Id;#RawTable
+        DATA1;Table
+        @;Column;Column2
+        0;'name';123
+        1;55555;123
+        2;name;123
+        #EndRawTable
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;DATA1;'Column'
+
+        #ForEach;#In
+        raw;DATA1
+            #Action;;
+            Print;raw.Column;raw.Column2
+
+        #EndForEach
+
+        #Assert;#Message
+        DATA1[0].Column == 'name' && DATA1[0].Column2 == 123;
+
+        #Assert;#Message
+        DATA1[1].Column == 55555 && DATA1[1].Column2 == 123;
+
+        #Assert;#Message
+        DATA1[2].Column == 'abc' && DATA1[2].Column2 == 123;
+
+        #ForEach;#In
+        raw;DATA1
+            #Action;;
+            Print;raw.Column;raw.Column2
+
+        #EndForEach
+
+        #Assert;#Message
+        DATA1[0].Column == 'name' && DATA1[0].Column2 == 123;
+
+        #Assert;#Message
+        DATA1[1].Column == 55555 && DATA1[1].Column2 == 123;
+
+        #Assert;#Message
+        DATA1[2].Column == 'abc' && DATA1[2].Column2 == 123;
+
+        #Id;#Let
+        i;0
+
+        #ForEach;#In
+        raw;DATA1
+            #Id;#Let
+            i;i +1
+
+            #Action;;;
+            Print;raw.Column = name1 + i;raw.Column2 = '000' + i;raw.Column
+
+        #EndForEach
+
+        #Assert;#Message
+        DATA1[0].Column == 101 && DATA1[0].Column2 == 0001;
+
+        #Assert;#Message
+        DATA1[1].Column == 102 && DATA1[1].Column2 == 0002;
+
+        #Assert;#Message
+        DATA1[2].Column == 103 && DATA1[2].Column2 == 0003;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'let';;;
+        #Id;#RawTable
+        DATA1;Table
+        @;value;expr
+        0;abc;100 + 10
+        1;def;'abac+10'
+        #EndRawTable
+
+        #Action;$Table;$Expression
+        TableConsiderColumnsAs;DATA1;'expr'
+
+        #Id;#Let
+        d;DATA1[0].expr = '\'_100+10\''
+
+        #Id;#Let
+        e;DATA1[0].value
+
+        #Id;#Let
+        f;DATA1[0].expr
+
+        #Assert;#Message
+        d == '\'_100+10\'' && e == 'abc'  && f == '_100+10';
+
+        // // for debug
+        #Off;#Action;$Table;$Title;$ReportValues;$BeforeTestCase
+        1;TableReport;DATA1;'after expressions changes';false;'MVEL'
+
+        // // for debug
+        #Off;#Action;$Table;$Title;$ReportValues;$BeforeTestCase
+        1;TableReport;DATA1;'after changes';true;'MVEL'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'int & expression';;;
+        #Id;#RawTable
+        DATA1;Table
+        @;value;expr;int
+        0;abc;100 + 10;100
+        1;def;'abac+10';200
+        #EndRawTable
+
+        #Action;$Table;$Expression;$Integer
+        TableConsiderColumnsAs;DATA1;'expr';'int'
+
+        #Id;#Let
+        row;DATA1[0]
+
+        #IgnoreErr;#Action;row.expr;row.expr
+        1;Print;row.expr;DATA1[0].expr
+
+        #IgnoreErr;#Action;row.int;row.int
+        1;Print;row.int;DATA1[0].int
+
+        #Assert;#Message
+        row.expr == 110 && DATA1[0].expr == 110;
+
+        #Assert;#Message
+        row.int == 100 && DATA1[0].int == 100;
+
+        #Let
+        row.int = row.expr + row.int
+
+        #Assert;#Message
+        row.int == 210;
+
+        #Let
+        row.expr = '\'abac+100\''
+
+        #Let
+        row.int = 'aaa'
+
+        #Action;#Assert;row.expr;row.expr
+        Print;This.Result == Result.Passed;row.expr;DATA1[0].expr
+
+        #Action;#Assert;row.int;row.int
+        Print;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;row.int;DATA1[0].int
+
+        // // for debug
+        #Off;#Action;$Table;$Title;$ReportValues;$BeforeTestCase
+        1;TableReport;DATA1;'after expressions changes';false;'MVEL'
+
+        // // for debug
+        #Off;#Action;$Table;$Title;$ReportValues;$BeforeTestCase
+        1;TableReport;DATA1;'after changes';true;'MVEL'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    '_ as row';;;
+        #Id;#RawTable
+        DATA1;Table
+        @;value;expr;int;string
+        0;abc;_.int + 100 + 10;100;c
+        1;def;'a' + _.string;200;b
+        #EndRawTable
+
+        #Action;$Table;$Expression;$Integer
+        TableConsiderColumnsAs;DATA1;'expr';'int'
+
+        #Assert;#Message
+        DATA1[0].expr == '100110' && DATA1[1].expr == 'ab';
+
+        #Id;#Let
+        i;0
+
+        #ForEach;#In
+        row;DATA1
+            #If
+            i == 0
+                #Assert;#Message
+                row.expr == '100110';
+
+            #EndIf
+
+            #If
+            i == 1
+                #Assert;#Message
+                row.expr == 'ab';
+
+            #EndIf
+
+            #Id;#Let
+            i;i + 1
+
+        #EndForEach
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+UTIL;subcases;;;
+    #Id;#SubCase;rawText
+    runMatrix;returned value - path to report;TEXT1
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;rawText
+
+        #Id;#Action;$Matrix
+        MXWT1;MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.failed() == 0;'Matrix contains failed testcase. Check the matrix'
+
+        #Return
+        MXRN1.Out.getReportName()
+
+    #EndSubCase
+
+    #Id;#SubCase;pathToReport
+    runBrowser;returned value - appConnection;pathToReport
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
+
+        #Return
+        APPSTR1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    stopBrowser;;appCon
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    expand;;appCon
+        #Id;#Action;$Dialog;$AppConnection;Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #Id;#Off;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL2;1;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
+
+        #Id;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"Report")]')).click()
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    expandTestcase;;appCon
+        #Id;#Action;$Dialog;$AppConnection;Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #Id;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
+
+        #Id;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"Report")]')).click()
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    expandChart;;appCon
+        #Id;#Action;$Dialog;$AppConnection;Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #Id;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
+
+        #Id;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (ChartReport)")]')).click()
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon;list
+    expandWithPath;;;
+        #If
+        !(list is java.util.List)
+            #Fail
+            'Passed array is not instance of List'
+
+        #EndIf
+
+        #Id;#Action;$Dialog;$AppConnection;Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #ForEach;#In
+        link;list
+            #Id;#Action;MockElement;$Dialog;$AppConnection
+            DLGFLL4;DialogFill;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"'+link+'")]')).click();'DialogForTestReport';appCon
+
+        #EndForEach
+
+    #EndSubCase
+
+

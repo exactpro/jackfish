@@ -1,0 +1,1288 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#TestCase;#Kind;#Depends;#For
+prepare;;;
+    #Id;#SubCase
+    createXml;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Xml
+        ~;"<root>"
+        ~;"	<first par1=""value1"">"
+        ~;"		<third>"
+        ~;"			Some text from third node"
+        ~;"		</third>"
+        ~;"		<fourth parameter=""parameter"" value=""value"" id=""5"">"
+        ~;"			"
+        ~;"		</fourth>"
+        ~;"	</first>"
+        ~;"	<first par1=""value2"">"
+        ~;""
+        ~;"	</first>"
+        ~;"	<second par2=""value3"">"
+        ~;"		<fourth parameter=""parameter13"" value=""value14"" id=""8"">"
+        ~;"			<another>text from another</another>"
+        ~;"		</fourth>"
+        ~;"	</second>"
+        ~;"</root>"
+        #EndRawText
+
+        #Id;#Action;$Text
+        XML1;XmlFromText;TEXT1
+
+        #Id;#Action;$Xml
+        XML2;XmlChildren;XML1.Out
+
+        #Id;#Action;$Xpath;$Xml
+        XML4;XmlFindFirst;'.//third';XML1.Out
+
+        // return root of xml. Not document
+        #Return
+        XML2.Out[0]
+
+    #EndSubCase
+
+    #Id;#SubCase
+    createXmlDocument;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Xml
+        ~;"<root>"
+        ~;"	<first par1=""value1"">"
+        ~;"		<third>"
+        ~;"			Some text from third node"
+        ~;"		</third>"
+        ~;"		<fourth parameter=""parameter"" value=""value"" id=""5"">"
+        ~;"			"
+        ~;"		</fourth>"
+        ~;"	</first>"
+        ~;"	<first par1=""value2"">"
+        ~;""
+        ~;"	</first>"
+        ~;"	<second par2=""value3"">"
+        ~;"		<fourth parameter=""parameter13"" value=""value14"" id=""8"">"
+        ~;"			<another>text from another</another>"
+        ~;"		</fourth>"
+        ~;"	</second>"
+        ~;"</root>"
+        #EndRawText
+
+        #Id;#Action;$Text
+        XML1;XmlFromText;TEXT1
+
+        #Return
+        XML1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;xml
+    saveToFile;;doc
+        #Action;$Xml;$File
+        XmlSaveToFile;xml;'temp.xml'
+
+    #EndSubCase
+
+    #Id;#SubCase;text
+    loadRoot;;TEXT2
+        #Id;#Action;$Text
+        XMLFT5;XmlFromText;text
+
+        #Id;#Action;$Xml
+        XML3;XmlChildren;XMLFT5.Out
+
+        #Return
+        XML3.Out[0]
+
+    #EndSubCase
+
+    #Id;#SubCase;rawText
+    runMatrix;returned value - path to report;matrix
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;rawText
+
+        #Id;#Action;$Matrix
+        MXWT1;MatrixWait;MXRN1.Out
+
+        #Assert;#Message
+        MXRN1.Out.failed() == 0;'Matrix contains failed testcase. Check the matrix'
+
+        #Return
+        MXRN1.Out.getReportName()
+
+    #EndSubCase
+
+    #Id;#SubCase;pathToReport
+    runBrowser;returned value - appConnection;pathToReport
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
+
+        #Return
+        APPSTR1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    stopBrowser;;appCon
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    expand;;appCon
+        #Id;#Action;$Dialog;$AppConnection;Executed
+        DLGFLL1;DialogFill;'DialogForTestReport';appCon;Do.click()
+
+        #Id;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL2;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"TestCase")]')).click()
+
+        #Id;#Action;$Dialog;$AppConnection;MockElement
+        DLGFLL3;DialogFill;'DialogForTestReport';appCon;Do.use(new Locator().kind(ControlKind.Any).xpath('.//a[contains(.,"ActionItem (XmlReport)")]')).click()
+
+    #EndSubCase
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlChildren;Never;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Action;#Assert;$Xml
+        XmlChildren;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Action;#Assert;$Xml
+        XmlChildren;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd'
+
+    #EndStep
+
+    #Id;#Call
+    root;createXml
+
+    #Id;#Action;#Assert;$Xml
+    rootChildren;XmlChildren;This.Out.size() == 3;root
+
+    #Id;#Action;#Assert;$Xml
+    first;XmlChildren;This.Out.size() == 2;rootChildren.Out[0]
+
+    #Id;#Action;#Assert;$Xml
+    first2;XmlChildren;This.Out.size() == 0;rootChildren.Out[1]
+
+
+#TestCase;#Kind;#Depends;#For
+check  XmlAddNode;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Action;#Assert;$Xml
+        XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;$Xml;parameter1;parameter2
+        XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;root;'par1';'par2'
+
+        #Action;#Assert;$Xml
+        XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Action;#Assert;$Xml;$NewXML
+        XmlAddNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;root;new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'add node with xml';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;$Xml
+        first;XmlChildren;root
+
+        #Action;$NewXML;$Xml
+        XmlAddNode;first.Out[0];root
+
+        #Assert;#Message
+        root.getChildren().size() == 4;'Root dosn\'t contains copied xml'
+
+        #Id;#Let
+        addedNode;root.getChildren().get(3)
+
+        #Assert;#Message
+        addedNode.getAttribute('par1') == 'value1';'Expected : value1, Actual : ' + addedNode.getAttribute('par1')
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'add node with xml document';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#RawText;#Kind
+        TEXT2;Text;Xml
+        ~;"<myXml>"
+        ~;"	<newTag>simpleTag</newTag>"
+        ~;"</myXml>"
+        #EndRawText
+
+        #Id;#Action;$Text
+        XMLFT1;XmlFromText;TEXT2
+
+        #Id;#Let
+        oldChildCount;XMLFT1.Out.getChildren()[0].getChildren().size()
+
+        #Action;$Xml;$NewXML
+        XmlAddNode;XMLFT1.Out;root
+
+        #Assert;#Message
+        XMLFT1.Out.getChildren()[0].getChildren().size() == oldChildCount + 1;'New child count not equals'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'add node with new node with textContent';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;$Xml;$NodeName;$Content
+        XmlAddNode;root;'simpleNodeName';'simple node content'
+
+        #Assert;#Message
+        root.getChildren().size() == 4 && root.getChildren().get(3).getText() == 'simple node content';'Root dosn\'t contains created xml element'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'add node with new node with parameters and textContent';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;$Xml;$NodeName;$Content;parameter1;parameter2
+        XmlAddNode;root;'simpleNodeName';'simple node content';'par1';'par2'
+
+        #Assert;#Message
+        root.getChildren().size() == 4;'Root dosn\'t contains created xml element'
+
+        #Id;#Let
+        addedXml;root.getChildren().get(3)
+
+        #Assert;#Message
+        addedXml.getText() == 'simple node content';'Text dosnt equals. Expected : simple node content, Actual : ' + addedXml.getText()
+
+        #Assert;#Message
+        addedXml.getAttribute('parameter1') == 'par1';'Attribute value dosnt equals. Expected : par1, Actual : ' + addedXml.getAttribute('parameter1')
+
+        #Assert;#Message
+        addedXml.getAttribute('parameter2') == 'par2';'Attribute value dosnt equals. Expected : par2, Actual : ' + addedXml.getAttribute('parameter2')
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'add node with new node with parameters and without textContent';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;$Xml;$NodeName;parameter1;parameter2
+        XmlAddNode;root;'simpleNodeName';'par1';'par2'
+
+        #Assert;#Message
+        root.getChildren().size() == 4;'Root dosn\'t contains created xml element'
+
+        #Id;#Let
+        addedXml;root.getChildren().get(3)
+
+        #Assert;#Message
+        addedXml.getText().isEmpty();'Text dosnt equals. Expected empty text, Actual : ' + addedXml.getText()
+
+        #Assert;#Message
+        addedXml.getAttribute('parameter1') == 'par1';'Attribute value dosnt equals. Expected : par1, Actual : ' + addedXml.getAttribute('parameter1')
+
+        #Assert;#Message
+        addedXml.getAttribute('parameter2') == 'par2';'Attribute value dosnt equals. Expected : par2, Actual : ' + addedXml.getAttribute('parameter2')
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlCompare;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;$Expected;$Actual
+        XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;$Expected;$Actual
+        XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;root;
+
+        #Action;#Assert;$Expected;$Actual
+        XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;root
+
+        #Action;#Assert;$Expected;$Actual
+        XmlCompare;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare equals roots';;;
+        #Id;#Call
+        root1;createXml
+
+        #Id;#Call
+        root2;createXml
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP1;XmlCompare;XMLCMP1.Out;root1;root2
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare equals xmls';;;
+        #Id;#RawText;#Kind
+        TEXT3;Text;Xml
+        ~;"<simpleTag>"
+        ~;"	<another>Text</another>"
+        ~;"</simpleTag>"
+        #EndRawText
+
+        #Id;#Action;$Text
+        XMLFT2;XmlFromText;TEXT3
+
+        #Id;#Action;$Text
+        XMLFT3;XmlFromText;TEXT3
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP2;XmlCompare;XMLCMP2.Out;XMLFT2.Out;XMLFT3.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare equals nodes';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Let
+        first;root.getChildren()[0].getChildren()[0]
+
+        #Id;#Let
+        second;root.getChildren()[0].getChildren()[0]
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP3;XmlCompare;XMLCMP3.Out;first;second
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare another roots';;;
+        #Id;#Call
+        firstRoot;createXml
+
+        #Id;#RawText;#Kind
+        TEXT4;Text;Xml
+        ~;"<simpleTag>"
+        ~;"	<another>Text</another>"
+        ~;"</simpleTag>"
+        #EndRawText
+
+        #Id;#Action;$Text
+        XMLFT1;XmlFromText;TEXT4
+
+        #Id;#Let
+        secondRoot;XMLFT1.Out.getChildren()[0].getChildren()[0]
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP4;XmlCompare;!XMLCMP4.Out;firstRoot;secondRoot
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare another xmls';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#RawText;#Kind
+        TEXT5;Text;Xml
+        ~;"<simpleTag>"
+        ~;"	<another>Text</another>"
+        ~;"</simpleTag>"
+        #EndRawText
+
+        #Id;#Action;$Text
+        XMLFT4;XmlFromText;TEXT5
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP5;XmlCompare;!XMLCMP5.Out;XMLFT4.Out;root
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare nodes with different parameters size';;;
+        #Id;#RawText;#Kind
+        TEXT2;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#RawText;#Kind
+        TEXT6;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"" p3=""p3"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#Call;text
+        first;loadRoot;TEXT2
+
+        #Id;#Call;text
+        second;loadRoot;TEXT6
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP6;XmlCompare;!XMLCMP6.Out;first;second
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'comapre nodes with different parameters value';;;
+        #Id;#RawText;#Kind
+        TEXT7;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#RawText;#Kind
+        TEXT8;Text;Xml
+        ~;"<simple p1=""p3"" p2=""p4"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#Call;text
+        first;loadRoot;TEXT7
+
+        #Id;#Call;text
+        second;loadRoot;TEXT8
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP7;XmlCompare;!XMLCMP7.Out;first;second
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'comapre nodes with different textContent';;;
+        #Id;#RawText;#Kind
+        TEXT9;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#RawText;#Kind
+        TEXT10;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">anotherText</simple>"
+        #EndRawText
+
+        #Id;#Call;text
+        first;loadRoot;TEXT9
+
+        #Id;#Call;text
+        second;loadRoot;TEXT10
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP8;XmlCompare;!XMLCMP8.Out;first;second
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'comapre nodes with different tagName';;;
+        #Id;#RawText;#Kind
+        TEXT11;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#RawText;#Kind
+        TEXT12;Text;Xml
+        ~;"<another p1=""p1"" p2=""p2"">simpleText</another>"
+        #EndRawText
+
+        #Id;#Call;text
+        first;loadRoot;TEXT11
+
+        #Id;#Call;text
+        second;loadRoot;TEXT12
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP9;XmlCompare;!XMLCMP9.Out;first;second
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare nodes equal';;;
+        #Id;#RawText;#Kind
+        TEXT13;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#RawText;#Kind
+        TEXT14;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#Call;text
+        first;loadRoot;TEXT13
+
+        #Id;#Call;text
+        second;loadRoot;TEXT14
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP10;XmlCompare;XMLCMP10.Out;first;second
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare nodes equal with difference text';;;
+        #Id;#RawText;#Kind
+        TEXT15;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#RawText;#Kind
+        TEXT16;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText<simple p1=""p1"" p2=""p2"">simpleText</simple></simple>"
+        #EndRawText
+
+        #Id;#Call;text
+        first;loadRoot;TEXT15
+
+        #Id;#Call;text
+        second;loadRoot;TEXT16
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP11;XmlCompare;!XMLCMP11.Out;first;second
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare with difference nodes order';;;
+        #Id;#RawText;#Kind
+        TEXT17;Text;Xml
+        ~;"<root>"
+        ~;"	<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        ~;"	<another q=""qValue"" w=""wValue"">simpleText</another>"
+        ~;"</root>"
+        #EndRawText
+
+        #Id;#RawText;#Kind
+        TEXT18;Text;Xml
+        ~;"<root>"
+        ~;"	<another q=""qValue"" w=""wValue"">simpleText</another>"
+        ~;"	<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        ~;"</root>"
+        #EndRawText
+
+        #Id;#Call;text
+        first;loadRoot;TEXT17
+
+        #Id;#Call;text
+        second;loadRoot;TEXT18
+
+        #Id;#Action;#Assert;$Expected;$Actual;$IgnoreNodeOrder
+        XMLCMP12;XmlCompare;XMLCMP12.Out;first;second;true
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'compare with difference nodes order and difference nodes';;;
+        #Id;#RawText;#Kind
+        TEXT19;Text;Xml
+        ~;"<root>"
+        ~;"	<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        ~;"	<anotherAsd q=""qValue"" w=""wValue"">simpleText</anotherAsd>"
+        ~;"</root>"
+        #EndRawText
+
+        #Id;#RawText;#Kind
+        TEXT20;Text;Xml
+        ~;"<root>"
+        ~;"	<another q=""qValue"" w=""wValue"">simpleText</another>"
+        ~;"	<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        ~;"</root>"
+        #EndRawText
+
+        #Id;#Call;text
+        first;loadRoot;TEXT19
+
+        #Id;#Call;text
+        second;loadRoot;TEXT20
+
+        #Id;#Action;#Assert;$Expected;$Actual;$IgnoreNodeOrder
+        XMLCMP13;XmlCompare;!XMLCMP13.Out;first;second;true
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlCreate;;;
+    #Id;#Action;#Assert
+    xml;XmlCreate;This.Out != null
+
+    #Assert;#Message
+    xml.Out.getChildren().isEmpty();'Created not empty xml'
+
+    #Assert;#Message
+    xml.Out.getText().isEmpty();'Created not empty xml'
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlFindFirst;;;
+    #Step;#Kind;#For;#Depends
+    'negative testings';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;$Xpath;$Xml
+        XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;$Xpath;$Xml
+        XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'asd';
+
+        #Action;#Assert;$Xpath;$Xml
+        XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;root
+
+        #Action;#Assert;$Xpath;$Xml
+        XmlFindFirst;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Found first node';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;$Xpath;$Xml
+        XML4;XmlFindFirst;'.//first';root
+
+        #Assert;#Message
+        XML4.Out.getAttribute('par1') == 'value1';'Expected : value1, Actual : '+ XML4.Out.getAttribute('par1')
+
+        #Assert;#Message
+        XML4.Out.getChildren().size() == 2;'Found not first node'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Find first second node';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;$Xpath;$Xml
+        XML5;XmlFindFirst;'.//first[2]';root
+
+        #Assert;#Message
+        XML5.Out.getAttribute('par1') == 'value2';'Expected : value2, Actual : '+ XML5.Out.getAttribute('par1')
+
+        #Assert;#Message
+        XML5.Out.getChildren().isEmpty();'Found not first second node'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Node not found';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;#Assert;$Xpath;$Xml
+        XML6;XmlFindFirst;XML6.Out == null;'.//nodenotfound';root
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'find node via parameters';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;$Xpath;$Xml
+        XML7;XmlFindFirst;'.//fourth[@value="value14"]';root
+
+        #Assert;#Message
+        XML7.Out != null;'Node need be found'
+
+        #Assert;#Message
+        XML7.Out.getAttribute('id') == 8;'Expected : 8, Actual : ' + XML7.Out.getAttribute('id')
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlFromText;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Action;#Assert;$Text
+        XMLFT1;XmlFromText;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$Text
+        XMLFT1;XmlFromText;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;''
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'from invalid text';;;
+        #Id;#RawText;#Kind
+        TEXT3;Text;None
+        ~;"some invalid xml"
+        #EndRawText
+
+        #Id;#Action;#Assert;$Text
+        XMLFT2;XmlFromText;This.Result == Result.Failed;TEXT3
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'from valid text';;;
+        #Id;#Call
+        root;createXml
+
+        #Assert;#Message
+        root.getChildren().size() == 3;'Xml loading failed'
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlLoadFromFile;;;
+    #Step;#Kind;#For;#Depends
+    'negative testings';;;
+        #Id;#Action;#Assert;$File
+        XML7;XmlLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'load from dosnt exists file';;;
+        #Id;#Action;#Assert;$File
+        XML8;XmlLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'fileThatDosntExists'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'load from directory';;;
+        #Id;#Action;#Assert;$File
+        XML5;XmlLoadFromFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'testdata'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'load from good file';;;
+        #Id;#Action;#Assert;$File
+        XML6;XmlLoadFromFile;This.Out != null;'testdata/testXml.xml'
+
+        #Id;#Let
+        root;XML6.Out.getChildren()[0]
+
+        #Assert;#Message
+        root.getChildren().size() == 3;'Actual size 3 dosnt equals expected size ' + root.getChildren().size()
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlRemove;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;$Xpath;$Xml
+        XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;$Xpath;$Xml
+        XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;root
+
+        #Action;#Assert;$Xpath;$Xml
+        XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'asd';
+
+        #Action;#Assert;$Xpath;$Xml
+        XmlRemove;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'asd';new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'remove one node';;;
+        #Id;#Let
+        xpath;'.//first[@par1="value2"]'
+
+        #Id;#Call
+        root;createXml
+
+        #Action;$Xpath;$Xml
+        XmlRemove;xpath;root
+
+        #Id;#Action;$Xpath;$Xml
+        XML5;XmlFindFirst;xpath;root
+
+        #Assert;#Message
+        XML5.Out == null;'XmlRemove works incorrectly'
+
+        #Assert;#Message
+        root.getChildren().size() == 2;'Expected size : 2, Actual : ' + root.getChildren().size()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'remove more that one nodes';;;
+        #Id;#Let
+        xpath;'.//first'
+
+        #Id;#Call
+        root;createXml
+
+        #Action;$Xpath;$Xml
+        XmlRemove;xpath;root
+
+        #Id;#Action;$Xpath;$Xml
+        XML6;XmlFindFirst;xpath;root
+
+        #Assert;#Message
+        XML6.Out == null;'XmlRemove works incorrectly'
+
+        #Assert;#Message
+        root.getChildren().size() == 1;'Expected size : 2, Actual : ' + root.getChildren().size()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'remove no one nodes';;;
+        #Id;#Let
+        xpath;'.//notexist'
+
+        #Id;#Call
+        root;createXml
+
+        #Action;$Xpath;$Xml
+        XmlRemove;xpath;root
+
+        #Id;#Action;$Xpath;$Xml
+        XML8;XmlFindFirst;xpath;root
+
+        #Assert;#Message
+        XML8.Out == null;'XmlRemove works incorrectly'
+
+        #Assert;#Message
+        root.getChildren().size() == 3;'Expected size : 3, Actual : ' + root.getChildren().size()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'remove from descedants';;;
+        #Id;#Let
+        xpath;'.//fourth'
+
+        #Id;#Call
+        root;createXml
+
+        #Action;$Xpath;$Xml
+        XmlRemove;xpath;root
+
+        #Id;#Action;$Xpath;$Xml
+        XML7;XmlFindFirst;xpath;root
+
+        #Assert;#Message
+        XML7.Out == null;'XmlRemove works incorrectly'
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlReport;;;
+    #Step;#Kind;#For;#Depends
+    'negative test';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;$Xml;$Title
+        XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;$Xml;$Title
+        XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;root;
+
+        #Action;#Assert;$Xml;$Title
+        XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'asd'
+
+        #Action;#Assert;$Xml;$Title
+        XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();'asd'
+
+        #Action;#Assert;$Xml;$Title;$ToReport
+        XmlReport;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;root;'asd';new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test before test case';;;
+        #Id;#Let
+        xml;'<root>\n    <simple par="val">simple text</simple>\n</root>'
+
+        #Id;#RawText;#Kind
+        matrix;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"tc;Test case;Never;;"
+        ~;"    #Id;#RawText;#Kind"
+        ~;"    TEXT1;Text;Xml"
+        ~;"    ~;""<root>"""
+        ~;"    ~;""	<simple par=""""val"""">simple text</simple>"""
+        ~;"    ~;""</root>"""
+        ~;"    #EndRawText"
+        ~;""
+        ~;"    #Id;#Action;$Text"
+        ~;"    XMLFT1;XmlFromText;TEXT1"
+        ~;""
+        ~;"    #Action;$Xml;$Title;$BeforeTestCase"
+        ~;"    XmlReport;XMLFT1.Out;'simple xml';'tc'"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;matrix
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Let
+        locator;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('.//td[@class=\'tdMax\' and contains(.,\'<simple par="val">simple text</simple>\')]')
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
+        DLGFLL4;DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
+        DLGFLL5;DialogFill;DLGFLL5.Out.MockElement.contains(xml);'DialogForTestReport';appCon;Do.use(locator).getValue()
+
+        // 
+        #Id;#Call;appCon
+        CALL_1;expand;appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection;MockElement
+        DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
+
+        #Call;appCon
+        stopBrowser;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test inside test case';;;
+        #Id;#Let
+        xml;'<root>\n    <simple par="val">simple text</simple>\n</root>'
+
+        #Id;#RawText;#Kind
+        matrix;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"tc;Test case;Never;;"
+        ~;"    #Id;#RawText;#Kind"
+        ~;"    TEXT1;Text;Xml"
+        ~;"    ~;""<root>"""
+        ~;"    ~;""	<simple par=""""val"""">simple text</simple>"""
+        ~;"    ~;""</root>"""
+        ~;"    #EndRawText"
+        ~;""
+        ~;"    #Id;#Action;$Text"
+        ~;"    XMLFT1;XmlFromText;TEXT1"
+        ~;""
+        ~;"    #Action;$Xml;$Title"
+        ~;"    XmlReport;XMLFT1.Out;'simple xml'"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Call;rawText
+        pathToReport;runMatrix;matrix
+
+        #Id;#Call;pathToReport
+        appCon;runBrowser;pathToReport
+
+        #Id;#Let
+        locator;new Locator().kind(ControlKind.Label).visibility(Visibility.Visible).xpath('.//td[@class=\'tdMax\' and contains(.,\'<simple par="val">simple text</simple>\')]')
+
+        #Action;#Assert;$Dialog;$AppConnection;MockElement
+        DialogFill;!This.Out.MockElement;'DialogForTestReport';appCon;Do.use(locator).isVisible()
+
+        // 
+        #Id;#Call;appCon
+        CALL_1;expand;appCon
+
+        #Action;#Assert;$Dialog;$AppConnection;MockElement
+        DialogFill;This.Out.MockElement;'DialogForTestReport';appCon;Do.use('MainTable',LocatorKind.Owner).use(locator, LocatorKind.Element).isVisible()
+
+        #Action;#Assert;$Dialog;$AppConnection;MockElement
+        DialogFill;This.Out.MockElement.contains(xml);'DialogForTestReport';appCon;Do.use(locator).getValue()
+
+        #Call;appCon
+        stopBrowser;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlSaveToFile;;;
+    #Id;#Let
+    tempFile;'xml.xml'
+
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;$Xml;$File
+        XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Action;#Assert;$Xml;$File
+        XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;root;
+
+        #Action;#Assert;$Xml;$File
+        XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;'a'
+
+        #Action;#Assert;$Xml;$File
+        XmlSaveToFile;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();'a'
+
+        #Action;#Assert;$Xml;$File
+        XmlSaveToFile;This.Result == Result.Failed;root;'testdata'
+
+    #EndStep
+
+    // remove old file, if exists.
+    // If not exists, nothing bad
+    #Id;#Let
+    deleteFile;new File(tempFile).delete()
+
+    #Step;#Kind;#For;#Depends
+    'save ,load and check, that xmls are equals';;;
+        #Id;#Call
+        root;createXmlDocument
+
+        #Action;#Assert;$Xml;$File
+        XmlSaveToFile;This.Out;root;tempFile
+
+        #Assert;#Message
+        Sys.exists(tempFile);'File not created'
+
+        #Id;#Action;$File
+        XML5;XmlLoadFromFile;tempFile
+
+        #Id;#Action;#Assert;$Expected;$Actual
+        XMLCMP1;XmlCompare;This.Out;XML5.Out;root
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlSelect;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelect;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'';;
+
+        // invalid node name
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelect;This.Result == Result.Failed;'';'123';root
+
+        // invalid xpath
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelect;This.Result == Result.Failed;'[[[';'node';root
+
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelect;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';'';new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'possitive test';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;$Xpath;$NodeName;$Xml
+        XML5;XmlSelect;'.//first';'newNode';root
+
+        #Assert;#Message
+        XML5.Out.getNodeName() == 'newNode';'Returned node is bad'
+
+        #Assert;#Message
+        XML5.Out.getChildren().size() == 2;'Child count not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'returned nothing';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;$Xpath;$NodeName;$Xml
+        XML6;XmlSelect;'.//asd';'newNode';root
+
+        #Assert;#Message
+        XML6.Out.getNodeName() == 'newNode';'Returned node is bad'
+
+        #Assert;#Message
+        XML6.Out.getChildren().size() == 0;'Child count not expected'
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlSelectFirst;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelectFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelectFirst;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'';;
+
+        // invalid node name
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelectFirst;This.Result == Result.Failed;'';'123';root
+
+        // invalid xpath
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelectFirst;This.Result == Result.Failed;'[[[';'node';root
+
+        #Action;#Assert;$Xpath;$NodeName;$Xml
+        XmlSelectFirst;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'';'';new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'possitive test';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;$Xpath;$NodeName;$Xml
+        XML5;XmlSelectFirst;'.//first';'newNode';root
+
+        #Assert;#Message
+        XML5.Out.getNodeName() == 'newNode';'Returned node is bad'
+
+        #Assert;#Message
+        XML5.Out.getChildren().size() == 1;'Child count not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'returned nothing';;;
+        #Id;#Call
+        root;createXml
+
+        #Id;#Action;$Xpath;$NodeName;$Xml
+        XML6;XmlSelectFirst;'.//asd';'newNode';root
+
+        #Assert;#Message
+        XML6.Out == null;'Found something not equals null'
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check XmlSetNode;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Action;#Assert;$Xml
+        XmlSetNode;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Action;#Assert;$Xml
+        XmlSetNode;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set text to node with children';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;#Assert;$Xml;$Text
+        XmlSetNode;root.getText() == 'My simple text';root;'My simple text'
+
+        #Assert;#Message
+        !root.hasChildren();'Child not empty'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set text to node without children';;;
+        #Id;#RawText;#Kind
+        TEXT2;Text;Xml
+        ~;"<simple p1=""p1"" p2=""p2"">simpleText</simple>"
+        #EndRawText
+
+        #Id;#Call;text
+        root;loadRoot;TEXT2
+
+        #Action;#Assert;$Xml;$Text
+        XmlSetNode;root.getText() == 'My simple text';root;'My simple text'
+
+        #Assert;#Message
+        !root.hasChildren();'Child not empty'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set node with parameters and without text';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;$Xml;parameter1;p2
+        XmlSetNode;root;'p1';'value2'
+
+        #Assert;#Message
+        root.getAttribute('parameter1') == 'p1';'Root dosnt contains expected attribute'
+
+        #Assert;#Message
+        root.getAttribute('p2') == 'value2';'Root dosnt contains expected attribute'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set node with parameters and text';;;
+        #Id;#Call
+        root;createXml
+
+        #Action;$Xml;$Text;parameter1;p2
+        XmlSetNode;root;'my text';'p1';'value2'
+
+        #Assert;#Message
+        !root.hasChildren();'Child not empty'
+
+        #Assert;#Message
+        root.getText() == 'my text';'Root dosnt contains expected text'
+
+        #Assert;#Message
+        root.getAttribute('parameter1') == 'p1';'Root dosnt contains expected attribute'
+
+        #Assert;#Message
+        root.getAttribute('p2') == 'value2';'Root dosnt contains expected attribute'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set text to document';;;
+        #Id;#Call
+        doc;createXmlDocument
+
+        // cant set text to document
+        #Action;#Assert;$Xml;$Text
+        XmlSetNode;This.Result == Result.Failed;doc;'my text'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set parameters to document';;;
+        #Id;#Call
+        doc;createXmlDocument
+
+        // cant set text to document
+        #Action;#Assert;$Xml;par
+        XmlSetNode;This.Result == Result.Failed;doc;'value'
+
+    #EndStep
+
+

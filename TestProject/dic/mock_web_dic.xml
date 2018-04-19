@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<dictionary>
+    <window name="Main">
+        <self>
+            <any id="" uid="" xpath="//body" class="" title="" text=""/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button" uid="button"/>
+            <textBox id="TextBox" uid="input"/>
+            <label id="Label" uid="centralLabel"/>
+            <label id="centralLabel" uid="centralLabel" addition="Many" visibility="Visible"/>
+            <any id="Any" uid="any" addition="Many"/>
+            <label id="moveLabel" uid="moveLabel" visibility="Visible"/>
+            <button id="Button1" class="manyButton" addition="Many"/>
+            <wait id="Wait" addition="Many"/>
+            <checkBox id="CheckBox" uid="checkbox" addition="Many"/>
+            <table id="Table" uid="table" addition="Many"/>
+            <table id="Table1" uid="table1" addition="Many"/>
+            <slider id="Slider" uid="slider" addition="Many"/>
+            <radioButton id="RadioButton" uid="radioButton" addition="Many"/>
+            <radioButton id="RadioButton1" uid="radioButton1" addition="Many"/>
+            <progressBar id="ProgressBar" uid="ProgressBar" addition="Many"/>
+            <toggleButton id="ToggleButton" uid="toggleb" addition="Many"/>
+            <comboBox id="ComboBox" uid="combobox" addition="Many"/>
+            <panel id="Panel" uid="panel" addition="Many"/>
+            <listView id="List" uid="List" addition="Many"/>
+            <frame id="Frame" uid="myIframe" owner="" addition="Many"/>
+            <dialog id="Dialog" uid="dialog" xpath=".//dialog[@id=&amp;quot;dialog&amp;quot;]" owner="" addition="Many"/>
+            <image id="Image" uid="image" owner="" addition="Many"/>
+            <comboBox id="EditableComboBox" uid="editableComboBox" addition="Many"/>
+            <any id="Value" owner="" weak="true"/>
+            <scrollBar id="ScrollBar" xpath="//body" owner="" addition="Many"/>
+            <tree id="Tree" xpath="//body" owner="" addition="Many"/>
+            <splitter id="Splitter" xpath="//body" owner="" addition="Many"/>
+            <toolTip id="Tooltip" xpath="//body" owner="" addition="Many"/>
+            <menu id="Menu" xpath="//body" owner="" addition="Many"/>
+            <menuItem id="MenuItem" xpath="//body" owner="" addition="Many"/>
+            <button id="buttonShowArea" owner="owner" name="showButton" addition="Many"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton" addition="Many"/>
+            <button id="countButton" owner="" name="countButton"/>
+            <button id="countButtonClear" owner="" name="countButtonClear"/>
+            <label id="countLabel" owner="" name="countLabel"/>
+            <label id="pressLabel" owner="" name="pressLabel"/>
+            <label id="downUpLabel" owner="" name="downUpLabel"/>
+            <button id="invisibleButton" owner="owner" name="invisibleButton" visibility="Visible"/>
+            <button id="notEnabledButton" owner="owner" name="notEnabledButton"/>
+            <label id="sliderLabel" uid="" name="sliderLabel" addition="Many"/>
+            <button id="colorButton" owner="owner" name="colorButton"/>
+            <label id="pushLabel" uid="" name="pushLabel" addition="Many"/>
+            <label id="checkedLabel" uid="" owner="" name="checkedLabel"/>
+            <tabPanel id="TabPanel" uid="" owner="owner" class="" addition="Many" weak="true"/>
+            <spinner id="Spinner" uid="" xpath="" owner="owner" class="" name="" addition="Many" weak="true"/>
+            <menu id="Menu2" xpath="//body" owner="" addition="Many" weak="true"/>
+            <label id="selectLabel" uid="selectLabel" owner="" name=""/>
+            <textBox id="protocolText" uid="protocolText" owner=""/>
+            <button id="protocolClear" uid="protocolClear" owner=""/>
+        </run>
+        <onClose/>
+        <close>
+            <button id="Button" uid="button" expression="Do.click()"/>
+        </close>
+    </window>
+    <window name="FrameDialog">
+        <self/>
+        <onOpen/>
+        <run>
+            <button id="buttonInFrame" uid="myId"/>
+            <frame id="frameRun" uid="myIframe"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DialogForTestReport">
+        <self/>
+        <onOpen/>
+        <run>
+            <any id="MockElement"/>
+            <button id="Executed" class="filterTotal"/>
+            <table id="MainTable" class="repLog"/>
+            <button id="Passed" class="filterPassed"/>
+            <button id="Failed" class="filterFailed"/>
+            <label id="startTime" xpath=".//span[@id=&amp;#39;startTime&amp;#39;]"/>
+            <label id="finishTime" xpath=".//span[@id=&amp;#39;finishTime&amp;#39;]"/>
+            <label id="version" xpath="//table[@class=&amp;quot;table&amp;quot;]/tbody/tr[2]/td[2]"/>
+            <table id="umbrellaTable" class="table table-bordered !repLog"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DialogForTestCharts">
+        <self>
+            <any id="self" xpath="//div[@class=&amp;quot;container&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <label id="title" class="tableTitle" visibility="Visible"/>
+            <label id="description" xpath=".//*[@transform=&amp;#39;rotate(-90)&amp;#39;]" owner="self" class="" visibility="Visible"/>
+            <label id="xAxisTicks" xpath=".//*[@class=&amp;quot;x axis&amp;quot; and name()=&amp;quot;g&amp;quot;]/*[@class=&amp;quot;tick&amp;quot; and name()=&amp;quot;g&amp;quot;]/*[name()=&amp;quot;text&amp;quot;]" owner="self" addition="Many"/>
+            <label id="lines" xpath=".//*[@class=&amp;quot;myLine&amp;quot;]/*[name()=&amp;quot;text&amp;quot;]" owner="self" addition="Many"/>
+            <label id="svg" xpath=".//*[name()=&amp;quot;svg&amp;quot;]" visibility="Visible"/>
+            <label id="bars" xpath=".//*[@class=&amp;quot;rect&amp;quot;]" owner="self" addition="Many"/>
+            <label id="legend" xpath=".//*[name()=&amp;quot;g&amp;quot; and @class=&amp;quot;legend&amp;quot;]/*[name()=&amp;quot;text&amp;quot;]" owner="self" addition="Many"/>
+            <label id="slices" xpath=".//*[@class=&amp;quot;slice&amp;quot; and name()=&amp;quot;g&amp;quot;]/*[name()=&amp;quot;text&amp;quot;]" owner="self" addition="Many"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="Empty">
+        <self/>
+        <onOpen>
+            <textBox id="TextBox" uid="input" xpath="" expression="Do.getTable()"/>
+        </onOpen>
+        <run/>
+        <onClose>
+            <textBox uid="input" expression="Do.getTable()"/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="NotAllowedForGUIOnly">
+        <self/>
+        <onOpen>
+            <menu id="Menu" uid="input" xpath=""/>
+        </onOpen>
+        <run/>
+        <onClose>
+            <menu id="Menu" uid="input" xpath=""/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="DialogForCheckReportImage">
+        <self>
+            <any id="Owner" xpath="//body"/>
+        </self>
+        <onOpen/>
+        <run>
+            <image id="logo" xpath="//img"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DialogForTestTableReport">
+        <self>
+            <any id="self" xpath="//div[@class=&amp;quot;container&amp;quot;]"/>
+        </self>
+        <onOpen/>
+        <run>
+            <any id="tableReport" xpath="//span[contains(text(),&amp;#39;Title&amp;#39;)]/.." class="" addition="Many" visibility="Visible"/>
+            <label id="numbers" xpath=".//th[contains(text(),&amp;#39;#&amp;#39;)]" owner="tableReport" addition="Many"/>
+            <table id="table" xpath=".//table" owner="tableReport" addition="Many"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DialogForTestWaitWithRef">
+        <self/>
+        <onOpen>
+            <wait owner="owner" ref="buttonShowArea" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="buttonShowArea" owner="owner" name="showButton"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton"/>
+        </run>
+        <onClose>
+            <wait owner="owner" ref="buttonHideArea" addition="WaitToDisappear" timeout="5000"/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="DialogForTestWaitWithoutRef">
+        <self/>
+        <onOpen>
+            <wait uid="" owner="owner" name="showButton" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="buttonShowArea" owner="owner" name="showButton"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton"/>
+        </run>
+        <onClose>
+            <wait uid="" owner="owner" name="hideButton" addition="WaitToDisappear" timeout="5000"/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="DialogValidateForGUI">
+        <self/>
+        <onOpen>
+            <textBox id="TextBox" uid="input" expression="Do.click(5,5,MouseAction.RightDoubleClick)"/>
+        </onOpen>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="Matchers">
+        <self>
+            <any id="Owner1" xpath="//body"/>
+            <any id="Owner2" uid="bodyId" xpath="" name=""/>
+            <any id="Owner3" uid="" xpath="" class="bodyClass" name="bodyName" title="bodyTitle" text=""/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button10" uid="button" name=""/>
+            <button id="Button11" uid="button" owner="Owner1" name=""/>
+            <button id="Button12" uid="button" owner="Owner2" name=""/>
+            <button id="Button13" uid="button" owner="Owner3" name=""/>
+            <button id="Button20" uid="" xpath="//button[@name=&amp;quot;Button&amp;quot;]" name="" text=""/>
+            <button id="Button21" uid="" xpath=".//button[@name=&amp;quot;Button&amp;quot;]" owner="Owner1" name="" text=""/>
+            <button id="Button22" uid="" xpath=".//button[@name=&amp;quot;Button&amp;quot;]" owner="Owner2" name="" text=""/>
+            <button id="Button23" uid="" xpath=".//button[@name=&amp;quot;Button&amp;quot;]" owner="Owner3" name="" text=""/>
+            <button id="Button30" uid="" class="" name="Button" title="Button" action="" text="Button" tooltip=""/>
+            <button id="Button31" uid="" owner="Owner1" class="" name="Button" title="Button" action="" text="Button" tooltip=""/>
+            <button id="Button32" uid="" owner="Owner2" class="" name="Button" title="Button" action="" text="Button" tooltip=""/>
+            <button id="Button33" uid="" owner="Owner3" class="" name="Button" title="Button" action="" text="Button" tooltip=""/>
+            <button id="ButtonMany" uid="" xpath="//Button[@name=&amp;quot;Any&amp;quot; or @name=&amp;quot;Button&amp;quot;]" class="" name="" text="" addition="Many"/>
+            <button id="ButtonManyNotPass" uid="" class="" name="Button" text=""/>
+            <button id="ButtonManyNotFail" uid="" xpath="//Button[@name=&amp;quot;Any&amp;quot; or @name=&amp;quot;Button&amp;quot;]" class="" name="" text=""/>
+            <button id="ButtonNormal" uid="" class="" name="Button" text=""/>
+            <button id="ButtonNormalVisible" uid="" class="" name="Button" text="" visibility="Visible"/>
+            <button id="ButtonNormalEnable" uid="" class="" name="Button" text="" visibility="Enable"/>
+            <button id="ButtonNotEnabled" uid="" class="" name="notEnabledButton" text=""/>
+            <button id="ButtonNotEnabledVisible" uid="" class="" name="notEnabledButton" text="" visibility="Visible"/>
+            <button id="ButtonNotEnabledEnabled" uid="" class="" name="notEnabledButton" text="" visibility="Enable"/>
+            <label id="matchersLabel" uid="matchersLabel" name=""/>
+            <button id="matchersButtonClear" owner="Owner1" name="matchersButtonClear"/>
+            <button id="invisibleButton" uid="" class="" name="invisibleButton" text=""/>
+            <button id="invisibleButtonVisible" uid="" class="" name="invisibleButton" text="" visibility="Visible"/>
+            <button id="invisibleButtonEnabled" uid="" class="" name="invisibleButton" text="" visibility="Enable"/>
+            <button id="ButtonWeak" uid="" class="" name="Button" text="" weak="true"/>
+            <button id="ButtonWeakNot" uid="" class="" name="Button" text=""/>
+            <button id="uidTemplate" uid="" owner="Owner1" name="@{nameTemplate}"/>
+            <button id="xpathTemplate" uid="" xpath=".//button[@name=&amp;quot;@{xpathTemplate}&amp;quot;]" owner="Owner1"/>
+            <button id="xpathTemplateNotFound" uid="" xpath=".//button[@name=&amp;quot;@{anotherXpathTemplate}&amp;quot;]" owner="Owner1" name=""/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DialogCheckLayout">
+        <self>
+            <any id="self" xpath=".//body"/>
+        </self>
+        <onOpen/>
+        <run>
+            <label id="checkText" uid="text" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[1]/div[1]/label</xpath>
+                    <rectangle x1="0.0883448642895157" y1="0.02355072463768116" x2="0.12240553485896753" y2="0.03985507246376812"/>
+                    <node>label</node>
+                    <attr name="id">text</attr>
+                </info>
+            </label>
+            <label id="checkColor" uid="color" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[1]/div[2]/label</xpath>
+                    <rectangle x1="0.21607237892496006" y1="0.02355072463768116" x2="0.23523150612027674" y2="0.03985507246376812"/>
+                    <node>label</node>
+                    <attr name="id">color</attr>
+                </info>
+            </label>
+            <label id="visible" uid="visible" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[1]/div[3]/span[2]</xpath>
+                    <rectangle x1="0.3288983501862693" y1="0.02355072463768116" x2="0.3528472591804151" y2="0.03985507246376812"/>
+                    <node>span</node>
+                    <attr name="id">visible</attr>
+                </info>
+            </label>
+            <label id="count" xpath="" owner="self" class="lbl" addition="Many" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[1]/div[4]/div/label[1]</xpath>
+                    <rectangle x1="0.4446797247220752" y1="0.02355072463768116" x2="0.4489147697194283" y2="0.03985507246376812"/>
+                    <node>label</node>
+                    <attr name="class">lbl</attr>
+                    <attr name="style">display:inline-block</attr>
+                </info>
+            </label>
+            <panel id="checkBackcolor" uid="backcolor" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[2]/div[1]/div</xpath>
+                    <rectangle x1="0.0883448642895157" y1="0.08695652173913043" x2="0.16817456093666844" y2="0.22282608695652173"/>
+                    <node>div</node>
+                    <attr name="class">self default inline</attr>
+                    <attr name="id">backcolor</attr>
+                </info>
+            </panel>
+            <panel id="checkAttr" uid="attr" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[2]/div[2]/div</xpath>
+                    <rectangle x1="0.26184140500266095" y1="0.08695652173913043" x2="0.34167110164981374" y2="0.22282608695652173"/>
+                    <node>div</node>
+                    <attr name="attr">attr</attr>
+                    <attr name="class">default other inline</attr>
+                    <attr name="id">attr</attr>
+                </info>
+            </panel>
+            <panel id="otherTAligned" uid="otherTAligned" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[2]/div[3]/div[1]</xpath>
+                    <rectangle x1="0.43533794571580625" y1="0.08695652173913043" x2="0.515167642362959" y2="0.22282608695652173"/>
+                    <node>div</node>
+                    <attr name="class">other default</attr>
+                    <attr name="id">otherTAligned</attr>
+                </info>
+            </panel>
+            <panel id="selfTAligned" uid="selfTAligned" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[2]/div[3]/div[2]</xpath>
+                    <rectangle x1="0.5204896221394358" y1="0.08695652173913043" x2="0.6003193187865886" y2="0.22282608695652173"/>
+                    <node>div</node>
+                    <attr name="class">self default</attr>
+                    <attr name="id">selfTAligned</attr>
+                    <attr name="style">position:relative;margin-left:10px</attr>
+                </info>
+            </panel>
+            <panel id="selfContains" uid="selfContains" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[3]/div[1]/div</xpath>
+                    <rectangle x1="0.0883448642895157" y1="0.26992753623188404" x2="0.16817456093666844" y2="0.4057971014492754"/>
+                    <node>div</node>
+                    <attr name="class">self default inline</attr>
+                    <attr name="id">selfContains</attr>
+                </info>
+            </panel>
+            <panel id="otherContains" uid="otherContains" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[3]/div[1]/div/div</xpath>
+                    <rectangle x1="0.10164981373070782" y1="0.29257246376811596" x2="0.1415646620542842" y2="0.3605072463768116"/>
+                    <node>div</node>
+                    <attr name="class">other</attr>
+                    <attr name="id">otherContains</attr>
+                    <attr name="style">width:75px;height:75px;position:relative; left:25px; top:25px</attr>
+                </info>
+            </panel>
+            <panel id="selfLeft" uid="selfLeft" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[3]/div[2]/div[1]</xpath>
+                    <rectangle x1="0.26184140500266095" y1="0.26992753623188404" x2="0.34167110164981374" y2="0.4057971014492754"/>
+                    <node>div</node>
+                    <attr name="class">self default inline</attr>
+                    <attr name="id">selfLeft</attr>
+                </info>
+            </panel>
+            <panel id="otherLeft" uid="otherLeft" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[3]/div[2]/div[2]</xpath>
+                    <rectangle x1="0.3602980308674827" y1="0.26992753623188404" x2="0.4401277275146354" y2="0.4057971014492754"/>
+                    <node>div</node>
+                    <attr name="class">other default inline</attr>
+                    <attr name="id">otherLeft</attr>
+                    <attr name="style">margin-left:35px</attr>
+                </info>
+            </panel>
+            <panel id="otherRight" uid="otherRight" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[3]/div[3]/div[1]</xpath>
+                    <rectangle x1="0.5337945715806279" y1="0.26992753623188404" x2="0.6136242682277807" y2="0.4057971014492754"/>
+                    <node>div</node>
+                    <attr name="class">other default inline</attr>
+                    <attr name="id">otherRight</attr>
+                </info>
+            </panel>
+            <panel id="selfRight" uid="selfRight" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[3]/div[3]/div[2]</xpath>
+                    <rectangle x1="0.6322511974454497" y1="0.26992753623188404" x2="0.7120808940926024" y2="0.4057971014492754"/>
+                    <node>div</node>
+                    <attr name="class">self default inline</attr>
+                    <attr name="id">selfRight</attr>
+                    <attr name="style">margin-left:35px</attr>
+                </info>
+            </panel>
+            <panel id="selfTop" uid="selfTop" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[1]/div[1]</xpath>
+                    <rectangle x1="0.008515167642362959" y1="0.4927536231884058" x2="0.0883448642895157" y2="0.6286231884057971"/>
+                    <node>div</node>
+                    <attr name="class">self default</attr>
+                    <attr name="id">selfTop</attr>
+                </info>
+            </panel>
+            <panel id="otherTop" uid="otherTop" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[1]/div[2]</xpath>
+                    <rectangle x1="0.008515167642362959" y1="0.657608695652174" x2="0.0883448642895157" y2="0.7934782608695652"/>
+                    <node>div</node>
+                    <attr name="class">other default</attr>
+                    <attr name="id">otherTop</attr>
+                    <attr name="style">margin-top:32px</attr>
+                </info>
+            </panel>
+            <panel id="otherBottom" uid="otherBottom" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[2]/div[1]</xpath>
+                    <rectangle x1="0.1021820117083555" y1="0.4927536231884058" x2="0.18201170835550823" y2="0.6286231884057971"/>
+                    <node>div</node>
+                    <attr name="class">other default</attr>
+                    <attr name="id">otherBottom</attr>
+                </info>
+            </panel>
+            <panel id="selfBottom" uid="selfBottom" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[2]/div[2]</xpath>
+                    <rectangle x1="0.1021820117083555" y1="0.657608695652174" x2="0.18201170835550823" y2="0.7934782608695652"/>
+                    <node>div</node>
+                    <attr name="class">self default</attr>
+                    <attr name="id">selfBottom</attr>
+                    <attr name="style">margin-top:32px</attr>
+                </info>
+            </panel>
+            <panel id="selfInTop" uid="selfInTop" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[3]/div[1]</xpath>
+                    <rectangle x1="0.20915380521554017" y1="0.6431159420289855" x2="0.26237360298030865" y2="0.7336956521739131"/>
+                    <node>div</node>
+                    <attr name="class">self default</attr>
+                    <attr name="id">selfInTop</attr>
+                    <attr name="style">width:100px;height:100px;position:relative;top:125px;left:25px</attr>
+                </info>
+            </panel>
+            <panel id="otherInTop" uid="otherInTop" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[3]/div[2]</xpath>
+                    <rectangle x1="0.19584885577434805" y1="0.6204710144927537" x2="0.2756785524215008" y2="0.7563405797101449"/>
+                    <node>div</node>
+                    <attr name="class">other default</attr>
+                    <attr name="id">otherInTop</attr>
+                </info>
+            </panel>
+            <panel id="otherInBottom" uid="otherInBottom" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[4]/div[1]</xpath>
+                    <rectangle x1="0.2895156998403406" y1="0.529891304347826" x2="0.3693453964874933" y2="0.6657608695652174"/>
+                    <node>div</node>
+                    <attr name="class">other default</attr>
+                    <attr name="id">otherInBottom</attr>
+                </info>
+            </panel>
+            <panel id="selfInBottom" uid="selfInBottom" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[4]/div[2]</xpath>
+                    <rectangle x1="0.30282064928153274" y1="0.552536231884058" x2="0.3560404470463012" y2="0.6431159420289855"/>
+                    <node>div</node>
+                    <attr name="class">self default</attr>
+                    <attr name="id">selfInBottom</attr>
+                    <attr name="style">width:100px;height:100px;position:relative;top:-125px;left:25px</attr>
+                </info>
+            </panel>
+            <panel id="otherOnTop" uid="otherOnTop" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[5]/div[1]</xpath>
+                    <rectangle x1="0.3831825439063331" y1="0.529891304347826" x2="0.4630122405534859" y2="0.6657608695652174"/>
+                    <node>div</node>
+                    <attr name="class">other default</attr>
+                    <attr name="id">otherOnTop</attr>
+                </info>
+            </panel>
+            <panel id="selfOnTop" uid="selfOnTop" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[5]/div[2]</xpath>
+                    <rectangle x1="0.39648749334752525" y1="0.5072463768115942" x2="0.44970729111229374" y2="0.5978260869565217"/>
+                    <node>div</node>
+                    <attr name="class">self default</attr>
+                    <attr name="id">selfOnTop</attr>
+                    <attr name="style">width:100px;height:100px;position:relative;top:-175px;left:25px</attr>
+                </info>
+            </panel>
+            <panel id="otherOnBottom" uid="otherOnBottom" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[6]/div[1]</xpath>
+                    <rectangle x1="0.4768493879723257" y1="0.529891304347826" x2="0.5566790846194785" y2="0.6657608695652174"/>
+                    <node>div</node>
+                    <attr name="class">other default</attr>
+                    <attr name="id">otherOnBottom</attr>
+                </info>
+            </panel>
+            <panel id="selfOnBottom" uid="selfOnBottom" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[6]/div[2]</xpath>
+                    <rectangle x1="0.4901543374135178" y1="0.6204710144927537" x2="0.5433741351782863" y2="0.7110507246376812"/>
+                    <node>div</node>
+                    <attr name="class">self default</attr>
+                    <attr name="id">selfOnBottom</attr>
+                    <attr name="style">width:100px;height:100px;position:relative;top:-50px;left:25px</attr>
+                </info>
+            </panel>
+            <panel id="otherLAligned" uid="otherLAligned" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[7]/div[1]</xpath>
+                    <rectangle x1="0.5705162320383182" y1="0.5027173913043478" x2="0.6503459286854709" y2="0.6385869565217391"/>
+                    <node>div</node>
+                    <attr name="class">other default</attr>
+                    <attr name="id">otherLAligned</attr>
+                </info>
+            </panel>
+            <panel id="selfLAligned" uid="selfLAligned" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[5]/div[7]/div[2]</xpath>
+                    <rectangle x1="0.5705162320383182" y1="0.6476449275362319" x2="0.6503459286854709" y2="0.7835144927536232"/>
+                    <node>div</node>
+                    <attr name="class">self default</attr>
+                    <attr name="id">selfLAligned</attr>
+                    <attr name="style">position:relative;margin-top:10px</attr>
+                </info>
+            </panel>
+            <panel id="otherInLeft" uid="otherInLeft" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[6]/div[1]/div</xpath>
+                    <rectangle x1="0.0883448642895157" y1="0.8405797101449275" x2="0.16817456093666844" y2="0.9764492753623188"/>
+                    <node>div</node>
+                    <attr name="class">other default inline</attr>
+                    <attr name="id">otherInLeft</attr>
+                </info>
+            </panel>
+            <panel id="selfInLeft" uid="selfInLeft" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[6]/div[1]/div/div</xpath>
+                    <rectangle x1="0.10164981373070782" y1="0.8632246376811594" x2="0.16285258116019158" y2="0.9311594202898551"/>
+                    <node>div</node>
+                    <attr name="class">self</attr>
+                    <attr name="id">selfInLeft</attr>
+                    <attr name="style">width:115px;height:75px;position:relative; left:25px; top:25px</attr>
+                </info>
+            </panel>
+            <panel id="otherInRight" uid="otherInRight" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[6]/div[2]/div</xpath>
+                    <rectangle x1="0.26184140500266095" y1="0.8405797101449275" x2="0.34167110164981374" y2="0.9764492753623188"/>
+                    <node>div</node>
+                    <attr name="class">other default inline</attr>
+                    <attr name="id">otherInRight</attr>
+                </info>
+            </panel>
+            <panel id="selfInRight" uid="selfInRight" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[6]/div[2]/div/div</xpath>
+                    <rectangle x1="0.2751463544438531" y1="0.8632246376811594" x2="0.3363491218733369" y2="0.9311594202898551"/>
+                    <node>div</node>
+                    <attr name="class">self</attr>
+                    <attr name="id">selfInRight</attr>
+                    <attr name="style">width:115px;height:75px;position:relative; left:25px; top:25px</attr>
+                </info>
+            </panel>
+            <panel id="otherOnLeft" uid="otherOnLeft" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[6]/div[3]/div</xpath>
+                    <rectangle x1="0.43533794571580625" y1="0.8405797101449275" x2="0.515167642362959" y2="0.9764492753623188"/>
+                    <node>div</node>
+                    <attr name="class">other default inline</attr>
+                    <attr name="id">otherOnLeft</attr>
+                </info>
+            </panel>
+            <panel id="selfOnLeft" uid="selfOnLeft" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[6]/div[3]/div/div</xpath>
+                    <rectangle x1="0.42203299627461416" y1="0.8632246376811594" x2="0.4832357637040979" y2="0.9311594202898551"/>
+                    <node>div</node>
+                    <attr name="class">self</attr>
+                    <attr name="id">selfOnLeft</attr>
+                    <attr name="style">width:115px;height:75px;position:relative; left:-25px; top:25px</attr>
+                </info>
+            </panel>
+            <panel id="otherOnRight" uid="otherOnRight" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[6]/div[4]/div</xpath>
+                    <rectangle x1="0.6088344864289515" y1="0.8405797101449275" x2="0.6886641830761042" y2="0.9764492753623188"/>
+                    <node>div</node>
+                    <attr name="class">other default inline</attr>
+                    <attr name="id">otherOnRight</attr>
+                </info>
+            </panel>
+            <panel id="selfOnRight" uid="selfOnRight" owner="self" rows="" header="" columns="">
+                <info>
+                    <xpath>/div[6]/div[4]/div/div</xpath>
+                    <rectangle x1="0.66205428419372" y1="0.8632246376811594" x2="0.7232570516232038" y2="0.9311594202898551"/>
+                    <node>div</node>
+                    <attr name="class">self</attr>
+                    <attr name="id">selfOnRight</attr>
+                    <attr name="style">width:115px;height:75px;position:relative; left:100px; top:25px</attr>
+                </info>
+            </panel>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>

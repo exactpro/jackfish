@@ -1,0 +1,81 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #Id;#Call
+    allDates;RF.listOfDates
+
+    #If
+    allDates.isEmpty()
+        #Action;$Text;$Notifier
+        Show;'No one runs found';Notifier.Info
+
+        #Return
+        
+
+    #EndIf
+
+    #Id;#Action;$DefaultValue;$HelpKind;$Title;$DataSource
+    inputDate;Input;'';HelpKind.ChooseFromList;'Choose the regression run. Leave empty if all';allDates
+
+    #Id;#Let
+    date;inputDate.Out == '' ? null : DateTime.date(inputDate.Out)
+
+    #Step;#Kind;#For;#Depends
+    'report overall';;;
+        #Call;pathToSave;date
+        RF.repCsvExport;'reports';date
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'report progress';;;
+        #Call
+        RF.repProgress
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'report summary';;;
+        #Call;date
+        RF.repSummary;date
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'report export';;;
+        #Call;pathToSave;date
+        RF.repCsvExport;'reports';date
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'report detailed';;;
+        #Call;date
+        RF.repLastAllDetails;date
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'report show result';;;
+        #Call;date
+        RF.showResults;date
+
+    #EndStep
+
+    #OnError
+        #Action;$Text;$Notifier
+        Show;error;Notifier.Error
+
+        #Fail
+        err
+
+
+

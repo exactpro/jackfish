@@ -1,0 +1,2 @@
+INFO  2017-05-18 08:23:45.704 [      main] MainRunner:54  - Tool version: LocalBuild
+INFO  2017-05-18 08:23:45.708 [      main] MainRunner:55  - args: [-config=config.xml, -new]

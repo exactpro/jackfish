@@ -1,0 +1,474 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#TestCase;#Kind;#Depends;#For
+Prepare;;;
+    #Id;#Global;#Let
+    plugin;1;'Win'
+
+
+#TestCase;#Kind;#Depends;#For
+Application start;Never;;
+    #Step;#Kind;#For;#Depends
+    'Start without any parameters';;;
+        #Id;#Action;#Assert;$AppId
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Start without workdir';;;
+        #Id;#Action;#Assert;$AppId;Exec
+        APPSTR2;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN';'calc.exe'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Start with invalid exec';;;
+        #Id;#Action;#Assert;$AppId;WorkDir;Exec
+        APPSTR3;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN';'.';new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Start with invalid workdir';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        APPSTR3;ApplicationStart;'WIN';new Date();'calc.exe'
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR3.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'start with valid parameters';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        APPSTR3;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR3.Out
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application connect;;;
+    #Id;#Call;plugin
+    appCon;testLib.runPlugin;plugin
+
+    #Id;#Action;$AppConnection;Rectangle
+    APPPAR2;ApplicationGetProperties;appCon;
+
+    #Id;#Let
+    pid;appCon.getProcessId()
+
+    #Id;#Let
+    h;APPPAR2.Out.Rectangle.height
+
+    #Id;#Let
+    w;APPPAR2.Out.Rectangle.width
+
+    #Step;#Kind;#For;#Depends
+    'Connect via title';;;
+        #Id;#Action;$AppId;MainWindow
+        APPSTR4;ApplicationConnectTo;'WIN';'MockWin'
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR4.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Connect via size';;;
+        #Id;#Action;$AppId;Height;Width
+        APPSTR4;ApplicationConnectTo;'WIN';h;w
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR4.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Connecti via pid';;;
+        #Id;#Action;$AppId;PID
+        APPSTR4;ApplicationConnectTo;'WIN';pid
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;APPSTR4.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Connecti via title and pid';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        newApp;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;#Assert;$AppId;MainWindow
+        APPSTR1;ApplicationConnectTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'WIN';'MockWin'
+
+        #Id;#Action;$AppId;PID;MainWindow
+        APPSTR1;ApplicationConnectTo;'WIN';newApp.Out.getProcessId();'MockWin'
+
+        #Id;#Action;$AppConnection
+        APPSTP3;ApplicationStop;APPSTR1.Out
+
+        #Id;#Action;$AppConnection
+        APPSTP4;ApplicationStop;newApp.Out
+
+    #EndStep
+
+    #Id;#Action;$AppConnection
+    APPSTP1;ApplicationStop;appCon
+
+    #Step;#Kind;#For;#Depends
+    'Connect with timeout';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Action;$Time"
+        ~;"    Wait;5000"
+        ~;""
+        ~;"    #Id;#Action;$Command;$Wait"
+        ~;"    EXEC1;Execute;'notepad.exe';false"
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
+
+        #Id;#Action;$AppId;MainWindow;Timeout
+        APPSTR1;ApplicationConnectTo;'WIN';'Untitled';30000
+
+        #Id;#Action;$AppConnection;$Kill
+        APPSTP1;ApplicationStop;APPSTR1.Out;true
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Connect with timeout 2';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Action;$Time"
+        ~;"    Wait;5000"
+        ~;""
+        ~;"    #Id;#Action;Exec;WorkDir;$AppId"
+        ~;"    APPSTR1;ApplicationStart;mockWinExec;mockWinDir;'WIN'"
+        ~;""
+        ~;"    #Action;$Value;$Name"
+        ~;"    Store;APPSTR1.Out;'appConnection'"
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN1;MatrixRunFromText;TEXT1
+
+        #Id;#Action;$AppId;MainWindow;Timeout
+        APPSTR1;ApplicationConnectTo;'WIN';'MockWin';30000
+
+        #Id;#Action;$AppConnection;$Kill
+        APPSTP7;ApplicationStop;APPSTR1.Out;true
+
+        #Action;$Name;$AsVar
+        Restore;'appConnection';'appC'
+
+        #Id;#Action;$AppConnection
+        APPSTP8;ApplicationStop;appC
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application stop;;;
+    #Step;#Kind;#For;#Depends
+    'Start - stop';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;$AppConnection
+        APPSTP5;ApplicationStop;app.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'connect - stop';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;$AppId;PID
+        APPSTR5;ApplicationConnectTo;'WIN';app.Out.getProcessId()
+
+        #Id;#Action;$AppConnection
+        APPSTP6;ApplicationStop;APPSTR5.Out
+
+        #Id;#Action;$AppConnection
+        APPSTP5;ApplicationStop;app.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'connect - stop with kill';;;
+        #Id;#Action;$AppId;WorkDir;Exec
+        app;ApplicationStart;'WIN';mockWinDir;mockWinExec
+
+        #Id;#Action;$AppId;PID
+        APPSTR5;ApplicationConnectTo;'WIN';app.Out.getProcessId()
+
+        #Id;#Action;$AppConnection;$Kill
+        APPSTP6;ApplicationStop;APPSTR5.Out;true
+
+        #Action;$AppConnection
+        ApplicationStop;app.Out
+
+        #Id;#Action;#Assert;$AppConnection;Rectangle
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.APPLICATION_CLOSED;app.Out;
+
+        #Id;#Action;$AppConnection
+        APPSTP5;ApplicationStop;app.Out
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application get properties;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'get properties';;;
+        #Id;#Action;$AppConnection;Rectangle
+        APPPAR2;ApplicationGetProperties;appCon;
+
+        #Id;#Let
+        width;APPPAR2.Out.Rectangle.width
+
+        #Id;#Let
+        height;APPPAR2.Out.Rectangle.height
+
+        #Assert;#Message
+        width > 800 && width < 1000;'Width is  wrong ' + width
+
+        #Assert;#Message
+        height > 800 && height < 1000;'Height is  wrong ' + height
+
+        #Id;#Action;$AppConnection;Title
+        APPPAR3;ApplicationGetProperties;appCon;
+
+        #Assert;#Message
+        APPPAR3.Result == Result.Passed;
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Id;#Action;$AppConnection
+        APPSTP5;ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Dialog get properties;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Let
+        x;1111
+
+        #Id;#Let
+        y;111
+
+        #Id;#Let
+        width;555
+
+        #Id;#Let
+        height;555
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Dialog';x;y;appCon
+
+        #Action;$Height;$Width;$Dialog;$AppConnection
+        DialogResize;height;width;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size.getWidth() == width && This.Out.Size.getWidth() == height  && This.Out.Position.getX() == x && This.Out.Position.getY() == y;;;'Dialog';appCon
+
+        #Action;#Assert;$Size;$Dialog;$AppConnection
+        DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';appCon
+
+        #Action;#Assert;$Position;$Dialog;$AppConnection
+        DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';appCon
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogGetProperties;This.Result == Result.Passed && This.Out.size == 0;'Dialog';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR8;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR10;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Dialog resize;Never;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';new Date()
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';appCon;
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize;$Height
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;Resize.Maximize;10
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative - Win';;;
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Height;$Width
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;500;500
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;Resize.Maximize
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+DialogMove;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'DialogNotExistException';1;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';1;;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;1;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';1;1;
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';1;1;asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Action;$Position;$Dialog;$AppConnection
+        APPPAR1;DialogGetProperties;;'Dialog';appCon
+
+        #Id;#Let
+        currentX;APPPAR1.Out.Position.getX()
+
+        #Id;#Let
+        currentY;APPPAR1.Out.Position.getY()
+
+        #Id;#Let
+        newX;currentX + 10
+
+        #Id;#Let
+        newY;currentY + 10
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Dialog';newX;newY;appCon
+
+        #Id;#Action;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;;'Dialog';appCon
+
+        #Assert;#Message
+        APPPAR6.Out.Position.getX() == newX;'Error while moving by X from ' + currentX + ' to ' + newX
+
+        #Assert;#Message
+        APPPAR6.Out.Position.getY() == newY;'Error while moving by Y from ' + currentY + ' to ' + newY
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+

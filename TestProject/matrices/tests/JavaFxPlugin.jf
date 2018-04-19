@@ -1,0 +1,426 @@
+// //////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+// 
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+// //////////////////////////////////////////////////////////////////////////////
+#TestCase;#Kind;#Depends;#For
+Prepare;;;
+    #Id;#Global;#Let
+    plugin;1;'JavaFx'
+
+
+#TestCase;#Kind;#Depends;#For
+Dialog get properties;Never;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Let
+        x;1111
+
+        #Id;#Let
+        y;111
+
+        #Id;#Let
+        width;555
+
+        #Id;#Let
+        height;555
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Dialog';x;y;appCon
+
+        #Action;$Height;$Width;$Dialog;$AppConnection
+        DialogResize;height;width;'Dialog';appCon
+
+        #Action;$Time
+        Wait;3000
+
+        #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size.getWidth() == width && This.Out.Size.getWidth() == height  && This.Out.Position.getX() == x && This.Out.Position.getY() == y;;;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Size;$Dialog;$AppConnection
+        APPPAR3;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Position;$Dialog;$AppConnection
+        APPPAR4;DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR5;DialogGetProperties;This.Result == Result.Passed && This.Out.size == 0;'Dialog';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR8;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR10;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Dialog resize;Never;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';new Date()
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';appCon;
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize;$Height
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;Resize.Maximize;10
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Height;$Width
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;500;500
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;Resize.Maximize
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+DialogMove;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'DialogNotExistException';1;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';1;;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;1;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';1;1;
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';1;1;asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Action;$Position;$Dialog;$AppConnection
+        APPPAR1;DialogGetProperties;;'Dialog';appCon
+
+        #Id;#Let
+        currentX;APPPAR1.Out.Position.getX()
+
+        #Id;#Let
+        currentY;APPPAR1.Out.Position.getY()
+
+        #Id;#Let
+        newX;currentX + 100
+
+        #Id;#Let
+        newY;currentY + 100
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Dialog';newX;newY;appCon
+
+        #Action;$Time
+        Wait;3000
+
+        #Id;#Action;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;;'Dialog';appCon
+
+        #Assert;#Message
+        APPPAR6.Out.Position.getX() == newX;'Error while moving by X from ' + currentX + ' to ' + newX
+
+        #Assert;#Message
+        APPPAR6.Out.Position.getY() == newY;'Error while moving by Y from ' + currentY + ' to ' + newY
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application get properties;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Let
+        x;100
+
+        #Id;#Let
+        y;200
+
+        #Id;#Let
+        width;555
+
+        #Id;#Let
+        height;555
+
+        #Action;$Time
+        Wait;3000
+
+        #Id;#Action;Position;Size;$AppConnection
+        APPPAR2;ApplicationGetProperties;;;appCon
+
+        #Id;#Action;$Position;$Size;$Dialog;$AppConnection
+        DLGGP1;DialogGetProperties;;;'Main';appCon
+
+        #Id;#Action;#Assert;Position;Size;$AppConnection
+        APPPAR2;ApplicationGetProperties;This.Out.Position.getX() == DLGGP1.Out.Position.getX() && This.Out.Position.getY() == DLGGP1.Out.Position.getY() && This.Out.Size.getWidth() == DLGGP1.Out.Size.getWidth() && This.Out.Size.getHeight() == DLGGP1.Out.Size.getHeight();;;appCon
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Main';x;y;appCon
+
+        #Action;$Height;$Width;$Dialog;$AppConnection
+        DialogResize;height;width;'Main';appCon
+
+        #Action;$Time
+        Wait;3000
+
+        #Id;#Action;#Assert;Position;Size;$AppConnection
+        APPPAR11;ApplicationGetProperties;This.Result == Result.Passed && This.Out.Size.getWidth() == width && This.Out.Size.getHeight() == height  && This.Out.Position.getX() == x && This.Out.Position.getY() == y;;;appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;Position;Size;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Id;#Action;#Assert;Position;$AppConnection
+        APPPAR3;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;jvdfvjkvhfjh;appCon
+
+        #Id;#Action;#Assert;Title;$AppConnection
+        APPPAR4;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;;any
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Do;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    // x - column
+    // y - row
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Action;colorTable;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;Do.use(1,0,new Locator().kind(ControlKind.Button).text('Click').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;centralLabel;$Dialog;$AppConnection
+        DLGFLL5;DialogFill;This.Result == Result.Passed && This.Out.centralLabel == 'ColorTable_2_click';Do.getValue();'Main';appCon
+
+        #Id;#Action;colorTable;$Dialog;$AppConnection
+        DLGFLL2;DialogFill;Do.use(1, 1, 'cell').click();'Main';appCon
+
+        #Id;#Action;#Assert;centralLabel;$Dialog;$AppConnection
+        DLGFLL6;DialogFill;This.Result == Result.Passed && This.Out.centralLabel == 'ColorTable_4_click';Do.getValue();'Main';appCon
+
+        #Id;#Action;colorTable;$Dialog;$AppConnection
+        DLGFLL3;DialogFill;Do.use(2,new Locator().kind(ControlKind.Button).text('Click').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;centralLabel;$Dialog;$AppConnection
+        DLGFLL7;DialogFill;This.Result == Result.Passed && This.Out.centralLabel == 'ColorTable_6_click';Do.getValue();'Main';appCon
+
+        #Id;#Action;colorTable;$Dialog;$AppConnection
+        DLGFLL4;DialogFill;Do.use(0, 'cell').click();'Main';appCon
+
+        #Id;#Action;#Assert;centralLabel;$Dialog;$AppConnection
+        DLGFLL8;DialogFill;This.Result == Result.Passed && This.Out.centralLabel == 'ColorTable_2_click';Do.getValue();'Main';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0,0,new Locator().kind(ControlKind.Button).text('any_wrong_text').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL2;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0, -1, new Locator().kind(ControlKind.Button).text('tr_1_td_1').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL3;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0,0, 'any_wrong_id_without_locator').click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL4;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0, -1, 'any_wrong_id_without_locator').click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL5;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0, new Locator().kind(ControlKind.Button).text('any_wrong_text').visibility(Visibility.Visible)).click();'Main';appCon
+
+        #Id;#Action;#Assert;colorTable;$Dialog;$AppConnection
+        DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use( -1, 'any_wrong_id_without_locator').click();'Main';appCon
+
+        #Id;#Action;#Assert;TextBox;$Dialog;$AppConnection
+        DLGFLL7;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;Do.script('any string');'Main';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;FeatureNotSupported;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    ;;;
+        #Id;#Action;#Assert;$AppConnection;$AppId
+        APPSTR1;ApplicationConnectTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;appCon;'JAVAFX'
+
+        #Action;$Time
+        Wait;1000
+
+        #Action;#Assert;$AppConnection
+        ApplicationRefresh;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSW1;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;#Assert;$Perform;$AppConnection
+        DLGALRT1;DialogAlert;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;PerformKind.Accept;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Action;#Assert;$AppConnection
+        DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Action;#Assert;$AppConnection
+        ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Action;#Assert;$Navigate;$AppConnection
+        ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;NavigateKind.BACK;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;#Assert;$Text;$Perform;$AppConnection
+        DLGALRT2;DialogAlert;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;'any text';PerformKind.Accept;appCon
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;#Assert;$AppConnection
+        APPCW1;ApplicationCloseWindow;This.Result == Result.Failed && This.Kind == ErrorKind.FEATURE_NOT_SUPPORTED;appCon
+
+        #Action;$Time
+        Wait;3000
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+

@@ -1,0 +1,299 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+RM38805;rename columns in action TableReport;Never;;
+    #Id;#RawTable
+    DATA1;Table
+    @;scenario;manual;date;time;result;performer;env;host;user
+    0;newR;z;asd;1;2;3;4;5;6
+    1;o;p;p;1;4;6;sasd;a;a
+    2;j;k;l;a;czxc;zx;a;1;a
+    #EndRawTable
+
+    #Action;$Table;$Title;$Numbers;scenario;result;date;time;user;host
+    TableReport;DATA1;'Consolidated Umbrella Report: ';false;'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Exectuted By';'Execution Machine'
+
+
+#TestCase;#Kind;#Depends;#For
+Two Calls can have similar Id.;;;
+    #Id;#Call
+    CALL_1;SUB_1
+
+    #Id;#Call
+    CALL_1;SUB_1
+
+    #Id;#SubCase
+    SUB_1;
+        #Return
+        1
+
+    #EndSubCase
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+RM38584;use name on assert;;;
+    #Id;#RawTable
+    DATA1;Table
+    @;col1
+    0;val1
+    1;val2
+    2;val3
+    #EndRawTable
+
+    #Action;#Assert;$Table;col1
+    TableSelect;This.Out.size() == 1;DATA1;'val2'
+
+    #Id;#Action;#Assert;$Table;col1
+    tableSelect;TableSelect;tableSelect.Out.size() == 1;DATA1;'val2'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+RM37970;fail into loops works incorrectly;;;
+    #Step;#Kind;#For;#Depends
+    'while';;;
+        #Id;#Call
+        CALL_1;SUB_1
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'some error';'Wrong ' + err.Message
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'for';;;
+        #Id;#Call
+        CALL_1;SUB_2
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'some error';'Wrong ' + err.Message
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'foreach';;;
+        #Id;#Call
+        CALL_1;SUB_3
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'some error';'Wrong ' + err.Message
+
+
+    #EndStep
+
+    #Id;#SubCase
+    SUB_1;while
+        #While
+        true
+            #Fail
+            'some error'
+
+            #OnError
+                #Fail
+                err
+
+
+        #EndWhile
+
+    #EndSubCase
+
+    #Id;#SubCase
+    SUB_2;for
+        #For;#From;#To;#Step
+        i;1;2;1
+            #Fail
+            'some error'
+
+            #OnError
+                #Fail
+                err
+
+
+        #EndFor
+
+    #EndSubCase
+
+    #Id;#SubCase
+    SUB_3;foreach
+        #ForEach;#In
+        a;[1,3]
+            #Fail
+            'some error'
+
+            #OnError
+                #Fail
+                err
+
+
+        #EndForEach
+
+    #EndSubCase
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+RM38699;Action For starts calculating since 1;;;
+    #Id;#Let
+    str;''
+
+    #For;#From;#To;#Step
+    i;0;2;1
+        #Id;#Let
+        str;str + i
+
+    #EndFor
+
+    #Assert;#Message
+    str == '012';'wrong ' + str
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+RM38720;TableLoadFromDir return table when directory doesn't exists;;;
+    #Id;#Let
+    path;'/directoryThatDoesNotExists'
+
+    #Id;#Action;#Assert;$Dir
+    TBLD1;TableLoadFromDir;This.Reason.equals('Directory \'' + path + '\' doesn\'t exists.');path
+
+    #Id;#Action;#Assert;$Dir
+    TBLD2;TableLoadFromDir;TBLD2.Out.getHeader(0) == 'Name' && TBLD2.Out.getHeader(4) == 'Hidden';'.'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+RM38916;AddColumnTable action does't update lines after add column;;;
+    #Id;#Action;testName
+    TBL2;TableCreate;
+
+    #Id;#Let
+    t;TBL2.Out
+
+    #Action;$Table;testName
+    TableAddValue;t;'name1'
+
+    #Action;$Table;testName
+    TableAddValue;t;'name2'
+
+    #Action;$Table;$Columns
+    TableAddColumns;t;'description'
+
+    #Action;$Table
+    TableAddValue;t
+
+    #Action;$Table;$Index;description
+    TableSetValue;t;0;'zero'
+
+    #Action;$Table;$Index;description
+    TableSetValue;t;1;'one'
+
+    #Action;$Table;$Index;description
+    TableSetValue;t;2;'two'
+
+    #Assert;#Message
+    t[0].description.equals('zero');
+
+    #Assert;#Message
+    t[1].description.equals('one');
+
+    #Assert;#Message
+    t[2].description.equals('two');
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+RM40665;[TableSort] Sorting for integer isn't correct;Never;;
+    #Id;#RawTable
+    DATA1;Table
+    @;int
+    0;2
+    1;10
+    2;3
+    #EndRawTable
+
+    #Id;#Action;$ColumnName;$Table
+    TBLS2;TableSort;'int';DATA1
+
+    #Assert;#Message
+    TBLS2.Out[0].int == '10';'Wrong string order'
+
+    #Action;$Table;$Integer
+    TableConsiderColumnsAs;DATA1;'int'
+
+    #Id;#Action;$ColumnName;$Table
+    TBLS1;TableSort;'int';DATA1
+
+    #Assert;#Message
+    TBLS1.Out[0].int == 2;'Wrong integer order'
+
+
+// 
+#Id;#TestCase;#Kind;#Depends;#For
+RM39588;Action TableSetValue is passed when enter nonexistent column;Never;;
+    #Id;#RawTable
+    DATA1;Table
+    @;newH
+    0;newR
+    #EndRawTable
+
+    #Action;#Assert;$Table;$Index;ffff
+    TableSetValue;This.Result == Result.Failed && This.Reason.contains('not exist');DATA1;0;1111
+
+    #Action;#Assert;$Table;gggg
+    TableAddValue;This.Result == Result.Failed && This.Reason.contains('not exist');DATA1;22222
+
+
+// 
+#Id;#TestCase;#Kind;#Depends;#For
+RM41079;aggregate conditions (or, and) work improperly;Never;;
+    #Id;#RawTable
+    DATA1;Table
+    @;col1;col2;nnnn
+    0;1;;q
+    1;;2;q
+    2;3;4;q
+    3;;;q
+    4;1;;
+    5;;2;
+    6;3;4;
+    7;;;
+    #EndRawTable
+
+    #Id;#Action;$Table;nnnn
+    TBLSLCT1;TableSelect;DATA1;Condition.or(Condition.not(Condition.empty('col1')), Condition.not(Condition.empty('col2')), Condition.empty('nnnn'))
+
+    #Assert;#Message
+    TBLSLCT1.Out.size() == 7;'Wrong numbers. Expected 7 Actual ' + TBLSLCT1.Out.size()
+
+
+// 
+#Id;#TestCase;#Kind;#Depends;#For
+RM42750;StepIdentity is incorrect in ResultTable if Step is in loop;Never;;
+    #For;#From;#To;#Step
+    i;1;2;1
+        #Step;#Kind;#For;#Depends
+        i;;;
+        #EndStep
+
+    #EndFor
+
+    #Id;#Action;$Decoraded
+    RESTBL1;ResultTable;true
+
+    #Id;#Action;$Table;Step;TestCase
+    TBLSLCT1;TableSelect;RESTBL1.Out;RESTBL1.Out\u003bCondition.not(Condition.empty('Step'));Condition.string('TestCaseId', 'RM42750', true)
+
+    #Id;#Action;$Table;$Column
+    TBL1;TableColumnAsList;TBLSLCT1.Out;'Step'
+
+    #Assert;#Message
+    TBL1.Out == ['1','2'];
+
+

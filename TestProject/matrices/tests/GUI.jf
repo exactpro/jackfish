@@ -1,0 +1,254 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;Init;;;
+    #Id;#Global;#Action;$AppId;Browser;URL
+    APPSTR1;1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+DESCTOP;DesctopScreenshot;Never;;
+    #Id;#Action
+    DSK1;DesktopScreenshot
+
+    #Assert;#Message
+    DSK1.Out.getImage().getHeight() > 480 && DSK1.Out.getImage().getWidth() > 640;'Too small image'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+ALERT;DialogAlert;;;
+    #Id;#Let
+    text;'text in alert'
+
+    #Id;#Action;$Dialog;$AppConnection;TextBox
+    DLGFLL1;DialogFill;'Main';APPSTR1.Out;Do.script('alert(\''+text+'\')')
+
+    #Id;#Action;$Perform;$AppConnection
+    DLGALRT1;DialogAlert;PerformKind.Dismiss;APPSTR1.Out
+
+    #Assert;#Message
+    DLGALRT1.Out == text;'Wrong text'
+
+    #Id;#Action;$Dialog;$AppConnection;TextBox
+    DLGFLL2;DialogFill;'Main';APPSTR1.Out;Do.script('prompt(\''+text+'\')')
+
+    #Id;#Action;$Perform;$AppConnection
+    DLGALRT2;DialogAlert;PerformKind.Nothing;APPSTR1.Out
+
+    #Assert;#Message
+    DLGALRT2.Out == text;'Wrong text'
+
+    #Id;#Action;$Perform;$AppConnection;$Text
+    DLGALRT3;DialogAlert;PerformKind.Accept;APPSTR1.Out;'new text'
+
+    #Assert;#Message
+    DLGALRT3.Out == text;'Wrong text'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+LAYOUT;DialogCheckLayout;;;
+    #Action;#Assert;$DoNotOpen;$DoNotClose;$Dialog;$AppConnection
+    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_NOT_ALLOWED;true;false;'NotAllowedForGUIOnly';APPSTR1.Out
+
+    #Action;#Assert;$DoNotOpen;$Dialog;$AppConnection
+    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_NOT_ALLOWED;false;'NotAllowedForGUIOnly';APPSTR1.Out
+
+    #Id;#Let
+    map;new LinkedHashMap()
+
+    #Let
+    map.put('TextBox', Do.text('123'))
+
+    #Action;$Fields;$Dialog;$AppConnection
+    DialogCheckLayout;map;'Main';APPSTR1.Out
+
+    #Action;TextBox;$Dialog;$AppConnection
+    DialogCheckLayout;Do.text('123');'Main';APPSTR1.Out
+
+    #Id;#Let
+    mapIncorrect;new LinkedHashMap()
+
+    #Let
+    mapIncorrect.put('', Do.text('123'))
+
+    #Action;#Assert;$Fields;$Dialog;$AppConnection
+    DialogCheckLayout;This.Result == Result.Failed && This.Kind == ErrorKind.LOCATOR_NOT_FOUND;mapIncorrect;'Main';APPSTR1.Out
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+CLOSE;DialogClose;;;
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    DLGCLS1;DialogClose;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'someDialog';APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    DLGCLS2;DialogClose;This.Out > 0;'Main';APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    DLGCLS3;DialogClose;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Empty';APPSTR1.Out
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+FILL;DialogFill;;;
+    #Id;#Action;TextBox;$DoNotClose;$StopOnFail;$DoNotOpen;$Dialog;$AppConnection
+    DLGFLL3;DialogFill;Do.text('1234567890');true;true;false;'Main';APPSTR1.Out
+
+    #Id;#Action;#Assert;NotExistsWindow;$Dialog;$AppConnection
+    DLGFLL4;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;Do.text('1234567890');'NotExistsWindow';APPSTR1.Out
+
+    #Id;#Action;#Assert;TextBox;$StopOnFail;$Dialog;$AppConnection
+    DLGFLL5;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_NOT_ALLOWED;Do.getTable();true;'Main';APPSTR1.Out
+
+    #Id;#Action;#Assert;$DoNotOpen;$Dialog;$AppConnection
+    DLGFLL10;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.CONTROL_NOT_SUPPORTED;false;'NotAllowedForGUIOnly';APPSTR1.Out
+
+    #Id;#Action;#Assert;$StopOnFail;$Dialog;$AppConnection;TextBox
+    DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_FAILED;true;'Main';APPSTR1.Out;Do.click(5,5,MouseAction.RightDoubleClick)
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+VALIDATE;DialogValidate;;;
+    #Action;#Assert;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'NotExistDialog';APPSTR1.Out
+
+    #Action;#Assert;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Passed;'Main';APPSTR1.Out
+
+    #Action;#Assert;TextBox;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Passed;1;'Main';APPSTR1.Out
+
+    #Action;#Assert;TextBox;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.FAIL;179;'Main';APPSTR1.Out
+
+    #Action;#Assert;$DoNotOpen;$DoNotClose;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.OPERATION_NOT_ALLOWED;true;false;'NotAllowedForGUIOnly';APPSTR1.Out
+
+    #Action;#Assert;$DoNotOpen;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.NOT_EQUAL;false;'DialogValidateForGUI';APPSTR1.Out
+
+    #Action;#Assert;TextBox;$DoNotClose;$Dialog;$AppConnection
+    DialogValidate;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.click(5,5,MouseAction.RightDoubleClick);false;'Main';APPSTR1.Out
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+IMAGE_GET;ImageGet;;;
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    IMGGET1;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$AppConnection
+    IMGGET2;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'NotExist';APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
+    IMGGET3;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Empty';;APPSTR1.Out
+
+    #Id;#Action;#Assert;$Dialog;$Name;$AppConnection
+    IMGGET4;ImageGet;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'NotExistImage';APPSTR1.Out
+
+    #Id;#Action;Image;$Dialog;$AppConnection
+    DLGFLL7;DialogFill;Do.move();'Main';APPSTR1.Out
+
+    #Id;#Action;#Assert;$Description;$Dialog;$Name;$AppConnection
+    IMGGET5;ImageGet;This.Out.getDescription() == 'string';'string';'Main';'Image';APPSTR1.Out
+
+    #Id;#Action;$Description;$Dialog;$Y1;$X1;$Y2;$X2;$Name;$AppConnection
+    IMGGET6;ImageGet;'str';'Main';10;10;5;20;'Image';APPSTR1.Out
+
+    #Assert;#Message
+    IMGGET6.Out.getImage().getWidth() == 10;'Wrong size!'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+IMAGE_REP;ImageReport;;;
+    #Id;#Action;Image;$Dialog;$AppConnection
+    DLGFLL8;DialogFill;Do.move();'Main';APPSTR1.Out
+
+    #Id;#Action;$Dialog;$Name;$AppConnection
+    IMGGET7;ImageGet;'Main';'Image';APPSTR1.Out
+
+    #Id;#Action;$ReportName
+    REP1;ReportStart;'ImageReportFromTest'
+
+    #Id;#Action;$ToReport;$Title;$Image
+    IMGRPT1;ImageReport;REP1.Out;'title';IMGGET7.Out
+
+    #Action;$Passed;$Report;$Failed
+    ReportFinish;1;REP1.Out;0
+
+    #Id;#Let
+    name;'file://' + new File(REP1.Out.getReportName()).getAbsolutePath()
+
+    #Id;#Action;Browser;URL;$AppId
+    APPSTR2;ApplicationStart;mockWebBrowser;name;mockWebApp
+
+    #Id;#Action;#Assert;logo;$Dialog;$AppConnection
+    DLGFLL9;DialogFill;This.Out.logo == true;Do.isVisible();'DialogForCheckReportImage';APPSTR2.Out
+
+    #Id;#Action;$AppConnection
+    APPSTP2;ApplicationStop;APPSTR2.Out
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+IMAGE_SAVE;ImageSave;;;
+    #Id;#Action
+    DSK2;DesktopScreenshot
+
+    #Id;#Action;$Image;$Dir
+    IMGSV1;ImageSave;DSK2.Out;'../../reports'
+
+    #Assert;#Message
+    Sys.exists(IMGSV1.Out);'Image is not saved'
+
+    #Id;#Let
+    fileName;'../../reports/saved.jpg'
+
+    #Id;#Action;$Image;$File
+    IMGSV2;ImageSave;DSK2.Out;fileName
+
+    #Assert;#Message
+    Sys.exists(IMGSV2.Out) && IMGSV2.Out == fileName;'Image is not saved'
+
+    // =====================================================================
+    // Negative tests
+    #Id;#Action;#Assert;$Image
+    IMGSV3;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #Id;#Action;#Assert;$Image
+    IMGSV4;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DSK2.Out
+
+    #Id;#Action;#Assert;$Image;$File
+    IMGSV5;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;DSK2.Out;''
+
+    #Id;#Action;#Assert;$Image;$Dir
+    IMGSV6;ImageSave;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;DSK2.Out;''
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+SWITCH;DialogSwitchToWindow;;;
+    #Action;$AppConnection
+    DialogSwitchToWindow;APPSTR1.Out
+
+    #Action;#Assert;$Dialog;$AppConnection
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'Main';APPSTR1.Out
+
+    #Action;#Assert;$Dialog;$Frame;$AppConnection
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;'Main';'blabla';APPSTR1.Out
+
+    #Action;#Assert;$Frame;$Dialog;$AppConnection
+    DialogSwitchToWindow;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'anyFrame';'NotExist';APPSTR1.Out
+
+    #Action;$Frame;$Dialog;$AppConnection
+    DialogSwitchToWindow;'Frame';'Main';APPSTR1.Out
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+CLEANUP;Cleanup;;;
+    #Id;#Action;$AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
+
+

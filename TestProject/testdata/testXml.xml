@@ -1,0 +1,18 @@
+<root>
+	<first par1="value1">
+		<third>
+			Some text from third node
+		</third>
+		<fourth parameter="parameter" value="value" id="5">
+
+		</fourth>
+	</first>
+	<first par1="value2">
+
+	</first>
+	<second par2="value3">
+		<fourth parameter="parameter13" value="value14" id="8">
+
+		</fourth>
+	</second>
+</root>

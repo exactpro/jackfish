@@ -1,0 +1,836 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#TestCase;#Kind;#Depends;#For
+Prepare;;;
+    #Id;#Global;#Let
+    mockWebURL2;1;mockWebURL.replace('mock.','mock2.')
+
+
+#TestCase;#Kind;#Depends;#For
+Application Close Window;;;
+    #Step;#Kind;#For;#Depends
+    'positive testing';;;
+        #Id;#Call
+        app;appStart
+
+        #Id;#Action;#Assert;$AppConnection
+        APPCW1;ApplicationCloseWindow;This.Result == Result.Passed;app
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;app
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive testing with 2 tabs';;;
+        #Id;#Let
+        newUrl;mockWebURL
+
+        #Id;#Call
+        app;appStart
+
+        #Id;#Action;$AppConnection;URL;WhereOpen
+        APPNI1;ApplicationNewInstance;app;newUrl;'OpenInTab'
+
+        #Action;$Time
+        Wait;1500
+
+        #Assert;#Message
+        app.getApplication().service().titles().size() == 2;'Page count not expected'
+
+        #Id;#Action;#Assert;$AppConnection
+        APPCW2;ApplicationCloseWindow;This.Result == Result.Passed;app
+
+        #Id;#Action;$SoftCondition;Title;$AppConnection
+        APPSW1;ApplicationSwitchTo;true;'Mock html';app
+
+        #Assert;#Message
+        app.getApplication().service().titles().size() == 1;'Page count not expected'
+
+        #Action;$Time
+        Wait;1500
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;app
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative testing';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPCW3;ApplicationCloseWindow;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Apllication Start;Never;;
+    #Step;#Kind;#For;#Depends
+    'Negative testing with empty parameters';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;;
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;mockWebURL
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;mockWebBrowser;
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative testing with wrong parameters';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;mockWebBrowser;''
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;'ndx';mockWebURL
+
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;new Date();mockWebBrowser;mockWebURL
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Positive testing';;;
+        #Id;#Action;#Assert;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;This.Result == Result.Passed && This.Out.isGood();mockWebApp;mockWebBrowser;mockWebURL
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR1.Out
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Navigate;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Action;Browser;URL;$AppId
+        APPSTR3;ApplicationStart;mockWebBrowser;mockWebURL2;mockWebApp
+
+        #Id;#Action;Title;$AppConnection
+        APPPAR1;ApplicationGetProperties;;APPSTR3.Out
+
+        #Id;#Let
+        firstTitle;APPPAR1.Out.get('Title')
+
+        #Id;#Action;URL;WhereOpen;$AppConnection
+        APPNI1;ApplicationNewInstance;mockWebURL;'OpenNewUrl';APPSTR3.Out
+
+        #Action;$Time
+        Wait;2500
+
+        #Id;#Action;Title;$AppConnection
+        APPPAR2;ApplicationGetProperties;;APPSTR3.Out
+
+        #Id;#Let
+        secondTitle;APPPAR2.Out.get('Title')
+
+        #Id;#Action;$Navigate;$AppConnection
+        APPPNVG2;ApplicationNavigate;NavigateKind.BACK;APPSTR3.Out
+
+        #Action;$Time
+        Wait;1000
+
+        #Id;#Action;Title;$AppConnection
+        APPPAR3;ApplicationGetProperties;;APPSTR3.Out
+
+        #Id;#Let
+        thirdTitle;APPPAR3.Out.get('Title')
+
+        #Assert;#Message
+        firstTitle != secondTitle && firstTitle == thirdTitle;'Wrong navigation'
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR3.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;NavigateKind.BACK;
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;CALL_1
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;;new Date()
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;new Date();
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date()
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application ConnectTo;;;
+    #If
+    Sys.osName().startsWith('Win')
+        #Step;#Kind;#For;#Depends
+        'Positive';;;
+            #Step;#Kind;#For;#Depends
+            'With PID';;;
+                #Id;#Action;Exec;WorkDir;$AppId
+                APPSTR1;ApplicationStart;'C:/Windows/notepad.exe';'C:/Windows';mockWinApp
+
+                #Id;#Action;#Assert;PID;$AppId
+                APPSTR2;ApplicationConnectTo;This.Result == Result.Passed && This.Out.isGood();APPSTR1.Out.getProcessId();mockWinApp
+
+                #Id;#Action;$AppConnection
+                APPSTP1;ApplicationStop;APPSTR1.Out
+
+                #Id;#Action;$AppConnection
+                APPSTP2;ApplicationStop;APPSTR2.Out
+
+            #EndStep
+
+            #Step;#Kind;#For;#Depends
+            'With window size';;;
+                #Id;#Action;Exec;WorkDir;$AppId
+                APPSTR1;ApplicationStart;'C:/Windows/notepad.exe';'C:/Windows';mockWinApp
+
+                #Id;#Action;$Height;$Width;$AppConnection
+                APPSZ1;ApplicationResize;555;666;APPSTR1.Out
+
+                #Id;#Action;#Assert;Height;Width;$AppId
+                APPSTR2;ApplicationConnectTo;This.Result == Result.Passed && This.Out.isGood();555;666;mockWinApp
+
+                #Id;#Action;$AppConnection
+                APPSTP1;ApplicationStop;APPSTR1.Out
+
+                #Id;#Action;$AppConnection
+                APPSTP2;ApplicationStop;APPSTR2.Out
+
+            #EndStep
+
+            #Step;#Kind;#For;#Depends
+            'With main window';;;
+                #Id;#Action;Exec;WorkDir;$AppId
+                APPSTR1;ApplicationStart;'C:/Windows/notepad.exe';'C:/Windows';mockWinApp
+
+                #Id;#Action;#Assert;MainWindow;$AppId
+                APPSTR2;ApplicationConnectTo;This.Result == Result.Passed && This.Out.isGood();'Notepad';mockWinApp
+
+                #Id;#Action;$AppConnection
+                APPSTP1;ApplicationStop;APPSTR1.Out
+
+                #Id;#Action;$AppConnection
+                APPSTP2;ApplicationStop;APPSTR2.Out
+
+            #EndStep
+
+            #Step;#Kind;#For;#Depends
+            'With control kind and PID';;;
+                #Id;#Action;Exec;WorkDir;$AppId
+                APPSTR1;ApplicationStart;'C:/Windows/notepad.exe';'C:/Windows';mockWinApp
+
+                #Id;#Action;#Assert;ControlKind;PID;$AppId
+                APPSTR2;ApplicationConnectTo;This.Result == Result.Passed && This.Out.isGood();'Dialog';APPSTR1.Out.getProcessId();mockWinApp
+
+                #Id;#Action;$AppConnection
+                APPSTP1;ApplicationStop;APPSTR1.Out
+
+                #Id;#Action;$AppConnection
+                APPSTP2;ApplicationStop;APPSTR2.Out
+
+            #EndStep
+
+            #Step;#Kind;#For;#Depends
+            'With timeout';;;
+                #Id;#RawText;#Kind
+                TEXT1;Text;Matrix
+                ~;"#TestCase;#Kind;#Depends;#For"
+                ~;";;;"
+                ~;"    #Action;#Time"
+                ~;"    Wait;5000"
+                ~;""
+                ~;"    #Id;#Action;#AppId;#Exec;#WorkDir"
+                ~;"    APPSTR1;ApplicationStart;mockWinApp;'C:/Windows/notepad.exe';'C:/Windows'"
+                #EndRawText
+
+                #Id;#Action;$Text
+                MXRN1;MatrixRunFromText;TEXT1
+
+                #Id;#Action;$Matrix
+                MXWT1;MatrixWait;MXRN1.Out
+
+                #Id;#Action;#Assert;MainWindow;Timeout;$AppId
+                APPSTR2;ApplicationConnectTo;This.Result == Result.Passed && This.Out.isGood();'Notepad';15000;mockWinApp
+
+                #Id;#Action;$Kill;$AppConnection
+                APPSTP2;ApplicationStop;true;APPSTR2.Out
+
+            #EndStep
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Negative';;;
+            #Id;#Action;Exec;WorkDir;$AppId
+            APPSTR1;ApplicationStart;'C:/Windows/notepad.exe';'C:/Windows';mockWinApp
+
+            #Id;#Action;#Assert;$AppId
+            APPSTR3;ApplicationConnectTo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+            #Id;#Action;#Assert;$AppConnection;$AppId
+            APPSTR3;ApplicationConnectTo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();mockWinApp
+
+            #Id;#Action;#Assert;AlwaysToFront;Timeout;ControlKind;PID;Width;Height;MainWindow;$AppConnection;$AppId
+            APPSTR4;ApplicationConnectTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;;;;;;;;APPSTR1.Out;mockWinApp
+
+            #Id;#Action;#Assert;AlwaysToFront;Timeout;ControlKind;PID;Width;Height;MainWindow;$AppConnection;$AppId
+            APPSTR4;ApplicationConnectTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;new Date();new Date();new Date();new Date();new Date();new Date();new Date();APPSTR1.Out;mockWinApp
+
+            #Id;#Action;#Assert;PID;MainWindow;$AppId
+            APPSTR2;ApplicationConnectTo;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;6669999;'Notepad';mockWinApp
+
+            #Id;#Action;$AppConnection
+            APPSTP5;ApplicationStop;APPSTR1.Out
+
+        #EndStep
+
+    #EndIf
+
+
+#TestCase;#Kind;#Depends;#For
+Application GetProperties;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Let
+        altURL;mockWebURL
+
+        #Id;#Action;Browser;URL;$AppId
+        APPSTR3;ApplicationStart;mockWebBrowser;altURL;mockWebApp
+
+        #Id;#Action;#Assert;URL;Title;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('Title').contains('Mock html') && This.Out.get('URL').contains('mocks/web/mock.html');;;APPSTR3.Out
+
+        #Id;#Action;#Assert;new Date();new Date();$AppConnection
+        APPPAR2;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('URL') == null && This.Out.get('Title') == null;;;APPSTR3.Out
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR3.Out
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Call
+        CALL_2;appStart
+
+        #Id;#Action;#Assert;URL;Title;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+        #Id;#Action;#Assert;URL;Title;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;;;new Date()
+
+        #Id;#Action;$AppConnection
+        APPSTP2;ApplicationStop;CALL_2
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Move;;;
+    #If
+    Sys.osName().startsWith('Win')
+        #Step;#Kind;#For;#Depends
+        'Positive';;;
+            #Id;#Let
+            moveForX;100
+
+            #Id;#Let
+            moveForY;100
+
+            #Id;#Action;Exec;WorkDir;$AppId
+            APPSTR1;ApplicationStart;'C:/Windows/notepad.exe';'C:/Windows';mockWinApp
+
+            #Id;#Action;$AppConnection;$Resize
+            APPSZ1;ApplicationResize;APPSTR1.Out;Resize.Normal
+
+            #Id;#Let
+            x;APPSTR1.Out.getApplication.service().getRectangle(null,null).x
+
+            #Id;#Let
+            y;APPSTR1.Out.getApplication.service().getRectangle(null,null).y
+
+            #Action;$X;$Y;$AppConnection
+            ApplicationMove;moveForX;moveForY;APPSTR1.Out
+
+            #Id;#Let
+            newX;APPSTR1.Out.getApplication.service().getRectangle(null,null).x
+
+            #Id;#Let
+            newY;APPSTR1.Out.getApplication.service().getRectangle(null,null).y
+
+            #Action;$X;$Y;$AppConnection
+            ApplicationMove;x;y;APPSTR1.Out
+
+            #Id;#Let
+            oldX;APPSTR1.Out.getApplication.service().getRectangle(null,null).x
+
+            #Id;#Let
+            oldY;APPSTR1.Out.getApplication.service().getRectangle(null,null).y
+
+            #Assert;#Message
+            newX == moveForX && newY == moveForY && x == oldX && y == oldY;'Wrong coordinates'
+
+            #Id;#Action;$AppConnection
+            APPSTP1;ApplicationStop;APPSTR1.Out
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'Negative';;;
+            #Id;#Call
+            CALL_7;appStart
+
+            #Action;#Assert;$X;$Y;$AppConnection
+            ApplicationMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;
+
+            #Action;#Assert;$X;$Y;$AppConnection
+            ApplicationMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;;CALL_7
+
+            #Action;#Assert;$X;$Y;$AppConnection
+            ApplicationMove;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;;;new Date()
+
+            #Action;#Assert;$X;$Y;$AppConnection
+            ApplicationMove;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date();new Date();CALL_7
+
+            #Id;#Action;$AppConnection
+            APPSTP1;ApplicationStop;CALL_7
+
+        #EndStep
+
+    #EndIf
+
+
+#TestCase;#Kind;#Depends;#For
+Application New Instance;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Let
+        newURL;mockWebURL
+
+        #Step;#Kind;#For;#Depends
+        'open in current url';;;
+            #Id;#Call
+            CALL_3;appStart
+
+            #Id;#Action;WhereOpen;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;'OpenNewUrl';newURL;CALL_3
+
+            #Id;#Action;$AppConnection;URL;AllTitles
+            APPPAR4;ApplicationGetProperties;CALL_3;;
+
+            #Assert;#Message
+            APPPAR4.Out.AllTitles.size() == 1;'Number of titiles is wroing ' + APPPAR4.Out.AllTitles
+
+            #Assert;#Message
+            APPPAR4.Out.URL.contains('mocks/web/mock.html');'Url is wrong ' + APPPAR4.Out.URL
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_3
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'open in tab';;;
+            #Id;#Call
+            CALL_4;appStart
+
+            #Id;#Action;WhereOpen;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;'OpenInTab';mockWebURL2;CALL_4
+
+            #Action;$Time
+            Wait;2000
+
+            #Action;
+            Print;newURL
+
+            #Id;#Action;URL;Title;$AppConnection
+            APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_4
+
+            #Id;#Action;$AppConnection;URL;AllTitles
+            APPPAR4;ApplicationGetProperties;CALL_4;;
+
+            #Assert;#Message
+            APPPAR4.Out.AllTitles.size() == 2;'Number of titiles is wroing ' + APPPAR4.Out.AllTitles
+
+            #Assert;#Message
+            APPPAR4.Out.URL.contains(newURL);'Url is wrong ' + APPPAR4.Out.URL
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_4
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'open in window';;;
+            #Id;#Call
+            CALL_5;appStart
+
+            #Id;#Action;WhereOpen;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;'OpenInWindow';newURL;CALL_5
+
+            #Action;$Time
+            Wait;2000
+
+            #Id;#Action;URL;Title;$AppConnection
+            APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_5
+
+            #Id;#Action;$AppConnection;URL
+            APPPAR4;ApplicationGetProperties;CALL_5;
+
+            #Assert;#Message
+            APPPAR4.Out.URL.contains(newURL);'Url is wrong ' + APPPAR4.Out.URL
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_5
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'open in new tab without parameter whereOpen';;;
+            #Id;#Call
+            CALL_4;appStart
+
+            #Id;#Action;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;mockWebURL2;CALL_4
+
+            #Action;$Time
+            Wait;2000
+
+            #Id;#Action;URL;Title;$AppConnection
+            APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_4
+
+            #Id;#Action;$AppConnection;URL;AllTitles
+            APPPAR4;ApplicationGetProperties;CALL_4;;
+
+            #Assert;#Message
+            APPPAR4.Out.AllTitles.size() == 2;'Number of titiles is wroing ' + APPPAR4.Out.AllTitles
+
+            #Assert;#Message
+            APPPAR4.Out.URL.contains(newURL);'Url is wrong ' + APPPAR4.Out.URL
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_4
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'open in new tab with parameter Tab';;;
+            #Id;#Call
+            CALL_4;appStart
+
+            #Id;#Action;URL;$AppConnection;Tab
+            APPNI2;ApplicationNewInstance;mockWebURL2;CALL_4;true
+
+            #Action;$Time
+            Wait;2000
+
+            #Id;#Action;URL;Title;$AppConnection
+            APPSW1;ApplicationSwitchTo;newURL;'Mock html';CALL_4
+
+            #Id;#Action;$AppConnection;URL;AllTitles
+            APPPAR4;ApplicationGetProperties;CALL_4;;
+
+            #Assert;#Message
+            APPPAR4.Out.AllTitles.size() == 2;'Number of titiles is wroing ' + APPPAR4.Out.AllTitles
+
+            #Assert;#Message
+            APPPAR4.Out.URL.contains(newURL);'Url is wrong ' + APPPAR4.Out.URL
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_4
+
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        'open in url with paramneter url and Tab';;;
+            #Id;#Call
+            CALL_3;appStart
+
+            #Id;#Action;WhereOpen;Tab;URL;$AppConnection
+            APPNI2;ApplicationNewInstance;'OpenNewUrl';true;newURL;CALL_3
+
+            #Id;#Action;$AppConnection;URL;AllTitles
+            APPPAR4;ApplicationGetProperties;CALL_3;;
+
+            #Assert;#Message
+            APPPAR4.Out.AllTitles.size() == 1;'Number of titiles is wroing ' + APPPAR4.Out.AllTitles
+
+            #Assert;#Message
+            APPPAR4.Out.URL.contains(newURL);'Url is wrong ' + APPPAR4.Out.URL
+
+            #Id;#Action;$AppConnection
+            APPSTP3;ApplicationStop;CALL_3
+
+        #EndStep
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;#Assert;$AppConnection
+        APPNI1;ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPNI1;ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Id;#Action;#Assert;$AppConnection
+        APPNI2;ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;CALL_1
+
+        #Id;#Action;#Assert;$AppConnection;URL;WhereOpen
+        APPNI3;ApplicationNewInstance;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;CALL_1;'someUrl';'asdasdasd'
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Refresh;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Let
+        text;'some text'
+
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;$Dialog;$AppConnection;TextBox;TextBox
+        DLGFLL1;DialogFill;'Main';CALL_1;Do.text(text,true);Do.check(text)
+
+        #Id;#Action;$AppConnection
+        APPR1;ApplicationRefresh;CALL_1
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection;TextBox
+        DLGFLL1;DialogFill;This.Result == Result.Passed && This.Out.TextBox == 'Green';'Main';CALL_1;Do.getValue()
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPR2;ApplicationRefresh;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPR3;ApplicationRefresh;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Resize;;;
+    // 
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Call
+        CALL_6;appStart
+
+        #Id;#Action;#Assert;$Height;$Width;$AppConnection
+        APPSZ1;ApplicationResize;This.Result == Result.Passed;500;500;CALL_6
+
+        #Id;#Action;$AppConnection
+        APPSTP4;ApplicationStop;CALL_6
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPSZ2;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSZ3;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Id;#Call
+        CALL_7;appStart
+
+        #Action;#Assert;$AppConnection
+        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7
+
+        #Action;#Assert;$AppConnection;$Resize
+        ApplicationResize;This.Kind == ErrorKind.EMPTY_PARAMETER;CALL_7;
+
+        #Action;#Assert;$AppConnection;$Height;$Resize
+        ApplicationResize;This.Kind == ErrorKind.WRONG_PARAMETERS;CALL_7;10;Resize.Maximize
+
+        #Action;$AppConnection
+        ApplicationStop;CALL_7
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Stop;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.APPLICATION_CLOSED;'Main';CALL_1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPSTP2;ApplicationStop;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSTP2;ApplicationStop;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application SwitchTo;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Let
+        newURL;mockWebURL
+
+        #Id;#Let
+        title;'Mock html'
+
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;URL;WhereOpen;$AppConnection
+        APPNI1;ApplicationNewInstance;newURL;'OpenInTab';CALL_1
+
+        #Id;#Action;URL;Title;$AppConnection
+        APPSW1;ApplicationSwitchTo;newURL;title;CALL_1
+
+        #Id;#Action;#Assert;Title;URL;$AppConnection
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('URL').contains(newURL) && This.Out.get('Title') == title;;;CALL_1
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Let
+        title;'Google'
+
+        #Id;#Let
+        newURL;mockWebURL2
+
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSW1;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSW1;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+        #Id;#Action;#Assert;Title;$AppConnection
+        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;title;CALL_1
+
+        #Id;#Action;#Assert;URL;$AppConnection
+        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;newURL;CALL_1
+
+        #Id;#Action;#Assert;$SoftCondition;$AppConnection
+        APPSW2;ApplicationSwitchTo;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;CALL_1
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Application Resize;;;
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Id;#Let
+        height;1000
+
+        #Id;#Let
+        width;1000
+
+        #Id;#Call
+        CALL_1;appStart
+
+        #Id;#Action;$Height;$Width;$AppConnection
+        APPSZ1;ApplicationResize;height;width;CALL_1
+
+        #Id;#Action;$AppConnection
+        IMGGET1;ImageGet;CALL_1
+
+        #Assert;#Message
+        IMGGET1.Out.getImage().getHeight() == height-125;'Height is wrong ' + IMGGET1.Out.getImage().getHeight()
+
+        #Assert;#Message
+        IMGGET1.Out.getImage().getWidth() == width-10;'Width is wrong ' + IMGGET1.Out.getImage().getWidth()
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;CALL_1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Id;#Action;#Assert;$AppConnection
+        APPSZ2;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSZ3;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;new Date()
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+subcases;;;
+    #Id;#SubCase
+    appStart;
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR2;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+        #Return
+        APPSTR2.Out
+
+    #EndSubCase
+
+

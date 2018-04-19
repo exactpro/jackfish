@@ -1,0 +1,34 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #Id;#Let
+    v;'v'
+
+    #Id;#RawTable
+    DATA1;Table
+    @;newH
+    0;v + 'zzz'
+    #EndRawTable
+
+    #Action;$Table;$Expression
+    TableConsiderColumnsAs;DATA1;'newH'
+
+    #Call;table
+    testLib.simpleSubWithTable;DATA1
+
+    #ForEach;#In
+    row;DATA1
+        #Action;Value
+        Print;row.newH+'.jf'
+
+    #EndForEach
+
+

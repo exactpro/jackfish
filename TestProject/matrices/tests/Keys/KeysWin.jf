@@ -1,0 +1,146 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;start;;;
+    #Id;#Global;#Let
+    plugin;1;'Win'
+
+    #Id;#Global;#Let
+    getNewLine;1;def (pl) {if(pl == 'Web') {return '\n'\u003b}if(pl == 'Swing') {return '\r\n'\u003b}if(pl == 'Win') {return '\r\n'\u003b}}\u003b
+
+    #Id;#Global;#Let
+    amount;1;100
+
+    #If
+    plugin == 'Chrome'
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+        #Id;#Global;#Let
+        appCon;1;APPSTR1.Out
+
+    #EndIf
+
+    #If
+    plugin == 'Swing'
+        #Id;#Action;$AppId;Jar;Args;MainClass
+        APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;'';mockSwingClass
+
+        #Id;#Global;#Let
+        appCon;1;APPSTR1.Out
+
+    #EndIf
+
+    #If
+    plugin == 'Win'
+        #Id;#Action;$AppId;Exec;WorkDir;Args
+        APPSTR1;ApplicationStart;mockWinApp;mockWinExec;mockWinDir;''
+
+        #Id;#Global;#Let
+        appCon;1;APPSTR1.Out
+
+    #EndIf
+
+
+// 
+#TestCase;#Kind;#Depends;#For
+testcases;Never;;
+    #Step;#Kind;#For;#Depends
+    'a';;;
+        #Id;#Action;$Dialog;$AppConnection;TextBox
+        DLGFLL1;DialogFill;'Main';appCon;Do.text('',true).click().press(Keyboard.A).getValue()
+
+        #Assert;#Message
+        DLGFLL1.Out.TextBox == 'a';DLGFLL1.Out.TextBox + ' != a'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'A';;;
+        #Id;#Action;$Dialog;$AppConnection;TextBox
+        DLGFLL1;DialogFill;'Main';appCon;Do.text('',true).click().keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).getValue()
+
+        #Assert;#Message
+        DLGFLL1.Out.TextBox == 'A';DLGFLL1.Out.TextBox + ' != A'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'CtrlC CtrlV';;;
+        #Id;#Action;$Dialog;$AppConnection;TextBox
+        DLGFLL1;DialogFill;'Main';appCon;Do.text('V',true).keyDown(Keyboard.CONTROL).press(Keyboard.A).press(Keyboard.C).click().press(Keyboard.V).keyUp(Keyboard.CONTROL).getValue()
+
+        #Assert;#Message
+        DLGFLL1.Out.TextBox == 'VV';DLGFLL1.Out.TextBox + ' != VV'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'CtrlA';;;
+        #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
+        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).press(Keyboard.A).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
+
+        #Id;#Let
+        expected;'TextBox_down_17' + getNewLine(plugin) +'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_17'
+
+        #Assert;#Message
+        DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'CtrlShiftA';;;
+        #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
+        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).press(Keyboard.A).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).delay(amount).getValue();Do.getValue()
+
+        #Id;#Let
+        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_press_1' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17'
+
+        #Assert;#Message
+        DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'CtrlShiftAltA';;;
+        #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
+        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().keyDown(Keyboard.CONTROL).keyDown(Keyboard.SHIFT).keyDown(Keyboard.ALT).press(Keyboard.A).keyUp(Keyboard.ALT).keyUp(Keyboard.SHIFT).keyUp(Keyboard.CONTROL).getValue();Do.getValue()
+
+        #Id;#Let
+        expected;'TextBox_down_17' + getNewLine(plugin) + 'TextBox_down_16' + getNewLine(plugin) + 'TextBox_down_18' + getNewLine(plugin) + 'TextBox_down_65' + getNewLine(plugin) + 'TextBox_up_65' + getNewLine(plugin) + 'TextBox_up_18' + getNewLine(plugin) + 'TextBox_up_16' + getNewLine(plugin) + 'TextBox_up_17'
+
+        #Assert;#Message
+        DLGFLL1.Out.protocolText == expected;DLGFLL1.Out.protocolText + ' != ' + expected
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'CapsLock';;;
+        #Id;#Action;$Dialog;$AppConnection;protocolClear;TextBox;protocolText
+        DLGFLL1;DialogFill;'Main';appCon;Do.click();Do.text('',true).click().move().press(Keyboard.A).press(Keyboard.CAPS_LOCK).press(Keyboard.A).press(Keyboard.CAPS_LOCK).press(Keyboard.A).delay(amount).getValue();Do.getValue()
+
+        #Assert;#Message
+        DLGFLL1.Out.TextBox == 'aAa';DLGFLL1.Out.TextBox + ' != ' + 'aAa'
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+stop;;;
+    #Id;#Action;$AppConnection
+    APPSTP1;ApplicationStop;appCon
+
+    #Id;#Action;$Decoraded
+    RESTBL1;ResultTable;true
+
+    #Action;$Table;$Title;$BeforeTestCase
+    TableReport;RESTBL1.Out;'Result';'INIT'
+
+

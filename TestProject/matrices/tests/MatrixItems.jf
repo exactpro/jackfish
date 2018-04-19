@@ -1,0 +1,3134 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+VISIBILITY;Variable visibility;Never;;
+    // ======================================================================
+    // var files visibility
+    #Assert;#Message
+    isdef TRUE;'Should be defined in vars.ini'
+
+    // ======================================================================
+    // local vars have priority
+    #Id;#Global;#Let
+    mixed;1;100
+
+    #Assert;#Message
+    mixed == 100;'Expected=' + 100 + ' Actual=' + mixed
+
+    #Id;#Let
+    mixed;150
+
+    #Assert;#Message
+    mixed == 150;'Expected=' + 150 + ' Actual=' + mixed
+
+    #Id;#Let
+    local1;123
+
+    // ======================================================================
+    // override global value
+    #Step;#Kind;#For;#Depends
+    ;;;
+        // 
+        #Assert;#Message
+        local1 == 123;'Expected=' + 123 + ' Actual=' + local1
+
+        // still the same
+        #Assert;#Message
+        mixed == 150;'Expected=' + 150 + ' Actual=' + mixed
+
+        #Id;#Let
+        mixed;300
+
+        // 
+        #Assert;#Message
+        mixed == 300;'Expected=' + 150 + ' Actual=' + mixed
+
+        #Id;#Global;#Let
+        global;1;1000
+
+        #Id;#Let
+        local;777
+
+    #EndStep
+
+    #Assert;#Message
+    mixed == 150;'Expected=' + 150 + ' Actual=' + mixed
+
+    #Assert;#Message
+    global == 1000;'Expected=' + 1000 + ' Actual=' + global
+
+    #Assert;#Message
+    !(isdef local);'Shouldnt be defined here'
+
+    #Id;#Let
+    newlocal;888
+
+    // ======================================================================
+    // visibility subcase results
+    #Id;#Let
+    additional;555
+
+    // 
+    #Id;#Global;#Call;additional
+    callResGlobal;1;TestSub;1
+
+    #Assert;#Message
+    callResGlobal == 101;'Should be defined here'
+
+    // 
+    #Id;#Call;additional
+    callRes;TestSub;2
+
+    #Assert;#Message
+    callRes == 102;'Should be defined here'
+
+    #Assert;#Message
+    additional == 555;'Should be defined here'
+
+    #Id;#SubCase;additional
+    TestSub;;global3
+        #Assert;#Message
+        additional != 555;'Expected !=' + 555 + ' Actual=' + additional
+
+        #Return
+        100 + additional
+
+    #EndSubCase
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+VISIBILITY;Variable visibility continue;;;
+    #SetHandler;#Kind
+    onStepStartLocal;OnStepStart
+
+    #Assert;#Message
+    mixed == 100;'Expected=' + 100 + ' Actual=' + mixed
+
+    #Assert;#Message
+    !(isdef newlocal);'Shouldnt be defined here'
+
+    #Assert;#Message
+    callResGlobal == 101;'Should be defined here'
+
+    #Assert;#Message
+    !(isdef callRes);'Shouldnt be defined here'
+
+    // ======================================================================
+    // Step var visibility
+    #Id;#Let
+    local2;1
+
+    #Id;#Global;#Let
+    global2;1;2
+
+    #Id;#Let
+    local3;3
+
+    #Id;#Global;#Let
+    global3;1;4
+
+    #Step;#Kind;#For;#Depends
+    ;;;
+        #Assert;#Message
+        local2 == 1;'Should be defined here'
+
+        #Assert;#Message
+        global2 == 2;'Should be defined here'
+
+        #Assert;#Message
+        local3 == 3;'Should be defined here'
+
+        #Assert;#Message
+        global3 == 4;'Should be defined here'
+
+        #Call;additional
+        TestSub;local2
+
+        #Call;additional
+        TestSub;global2
+
+        #Call;additional
+        TestSub;local3
+
+        #Call;additional
+        TestSub;global3
+
+        #Id;#Let
+        stepLocal;3
+
+        #Id;#Global;#Let
+        stepGlobal;1;4
+
+    #EndStep
+
+    #Assert;#Message
+    local2 == 1;'Should be defined here'
+
+    #Assert;#Message
+    global2 == 2;'Should be defined here'
+
+    #Assert;#Message
+    !(isdef stepLocal);'Shouldnt be defined here'
+
+    #Assert;#Message
+    stepGlobal == 4;'Should be defined here'
+
+    #Id;#SubCase
+    onStepStartLocal;onStepStartLocal
+        #Assert;#Message
+        isdef global2;'Should be defined'
+
+        #Assert;#Message
+        !(isdef local2);'Shouldnt be defined'
+
+    #EndSubCase
+
+
+#TestCase;#Kind;#Depends;#For
+check Let;;;
+    #Step;#Kind;#For;#Depends
+    'negative test with not comiled value';;;
+        #Id;#RawText;#Kind
+        TEXT2;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Let"
+        ~;"    asd'asd;"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;#Assert;$Text
+        MXRN2;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('Invalid identifier : asd\'asd');TEXT2
+
+    #EndStep
+
+    // null - null
+    // It's expected?
+    #Step;#Kind;#For;#Depends
+    'empty let and value';;;
+        #Let
+        
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'let with invalid value';;;
+        #Id;#Let
+        someLet;some_invalid_value
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression #Let';'Expected excepion and message not equals the actuals'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check that let saved into local namespace';;;
+        #Id;#Let
+        myLocalVariable;'myLocalVariable'
+
+        #Assert;#Message
+        evaluator.getLocals().getVariable('myLocalVariable') == 'myLocalVariable';'Local variables dosnt contains local variable'
+
+        #Assert;#Message
+        evaluator.getGlobals().getVariable('myLocalVariable') == null;'Global variables contains local variable'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check that let saved into global namespace';;;
+        #Id;#Global;#Let
+        myGlobalVariable;1;'myGlobalVariable'
+
+        #Assert;#Message
+        evaluator.getLocals().getVariable('myGlobalVariable') == null;'Local variables contains the global variable'
+
+        #Assert;#Message
+        evaluator.getGlobals().getVariable('myGlobalVariable') == 'myGlobalVariable';'Global variables dosnt contains the global variable'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'checklet with invalid id';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Let"
+        ~;"    asd zxc;'asd zxc'"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;#Assert;$Text
+        MXRN1;MatrixRunFromText;This.Result == Result.Failed && This.Kind == ErrorKind.MATRIX_ERROR && This.Reason.contains('Invalid identifier : asd zxc');TEXT1
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check Assert;;;
+    #Step;#Kind;#For;#Depends
+    'negative test with not comiled value';;;
+        #Id;#RawText;#Kind
+        TEXT2;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Assert;#Message"
+        ~;"    asd'asd;"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;#Assert;$Text
+        MXRN2;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('asd\'asd');TEXT2
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative testing with empty assert and message';;;
+        #Assert;#Message
+        ;
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'Assert expression should be boolean';'Expected exception not equals actual'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative testing with assert not boolean and empty message';;;
+        #Assert;#Message
+        new Date();
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'Assert expression should be boolean';'Expected exception not equals actual'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative testing with invalid assert';;;
+        #Assert;#Message
+        new Date() > 1;'new Date() > 1'
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression  #Assert';'Expected exception not equals actual'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative testing with invalid message';;;
+        #Assert;#Message
+        2 > 1;new Date() > 1
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression  #Message';'Expected exception not equals actual'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative testing with false assert and message';;;
+        #Id;#Let
+        failedMsg;'2 not less that 1'
+
+        #Assert;#Message
+        2 < 1;failedMsg
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.ASSERT && err.Message == failedMsg;'Expected kind and message not equals actual'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive testing with true assert and message';;;
+        #Id;#Let
+        expectedMessage;'2 great that 1'
+
+        #Assert;#Message
+        2 > 1;expectedMessage
+
+        #OnError
+            #Fail
+            'Assert not true'
+
+
+    #EndStep
+
+
+// =======================================
+// branch items
+// =======================================
+#TestCase;#Kind;#Depends;#For
+check Switch Case Default;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing, when child of Switch not Case or Default';;;
+        #Id;#RawText;#Kind
+        TEXT2;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Switch"
+        ~;"    "
+        ~;"        #Action"
+        ~;"        Print"
+        ~;""
+        ~;"    #EndSwitch"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;#Assert;$Text
+        MXRN2;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('Switch must contain only Case or Default item');TEXT2
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative testing with invalid switch value';;;
+        #Switch
+        asd
+        #EndSwitch
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression : Switch';'Assert is false'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative testing with invalid case value';;;
+        #Switch
+        'asd'
+            #Case
+            asd
+
+        #EndSwitch
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression : Case : asd';'Assert is false'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with empty child of switch';;;
+        #Id;#Let
+        myVariable;1
+
+        #Switch
+        
+        #EndSwitch
+
+        #Assert;#Message
+        myVariable == 1;'Excpected : 1 and actual : ' + myVariable
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with null value on switch and case';;;
+        #Id;#Let
+        myVariable;1
+
+        #Switch
+        
+            #Case
+            'asd'
+                #Id;#Let
+                myVariable;'case number 1'
+
+
+            #Case
+            
+                #Id;#Let
+                myVariable;'expected'
+
+
+            #Default
+                #Id;#Let
+                myVariable;'default'
+
+
+        #EndSwitch
+
+        #Assert;#Message
+        myVariable == 'expected';'Excpected : expected and actual : ' + myVariable
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with null value on switch and not null value on case ( without default)';;;
+        #Id;#Let
+        myVariable;1
+
+        #Switch
+        
+            #Case
+            'asd'
+                #Id;#Let
+                myVariable;'case number 1'
+
+
+            #Case
+            'some asd'
+                #Id;#Let
+                myVariable;'expected'
+
+
+        #EndSwitch
+
+        #Assert;#Message
+        myVariable == 1;'Excpected : 1 and actual : ' + myVariable
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with null value on switch and not null value on case ( with default)';;;
+        #Id;#Let
+        myVariable;1
+
+        #Switch
+        
+            #Case
+            'asd'
+                #Id;#Let
+                myVariable;'case number 1'
+
+
+            #Case
+            'some asd'
+                #Id;#Let
+                myVariable;'expected'
+
+
+            #Default
+                #Id;#Let
+                myVariable;'default'
+
+
+        #EndSwitch
+
+        #Assert;#Message
+        myVariable == 'default';'Excpected : default and actual : ' + myVariable
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with not null value and not null case';;;
+        #Id;#Let
+        myVariable;1
+
+        #Switch
+        'some asd'
+            #Case
+            'asd'
+                #Id;#Let
+                myVariable;'case number 1'
+
+
+            #Case
+            'some asd'
+                #Id;#Let
+                myVariable;'expected'
+
+
+            #Default
+                #Id;#Let
+                myVariable;'default'
+
+
+        #EndSwitch
+
+        #Assert;#Message
+        myVariable == 'expected';'Excpected : expected and actual : ' + myVariable
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with not null value and not null case,where default is first';;;
+        #Id;#Let
+        myVariable;1
+
+        #Switch
+        'some asd'
+            #Default
+                #Id;#Let
+                myVariable;'default'
+
+
+            #Case
+            'asd'
+                #Id;#Let
+                myVariable;'case number 1'
+
+
+            #Case
+            'some asd'
+                #Id;#Let
+                myVariable;'expected'
+
+
+        #EndSwitch
+
+        #Assert;#Message
+        myVariable == 'default';'Excpected : default and actual : ' + myVariable
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with not null value and not null case,where default is last';;;
+        #Id;#Let
+        myVariable;1
+
+        #Switch
+        'some asd'
+            #Case
+            'asd'
+                #Id;#Let
+                myVariable;'case number 1'
+
+
+            #Case
+            'some asd123'
+                #Id;#Let
+                myVariable;'expected'
+
+
+            #Default
+                #Id;#Let
+                myVariable;'default'
+
+
+        #EndSwitch
+
+        #Assert;#Message
+        myVariable == 'default';'Excpected : default and actual : ' + myVariable
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check If / Else;;;
+    #Step;#Kind;#For;#Depends
+    'negative test with not compiled value on If';;;
+        #Id;#RawText;#Kind
+        TEXT1;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #If"
+        ~;"    asd'asd"
+        ~;"    #EndIf"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;#Assert;$Text
+        MXRN1;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('asd\'asd');TEXT1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with invalid condition';;;
+        #If
+        asd
+        #EndIf
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message.contains('Error in expression #If.');'Assert is false'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with not boolean condition';;;
+        #If
+        new Date()
+        #EndIf
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'Result is not type of Boolean' && err.Kind == ErrorKind.EXCEPTION;'Assert is false'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test without Else and condition true';;;
+        #Id;#Let
+        myVar;1
+
+        #If
+        3 > 2
+            #Id;#Let
+            myVar;2
+
+        #EndIf
+
+        #Assert;#Message
+        myVar == 2;'Expected 2 and Actual : ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test without Else and condition false';;;
+        #Id;#Let
+        myVar;1
+
+        #If
+        3 < 2
+            #Id;#Let
+            myVar;2
+
+        #EndIf
+
+        #Assert;#Message
+        myVar == 1;'Expected 1 and Actual : ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Else and condition true';;;
+        #Id;#Let
+        myVar;1
+
+        #If
+        3 > 2
+            #Id;#Let
+            myVar;2
+
+        #Else
+            #Id;#Let
+            myVar;3
+
+
+        #EndIf
+
+        #Assert;#Message
+        myVar == 2;'Expected 2 and Actual : ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Else and condition false';;;
+        #Id;#Let
+        myVar;1
+
+        #If
+        3 < 2
+            #Id;#Let
+            myVar;2
+
+        #Else
+            #Id;#Let
+            myVar;3
+
+
+        #EndIf
+
+        #Assert;#Message
+        myVar == 3;'Expected 3 and Actual : ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'simple positive test with empty step value';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;1
+            #Id;#Let
+            myVar;myVar + 1
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 11;'Expected 11, but Actual ' + myVar
+
+    #EndStep
+
+
+// =======================================
+// cycle items
+// =======================================
+// Theese test include test for items Break and Continue
+#TestCase;#Kind;#Depends;#For
+check For;;;
+    #Step;#Kind;#For;#Depends
+    'negative test with not valid for';;;
+        #Id;#RawText;#Kind
+        TEXT3;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #For;#From;#To;#Step"
+        ~;"    123asd zxc;;;"
+        ~;"    #EndFor"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;#Assert;$Text
+        MXRN1;MatrixRunFromText;This.Result == Result.Failed && This.Kind == ErrorKind.MATRIX_ERROR && This.Reason.contains('Invalid identifier : 123asd zxc');TEXT3
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with expression on from';;;
+        #For;#From;#To;#Step
+        ;asd;1;1
+        #EndFor
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression #From';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with expression on to';;;
+        #For;#From;#To;#Step
+        ;1;asd;1
+        #EndFor
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression #To';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with expression on step';;;
+        #For;#From;#To;#Step
+        ;1;1;asd
+        #EndFor
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression #Step';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with expression on from not a number';;;
+        #For;#From;#To;#Step
+        ;new Date();1;1
+        #EndFor
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == '#From is not type of Number';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with expression on to not a number';;;
+        #For;#From;#To;#Step
+        ;1;new Date();1
+        #EndFor
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == '#To is not type of Number';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with expression on step not a number';;;
+        #For;#From;#To;#Step
+        ;1;1;new Date()
+        #EndFor
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == '#Step is not type of Number';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with empty step value';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;1
+            #Id;#Let
+            myVar;myVar + 1
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 11;'Expected 11 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with not empty step value';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;2
+            #Id;#Let
+            myVar;myVar + 1
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 6;'Expected 6 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with big step value';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;200
+            #Id;#Let
+            myVar;myVar + 1
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 1;'Expected 1 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test from 0 to 0';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;0;1
+            #Id;#Let
+            myVar;myVar + 1
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 1;'Expected 1 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with negative to and step';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;-10;-1
+            #Id;#Let
+            myVar;myVar + 1
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 11;'Expected 11 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with execute children until OnError';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;1
+            #Id;#Let
+            myVar;myVar + 1
+
+            #OnError
+                #Id;#Let
+                myVar;myVar + 100
+
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 11;'Expected 11 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with execute with OnError and fail';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;1
+            #Id;#Let
+            myVar;myVar + 1
+
+            #If
+            i > 5
+                #Fail
+                'some fail'
+
+            #EndIf
+
+            #OnError
+                #Id;#Let
+                myVar;myVar + 100
+
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 511;'Expected 511 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with execute and fail';;;
+        #Id;#Let
+        failString;'some fail string'
+
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;1
+            #Id;#Let
+            myVar;myVar + 1
+
+            #If
+            i > 5
+                #Fail
+                failString
+
+            #EndIf
+
+        #EndFor
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.FAIL && err.Message == failString;
+
+            #Assert;#Message
+            myVar == 7;'Expected 7 but Actual ' + myVar
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Break';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;1
+            #Id;#Let
+            myVar;myVar + 1
+
+            #If
+            i == 2
+                #Break
+
+            #EndIf
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 3;'Expected 3 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Continue';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;1
+            #If
+            i >5
+                #Continue
+
+            #EndIf
+
+            #Id;#Let
+            myVar;myVar + 1
+
+        #EndFor
+
+        #Assert;#Message
+        myVar == 6;'Expected 6 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Return';;;
+        #Id;#Let
+        myVar;0
+
+        #For;#From;#To;#Step
+        i;0;10;1
+            #Id;#Let
+            myVar;myVar + 1
+
+            #If
+            i == 2
+                #Return
+                'some return value'
+
+            #EndIf
+
+        #EndFor
+
+        #Fail
+        'this fail never throws'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with empty children';;;
+        #For;#From;#To;#Step
+        i;0;10;1
+        #EndFor
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check While;;;
+    #Step;#Kind;#For;#Depends
+    'negative test with invalid condition';;;
+        #While
+        asd
+        #EndWhile
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Error in expression : While';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with condiion is not boolean';;;
+        #While
+        new Date()
+        #EndWhile
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Result is not type of Boolean';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with false condition';;;
+        #Id;#Let
+        myVar;1
+
+        #While
+        false
+            #Id;#Let
+            myVar;2
+
+        #EndWhile
+
+        #Assert;#Message
+        myVar == 1;'Expected 1 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with true condtiion, but after several iteration condition is false';;;
+        #Id;#Let
+        flag;true
+
+        #Id;#Let
+        myVar;1
+
+        #While
+        flag
+            #Id;#Let
+            myVar;myVar + 1
+
+            #If
+            myVar > 4
+                #Id;#Let
+                flag;false
+
+            #EndIf
+
+        #EndWhile
+
+        #Assert;#Message
+        myVar == 5;'Expected 5 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with execute children until OnError';;;
+        #Id;#Let
+        myVar;0
+
+        #While
+        myVar < 10
+            #Id;#Let
+            myVar;myVar + 1
+
+            #OnError
+                #Id;#Let
+                myVar;myVar + 100
+
+
+        #EndWhile
+
+        #Assert;#Message
+        myVar == 10;'Expected 10 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with execute with OnError and fail';;;
+        #Id;#Let
+        myVar;0
+
+        #While
+        myVar < 500
+            #Id;#Let
+            myVar;myVar + 1
+
+            #If
+            myVar > 5
+                #Fail
+                'some fail'
+
+            #EndIf
+
+            #OnError
+                #Id;#Let
+                myVar;myVar + 100
+
+
+        #EndWhile
+
+        #Assert;#Message
+        myVar == 510;'Expected 510 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with execute and fail';;;
+        #Id;#Let
+        failString;'some fail string'
+
+        #Id;#Let
+        myVar;0
+
+        #While
+        myVar < 10
+            #Id;#Let
+            myVar;myVar + 1
+
+            #If
+            myVar > 5
+                #Fail
+                failString
+
+            #EndIf
+
+        #EndWhile
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.FAIL && err.Message == failString;
+
+            #Assert;#Message
+            myVar == 6;'Expected 6 but Actual ' + myVar
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Break';;;
+        #Id;#Let
+        myVar;0
+
+        #While
+        myVar < 10
+            #Id;#Let
+            myVar;myVar + 1
+
+            #If
+            myVar == 2
+                #Break
+
+            #EndIf
+
+        #EndWhile
+
+        #Assert;#Message
+        myVar == 2;'Expected 2 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Continue';;;
+        #Id;#Let
+        i;0
+
+        #Id;#Let
+        myVar;0
+
+        #While
+        i < 10
+            #Id;#Let
+            i;i + 1
+
+            #If
+            i > 5
+                #Continue
+
+            #EndIf
+
+            #Id;#Let
+            myVar;myVar + 1
+
+        #EndWhile
+
+        #Assert;#Message
+        myVar == 5;'Expected 5 but Actual ' + myVar
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Return';;;
+        #Id;#Let
+        i;0
+
+        #Id;#Let
+        myVar;0
+
+        #While
+        i < 10
+            #Id;#Let
+            i;i + 1
+
+            #Id;#Let
+            myVar;myVar + 1
+
+            #If
+            i == 2
+                #Return
+                'some return value'
+
+            #EndIf
+
+        #EndWhile
+
+        #Fail
+        'this fail never throws'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with empty children';;;
+        #Id;#Let
+        i;0
+
+        #While
+        i < 10
+            #Id;#Let
+            i;i + 1
+
+        #EndWhile
+
+        #Assert;#Message
+        i == 10;
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check ForEach;;;
+    #Step;#Kind;#For;#Depends
+    'negative test with not valid for';;;
+        #Id;#RawText;#Kind
+        TEXT3;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #ForEach;#In"
+        ~;"    123asd zxc;"
+        ~;"    #EndForEach"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;#Assert;$Text
+        MXRN1;MatrixRunFromText;This.Result == Result.Failed && This.Kind == ErrorKind.MATRIX_ERROR && This.Reason.contains('Invalid identifier : 123asd zxc');TEXT3
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with invalid in';;;
+        #ForEach;#In
+        i;zxc
+        #EndForEach
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message.startsWith('Error in expression #In');
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with in is not a collection';;;
+        #ForEach;#In
+        i;new Date()
+        #EndForEach
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message == '#In is not a collection';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive simple test';;;
+        #Id;#Let
+        collection;[1,2,3,4,5,6,7]
+
+        #Id;#Let
+        lastValue;-1
+
+        #ForEach;#In
+        v;collection
+            #Id;#Let
+            lastValue;v
+
+        #EndForEach
+
+        #Assert;#Message
+        lastValue == 7;'Expected 7 but Actual ' + lastValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with execute childrend until OnError';;;
+        #Id;#Let
+        collection;[1,2,3,4,5,6,7]
+
+        #Id;#Let
+        lastValue;-1
+
+        #ForEach;#In
+        v;collection
+            #Id;#Let
+            lastValue;v
+
+            #OnError
+                #Id;#Let
+                lastValue;lastValue + 1000
+
+
+        #EndForEach
+
+        #Id;#Let
+        lastValue;v
+
+        #Assert;#Message
+        lastValue == 7;'Expected 7 but Actual ' + lastValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with execute with OnError and fail';;;
+        #Id;#Let
+        collection;[1,2,3,4,5,6,7]
+
+        #Id;#Let
+        lastValue;-1
+
+        #ForEach;#In
+        v;collection
+            #Id;#Let
+            lastValue;v
+
+            #If
+            lastValue > 4
+                #Fail
+                'some fail'
+
+            #EndIf
+
+            #OnError
+                #Id;#Let
+                lastValue;lastValue + 1000
+
+
+        #EndForEach
+
+        #Assert;#Message
+        lastValue == 1007;'Expected 1007 but Actual ' + lastValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with execute and fail';;;
+        #Id;#Let
+        failString;'some fail string'
+
+        #Id;#Let
+        collection;[1,2,3,4,5,6,7]
+
+        #Id;#Let
+        lastValue;-1
+
+        #ForEach;#In
+        v;collection
+            #Id;#Let
+            lastValue;v
+
+            #If
+            lastValue > 4
+                #Fail
+                failString
+
+            #EndIf
+
+        #EndForEach
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.FAIL && err.Message == failString;
+
+            #Assert;#Message
+            lastValue == 5;'Expected 5 but Actual ' + lastValue
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Break';;;
+        #Id;#Let
+        collection;[1,2,3,4,5,6,7]
+
+        #Id;#Let
+        lastValue;-1
+
+        #ForEach;#In
+        v;collection
+            #Id;#Let
+            lastValue;v
+
+            #If
+            lastValue > 4
+                #Break
+
+            #EndIf
+
+        #EndForEach
+
+        #Assert;#Message
+        lastValue == 5;'Expected 5 but Actual ' + lastValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Continue';;;
+        #Id;#Let
+        collection;[1,2,3,4,5,6,7]
+
+        #Id;#Let
+        lastValue;-1
+
+        #ForEach;#In
+        v;collection
+            #If
+            lastValue > 4
+                #Continue
+
+            #EndIf
+
+            #Id;#Let
+            lastValue;v
+
+        #EndForEach
+
+        #Assert;#Message
+        lastValue == 5;'Expected 5 but Actual ' + lastValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with Return';;;
+        #Id;#Let
+        collection;[1,2,3,4,5,6,7]
+
+        #Id;#Let
+        lastValue;-1
+
+        #ForEach;#In
+        v;collection
+            #If
+            lastValue > 4
+                #Return
+                lastValue
+
+            #EndIf
+
+            #Id;#Let
+            lastValue;v
+
+        #EndForEach
+
+        #Fail
+        'this fail never throws'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with empty children';;;
+        #Id;#Let
+        collection;[1,2,3,4,5,6,7]
+
+        #ForEach;#In
+        v;collection
+        #EndForEach
+
+    #EndStep
+
+
+// =======================================
+// onError into cycles cheked above
+#TestCase;#Kind;#Depends;#For
+check OnError;;;
+    #Step;#Kind;#For;#Depends
+    'positive test : variables err and error are presented inside OnError section';;;
+        #Fail
+        'some fail'
+
+        #OnError
+            #Assert;#Message
+            isdef err;'Variable err not defined'
+
+            #Assert;#Message
+            isdef error;'Variable error not defined'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test : onError  processing error';;;
+        #Fail
+        'some fail'
+
+        #OnError
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test that error contains expected string';;;
+        #Id;#Let
+        expectedString;'my some string'
+
+        #Fail
+        expectedString
+
+        #OnError
+            #Assert;#Message
+            error == expectedString;'Expected : ' + expectedString + ' but Actual : ' + error
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test that err contains expected string';;;
+        #Id;#Let
+        expectedString;'my some string'
+
+        #Fail
+        expectedString
+
+        #OnError
+            #Assert;#Message
+            err.Message == expectedString;'Expected : ' + expectedString + ' but Actual : ' + err.Message
+
+            #Assert;#Message
+            err.Kind == ErrorKind.FAIL;'Expected : ' + ErrorKind.FAIL + ' but Actual : ' + err.Kind
+
+            #Assert;#Message
+            err.Where != null;
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test that error throws from another action';;;
+        #Id;#Let
+        invalidApplicationId;'Some invalid application id'
+
+        #Id;#Action;$AppId
+        APPSTR1;ApplicationStart;invalidApplicationId
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && err.Message.contains(invalidApplicationId);'Some part of asesrt is false'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positivite test with several onError section into child';;;
+        #Id;#Let
+        variable;'asd'
+
+        #Fail
+        'fail 1'
+
+        #OnError
+            #Fail
+            'fail 2'
+
+            #OnError
+                #Fail
+                'fail 3'
+
+                #OnError
+                    #Id;#Let
+                    variable;123
+
+                    #Assert;#Message
+                    variable == 123;
+
+
+
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+check Fail;;;
+    #Step;#Kind;#For;#Depends
+    'negative testing with invalid fail value';;;
+        #Fail
+        asd
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION && error == 'Error in expression : Fail';
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with failing MatrixError';;;
+        #Id;#Let
+        myMessage;'My message'
+
+        #Id;#Let
+        myErrorKind;ErrorKind.OTHER
+
+        #Id;#Let
+        myItem;null
+
+        #Fail
+        new com.exactprosystems.jf.documents.matrix.parser.items.MatrixError(myMessage, myErrorKind, myItem)
+
+        #OnError
+            #Assert;#Message
+            err.Kind == myErrorKind;'Expected : ' + myErrorKind + ' but Actual : ' + err.Kind
+
+            #Assert;#Message
+            err.Message == myMessage;'Expected : ' + myMessage + ' but Actual : ' + err.Message
+
+            #Assert;#Message
+            err.Where == myItem;'Expected : ' + myItem + ' but Actual : ' + err.Where
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'posibite test with failing null';;;
+        #Fail
+        
+
+        #OnError
+            #Assert;#Message
+            err.Message == 'null' && err.Kind == ErrorKind.FAIL;'Assert is false'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'positive test with failing any value';;;
+        #Id;#Let
+        failingValue;new Date()
+
+        #Fail
+        failingValue
+
+        #OnError
+            #Assert;#Message
+            err.Message == failingValue.toString() && err.Kind == ErrorKind.FAIL;'Assert is false'
+
+
+    #EndStep
+
+
+// =======================================
+// Raw items
+// =======================================
+#TestCase;#Kind;#Depends;#For
+check RawMessage;;;
+
+#TestCase;#Kind;#Depends;#For
+check RawTable;;;
+    #Id;#RawTable
+    DATA1;Table
+    @;A;B;C
+    0;1;23;35
+    1;8;9;45
+    2;6;3;8
+    #EndRawTable
+
+    #Assert;#Message
+    DATA1.size() == 3;'Size not expected'
+
+    #Id;#Let
+    columns;['A', 'B', 'C']
+
+    #Action;$Actual;A;B;C
+    Check;DATA1[0];1;23;35
+
+    #Action;$Actual;A;B;C
+    Check;DATA1[2];6;3;8
+
+    #For;#From;#To;#Step
+    i;0;DATA1.getHeaderSize() - 1;1
+        #Assert;#Message
+        columns[i] == DATA1.getHeader(i);'Assert is false'
+
+    #EndFor
+
+
+#TestCase;#Kind;#Depends;#For
+check RawText;;;
+    #Id;#RawText;#Kind
+    TEXT4;Text;None
+    ~;"my simple"
+    ~;"super"
+    ~;"bigger"
+    ~;"not bigger"
+    ~;"raw"
+    ~;"text"
+    #EndRawText
+
+    #Assert;#Message
+    TEXT4.size() == 6;'Expected size not equals actual'
+
+    #Assert;#Message
+    TEXT4[0] == 'my simple';
+
+    #Assert;#Message
+    TEXT4[5] == 'text';
+
+
+// =======================================
+// Sub functions
+// =======================================
+#TestCase;#Kind;#Depends;#For
+check SubCase / Call;;;
+    #Step;#Kind;#For;#Depends
+    'check that local variable from step not appear into subcase';;;
+        #Id;#Let
+        localVariable;'myLocalVariable'
+
+        #Id;#SubCase
+        SUB_1;
+            #Assert;#Message
+            isdef localVariable == false;'Local variable is appear'
+
+        #EndSubCase
+
+        #Id;#Call
+        CALL_1;SUB_1
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check that parameters into subcase is appear into local namespace';;;
+        #Id;#SubCase;myVariable
+        SUB_2;;'simpleString'
+            #Assert;#Message
+            isdef myVariable;'Variable not presented'
+
+        #EndSubCase
+
+        #Id;#Call;myVariable
+        CALL_2;SUB_2;'simpleString'
+
+        #Assert;#Message
+        isdef myVariable == false;'Variable is appear'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check execute children until onError';;;
+        #Id;#SubCase
+        SUB_3;
+            #Id;#Let
+            myVariable;1
+
+            #Return
+            myVariable
+
+            #OnError
+                #Id;#Let
+                myVariable;100
+
+                #Return
+                myVariable
+
+
+        #EndSubCase
+
+        #Id;#Call
+        CALL_3;SUB_3
+
+        #Assert;#Message
+        CALL_3 == 1;'Expecte 1 but Actual ' + CALL_3
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check execute children with fail and onError section';;;
+        #Id;#SubCase
+        SUB_4;
+            #Id;#Let
+            myVariable;1
+
+            #Fail
+            'some fail'
+
+            #Return
+            myVariable
+
+            #OnError
+                #Id;#Let
+                myVariable;100
+
+                #Return
+                myVariable
+
+
+        #EndSubCase
+
+        #Id;#Call
+        CALL_4;SUB_4
+
+        #Assert;#Message
+        CALL_4 == 100;'Expecte 100 but Actual ' + CALL_4
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'check subcase without return value';;;
+        #Id;#SubCase
+        SUB_5;
+            #Id;#Let
+            asd;123
+
+        #EndSubCase
+
+        #Id;#Call
+        CALL_5;SUB_5
+
+        #Assert;#Message
+        CALL_5 == null;'Subcase result not null'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'call sub from library';;;
+        #Id;#Call;str
+        CALL_6;testLib.simpleSub;'asd'
+
+        #Assert;#Message
+        CALL_6 == 'ASD';'Assert failed'
+
+    #EndStep
+
+
+// =======================================
+#TestCase;#Kind;#Depends;#For
+check SetHandler;;;
+    #Id;#SubCase
+    clearStepHandlers;
+        #SetHandler;#Kind
+        ;OnStepStart
+
+        #SetHandler;#Kind
+        ;OnStepFinish
+
+        #SetHandler;#Kind
+        ;OnStepError
+
+    #EndSubCase
+
+    #Step;#Kind;#For;#Depends
+    'negative test with empty kind';;;
+        #SetHandler;#Kind
+        ;
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EMPTY_PARAMETER;'Kind is not expected'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with invalid name';;;
+        #SetHandler;#Kind
+        'zxczxczxczxc';OnTestCaseStart
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;'Kind not expected'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with *Error handler and empty parameter for Step';;;
+        #Id;#SubCase
+        temp;
+        #EndSubCase
+
+        #SetHandler;#Kind
+        temp;OnStepError
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;'Expected kind not exception'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'negative test with *Error handler and empty parameter for TestCase';;;
+        #Id;#SubCase
+        tempTestCaseError;
+        #EndSubCase
+
+        #SetHandler;#Kind
+        tempTestCaseError;OnTestCaseError
+
+        #OnError
+            #Assert;#Message
+            err.Kind == ErrorKind.EXCEPTION;'Expected kind not exception'
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set hadler OnStepStart';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        globalVariableStepStart;1;'init value'
+
+        #Id;#SubCase
+        onStepStart;
+            #Id;#Global;#Let
+            globalVariableStepStart;1;'from subcase'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        onStepStart;OnStepStart
+
+        #Step;#Kind;#For;#Depends
+        'simple step';;;
+        #EndStep
+
+        #Assert;#Message
+        globalVariableStepStart == 'from subcase';'Expected from subcase and Actual ' + globalVariableStepStart
+
+        #Call
+        clearStepHandlers
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set hadler OnStepFinish';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        globalVariableStepFinish;1;'init value'
+
+        #Id;#SubCase
+        onStepFinish;
+            #Id;#Global;#Let
+            globalVariableStepFinish;1;'from subcase'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        onStepFinish;OnStepFinish
+
+        #Step;#Kind;#For;#Depends
+        'simple step';;;
+            #Id;#Global;#Let
+            globalVariableStepFinish;1;'from step'
+
+        #EndStep
+
+        #Assert;#Message
+        globalVariableStepFinish == 'from subcase';'Expected from subcase and Actual ' + globalVariableStepFinish
+
+        #Call
+        clearStepHandlers
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set hadler OnStepError';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        globalVariableStepError;1;'init value'
+
+        #Id;#SubCase;err
+        onStepError;;
+            #Id;#Global;#Let
+            globalVariableStepError;1;'from subcase'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        onStepError;OnStepError
+
+        #Step;#Kind;#For;#Depends
+        'simple step check error handler';;;
+            #Id;#Global;#Let
+            globalVariable;1;'from step'
+
+            #Fail
+            'some fail'
+
+        #EndStep
+
+        #Assert;#Message
+        globalVariableStepError == 'from subcase';'Expected from subcase and Actual ' + globalVariableStepError
+
+        #Call
+        clearStepHandlers
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set handler OnTestCaseStart';;;
+        #Id;#Let
+        name;'onTestCaseStartVariable'
+
+        #Id;#Let
+        expectedValue;'expected value'
+
+        #Action;$Value;$Name
+        Store;'init value';name
+
+        #Id;#RawText;#Kind
+        TEXT5;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"init;Never;;"
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseStart"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseFinish"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseError"
+        ~;""
+        ~;"    #Id;#SubCase"
+        ~;"    simple;"
+        ~;"        #Action;$Value;$Name"
+        ~;"        Store;parameter.expectedValue;parameter.name"
+        ~;""
+        ~;"    #EndSubCase"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    simple;OnTestCaseStart"
+        ~;""
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"check;;;"
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        TXT1;TextPerform;TEXT5
+
+        #Id;#Action;$Text;$Parameter
+        MXRN3;MatrixRunFromText;TXT1.Out;{'expectedValue' : expectedValue, 'name' : name}
+
+        #Id;#Action;$Matrix
+        MXWT1;MatrixWait;MXRN3.Out
+
+        #Id;#Action;$Name
+        restoredValue;Restore;name
+
+        #Assert;#Message
+        restoredValue.Out == expectedValue;'Actual : ' + restoredValue.Out + ' and Expected : ' + expectedValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set handler OnTestCaseFinish';;;
+        #Id;#Let
+        name;'onTestCaseFinishVariable'
+
+        #Id;#Let
+        expectedValue;'expected value'
+
+        #Action;$Value;$Name
+        Store;'init value';name
+
+        #Id;#RawText;#Kind
+        TEXT5;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"init;Never;;"
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseStart"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseFinish"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseError"
+        ~;""
+        ~;"    #Id;#SubCase"
+        ~;"    simple;"
+        ~;"        #Action;$Value;$Name"
+        ~;"        Store;parameter.expectedValue;parameter.name"
+        ~;""
+        ~;"    #EndSubCase"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    simple;OnTestCaseFinish"
+        ~;""
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"check;;;"
+        ~;"    #Action;$Value;$Name"
+        ~;"    Store;'not expected value from testcase';parameter.name"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        TXT1;TextPerform;TEXT5
+
+        #Id;#Action;$Text;$Parameter
+        MXRN3;MatrixRunFromText;TXT1.Out;{'expectedValue' : expectedValue, 'name' : name}
+
+        #Id;#Action;$Matrix
+        MXWT1;MatrixWait;MXRN3.Out
+
+        #Id;#Action;$Name
+        restoredValue;Restore;name
+
+        #Assert;#Message
+        restoredValue.Out == expectedValue;'Actual : ' + restoredValue.Out + ' and Expected : ' + expectedValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'set handler OnTestCaseError';;;
+        #Id;#Let
+        name;'onTestCaseErrorVariable'
+
+        #Id;#Let
+        expectedValue;'expected value'
+
+        #Action;$Value;$Name
+        Store;'init value';name
+
+        #Id;#RawText;#Kind
+        TEXT5;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"init;Never;;"
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseStart"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseFinish"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    ;OnTestCaseError"
+        ~;""
+        ~;"    #Id;#SubCase;par"
+        ~;"    simple;;"
+        ~;"        #Action;$Value;$Name"
+        ~;"        Store;parameter.expectedValue;parameter.name"
+        ~;""
+        ~;"    #EndSubCase"
+        ~;""
+        ~;"    #SetHandler;#Kind"
+        ~;"    simple;OnTestCaseError"
+        ~;""
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"check;;;"
+        ~;"    #Action;$Value;$Name"
+        ~;"    Store;'not expected value from testcase';parameter.name"
+        ~;""
+        ~;"    #Fail"
+        ~;"    'some fail'"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        TXT1;TextPerform;TEXT5
+
+        #Id;#Action;$Text;$Parameter
+        MXRN3;MatrixRunFromText;TXT1.Out;{'expectedValue' : expectedValue, 'name' : name}
+
+        #Id;#Action;$Matrix
+        MXWT1;MatrixWait;MXRN3.Out
+
+        #Id;#Action;$Name
+        restoredValue;Restore;name
+
+        #Assert;#Message
+        restoredValue.Out == expectedValue;'Actual : ' + restoredValue.Out + ' and Expected : ' + expectedValue
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'handler error priority. Only set handler';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        checkVariable;1;'default value'
+
+        #Id;#SubCase;err
+        checkSub;;
+            #Id;#Global;#Let
+            checkVariable;1;'from subcase value'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        checkSub;OnStepError
+
+        #Step;#Kind;#For;#Depends
+        'check step';;;
+            #Fail
+            'some fail'
+
+        #EndStep
+
+        #Assert;#Message
+        checkVariable == 'from subcase value';'Assert is false. Actual ' + checkVariable + ' and expected from subcase value'
+
+        #Call
+        clearStepHandlers
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'handler error priority. Set handler and local';;;
+        #Call
+        clearStepHandlers
+
+        #Id;#Global;#Let
+        checkVariable;1;'default value'
+
+        #Id;#SubCase;err
+        checkSub;;
+            #Id;#Global;#Let
+            checkVariable;1;'from subcase value'
+
+        #EndSubCase
+
+        #SetHandler;#Kind
+        checkSub;OnStepError
+
+        #Step;#Kind;#For;#Depends
+        'check step';;;
+            #Fail
+            'some fail'
+
+        #EndStep
+
+        #Assert;#Message
+        checkVariable == 'from subcase value';'Assert is false. Actual ' + checkVariable + ' and expected from subcase value'
+
+        #Call
+        clearStepHandlers
+
+        #OnError
+            #Assert;#Message
+            checkVariable == 'default value';'Assert is false. Actual ' + checkVariable + ' and expected default value'
+
+            #Call
+            clearStepHandlers
+
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Check Step (SetHandler checked above);;;
+    #Step;#Kind;#For;#Depends
+    'negative test for testing invalid identify';;;
+        #Id;#RawText;#Kind
+        TEXT7;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Step;#Kind;#For;#Depends"
+        ~;"    asd;;;"
+        ~;"    #EndStep"
+        ~;""
+        ~;"    #OnError"
+        ~;"        #Assert;#Message"
+        ~;"        err.Kind == ErrorKind.WRONG_PARAMETERS;'Wrong parameters'"
+        ~;""
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN5;MatrixRunFromText;TEXT7
+
+        #Action;$Matrix
+        MatrixWait;MXRN5.Out
+
+        #Assert;#Message
+        MXRN5.Out.passed() == 1;'Passed count not expected'
+
+        #Assert;#Message
+        MXRN5.Out.failed() == 0;'Failed count not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test for dependency with fail';;;
+        #Id;#RawText;#Kind
+        TEXT7;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Step;#Kind;#For;#Depends"
+        ~;"    faieldStep;;;;"
+        ~;"        #Fail"
+        ~;"        'some fail'"
+        ~;""
+        ~;"    #EndStep"
+        ~;""
+        ~;"    #Step;#Kind;#For;#Depends"
+        ~;"    ;;;faieldStep"
+        ~;"    #EndStep"
+        ~;""
+        ~;"    #OnError"
+        ~;"        #Assert;#Message"
+        ~;"        err.Kind == ErrorKind.FAIL;'Expect kins is Fail, but Actual : ' + err.Kind"
+        ~;""
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN5;MatrixRunFromText;TEXT7
+
+        #Action;$Matrix
+        MatrixWait;MXRN5.Out
+
+        #Assert;#Message
+        MXRN5.Out.passed() == 1;'Passed count not expected'
+
+        #Assert;#Message
+        MXRN5.Out.failed() == 0;'Failed count not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test for dependency without fail';;;
+        #Id;#Step;#Kind;#For;#Depends
+        notFailedStep;;;;
+        #EndStep
+
+        #Step;#Kind;#For;#Depends
+        ;;;notFailedStep
+        #EndStep
+
+        #OnError
+            #Fail
+            err
+
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on start';Never;;
+        #Id;#Step;#Kind;#For;#Depends
+        screenOnStart;'screenOnStart';OnStart;;
+        #EndStep
+
+        #Id;#Action;$Decoraded
+        resTbl;ResultTable;true
+
+        #Id;#Action;$Table;StepIdentity
+        TBLSLCT1;TableSelect;resTbl.Out;'screenOnStart'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnStart</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on startOnError ( without error)';Never;;
+        #Id;#Step;#Kind;#For;#Depends
+        screenOnStartOrError;'screenOnStartOrError';OnStartOrError;;
+        #EndStep
+
+        #Id;#Action;$Decoraded
+        resTbl;ResultTable;true
+
+        #Id;#Action;$Table;StepIdentity
+        TBLSLCT1;TableSelect;resTbl.Out;'screenOnStartOrError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnStart</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on startOnError ( with error)';Never;;
+        #Id;#RawText;#Kind
+        TEXT7;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Step;#Kind;#For;#Depends"
+        ~;"    ;'screenOnStartOrErrorWithError';OnStartOrError;;"
+        ~;"        #Fail"
+        ~;"        'some fail'"
+        ~;""
+        ~;"    #EndStep"
+        ~;""
+        ~;"    #OnError"
+        ~;"        #Id;#Action;$Decoraded"
+        ~;"        resTbl;ResultTable;true"
+        ~;""
+        ~;"        #Id;#Action;$Table;StepIdentity"
+        ~;"        TBLSLCT1;TableSelect;resTbl.Out;'screenOnStartOrErrorWithError'"
+        ~;""
+        ~;"        #Assert;#Message"
+        ~;"        TBLSLCT1.Out.size() == 1;'Found more that one row'"
+        ~;""
+        ~;"        #Id;#Let"
+        ~;"        screenShot;TBLSLCT1.Out.get(0).Screenshot"
+        ~;""
+        ~;"        #Assert;#Message"
+        ~;"        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'"
+        ~;""
+        ~;"        #Assert;#Message"
+        ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN5;MatrixRunFromText;TEXT7
+
+        #Action;$Matrix
+        MatrixWait;MXRN5.Out
+
+        #Assert;#Message
+        MXRN5.Out.passed() == 1;'Passed count not expected'
+
+        #Assert;#Message
+        MXRN5.Out.failed() == 0;'Failed count not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish';Never;;
+        #Step;#Kind;#For;#Depends
+        'screenOnFinish';OnFinish;;
+        #EndStep
+
+        #Id;#Action;$Decoraded
+        resTbl;ResultTable;true
+
+        #Id;#Action;$Table;StepIdentity
+        TBLSLCT1;TableSelect;resTbl.Out;'screenOnFinish'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnFinish</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish or error ( without fail)';Never;;
+        #Step;#Kind;#For;#Depends
+        'screenOnFinishOrError';OnFinishOrError;;
+        #EndStep
+
+        #Id;#Action;$Decoraded
+        resTbl;ResultTable;true
+
+        #Id;#Action;$Table;StepIdentity
+        TBLSLCT1;TableSelect;resTbl.Out;'screenOnFinishOrError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnFinish</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish or error ( with fail)';Never;;
+        #Id;#RawText;#Kind
+        TEXT7;Text;Matrix
+        ~;"// "
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Step;#Kind;#For;#Depends"
+        ~;"    ;'screenOnFinishOrErrorWithFail';OnFinishOrError;;"
+        ~;"        #Fail"
+        ~;"        'a'"
+        ~;""
+        ~;"    #EndStep"
+        ~;""
+        ~;"    #OnError"
+        ~;"        #Id;#Action;$Decoraded"
+        ~;"        resTbl;ResultTable;true"
+        ~;""
+        ~;"        #Id;#Action;$Table;StepIdentity"
+        ~;"        TBLSLCT1;TableSelect;resTbl.Out;'screenOnFinishOrErrorWithFail'"
+        ~;""
+        ~;"        #Assert;#Message"
+        ~;"        TBLSLCT1.Out.size() == 1;'Found more that one row'"
+        ~;""
+        ~;"        #Id;#Let"
+        ~;"        screenShot;TBLSLCT1.Out.get(0).Screenshot"
+        ~;""
+        ~;"        #Assert;#Message"
+        ~;"        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'"
+        ~;""
+        ~;"        #Assert;#Message"
+        ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN5;MatrixRunFromText;TEXT7
+
+        #Action;$Matrix
+        MatrixWait;MXRN5.Out
+
+        #Assert;#Message
+        MXRN5.Out.passed() == 1;'Passed count not expected'
+
+        #Assert;#Message
+        MXRN5.Out.failed() == 0;'Failed count not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on error';Never;;
+        #Id;#RawText;#Kind
+        TEXT7;Text;Matrix
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;"Test case;Never;;"
+        ~;"    #Id;#Step;#Kind;#For;#Depends"
+        ~;"    ;'screenOnError';OnError;;"
+        ~;"        #Fail"
+        ~;"        'a'"
+        ~;""
+        ~;"    #EndStep"
+        ~;""
+        ~;"    #OnError"
+        ~;"        #Id;#Action;$Decoraded"
+        ~;"        resTbl;ResultTable;true"
+        ~;""
+        ~;"        #Id;#Action;$Table;StepIdentity"
+        ~;"        TBLSLCT1;TableSelect;resTbl.Out;'screenOnError'"
+        ~;""
+        ~;"        #Assert;#Message"
+        ~;"        TBLSLCT1.Out.size() == 1;'Found more that one row'"
+        ~;""
+        ~;"        #Id;#Let"
+        ~;"        screenShot;TBLSLCT1.Out.get(0).Screenshot"
+        ~;""
+        ~;"        #Assert;#Message"
+        ~;"        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'"
+        ~;""
+        ~;"        #Assert;#Message"
+        ~;"        screenShot.matches('<a href="".+?"">OnError</a>');'String not matches'"
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN5;MatrixRunFromText;TEXT7
+
+        #Action;$Matrix
+        MatrixWait;MXRN5.Out
+
+        #Assert;#Message
+        MXRN5.Out.passed() == 1;'Passed count not expected'
+
+        #Assert;#Message
+        MXRN5.Out.failed() == 0;'Failed count not expected'
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Check TestCase (SetHandler checked above);;;
+    #Step;#Kind;#For;#Depends
+    'test for dependency with fail';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"failedTestCase;Test case;Never;;"
+        ~;"    #Fail"
+        ~;"    'Some fail'"
+        ~;""
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;";;failedTestCase;"
+        ~;"    #Action;$Value;$Name"
+        ~;"    Store;'my new value';parameter.variableKey"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Action;$Value;$Name
+        Store;'variable from matrix';'variableKey'
+
+        #Id;#Action;$Text;$Parameter
+        MXRN4;MatrixRunFromText;TEXT6;{'variableValue':'temp','variableKey' : 'variableKey'}
+
+        #Action;$Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 2;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 0;'Passed count not expected'
+
+        #Id;#Action;$Name
+        restored;Restore;'variableKey'
+
+        #Assert;#Message
+        restored.Out == 'variable from matrix';'Restored value not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test for dependency without fail';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"failedTestCase;Test case;Never;;"
+        ~;""
+        ~;"#TestCase;#Kind;#Depends;#For"
+        ~;";;failedTestCase;"
+        ~;"    #Action;$Value;$Name"
+        ~;"    Store;'my new value';parameter.variableKey"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Action;$Value;$Name
+        Store;'variable from matrix';'variableKey'
+
+        #Id;#Action;$Text;$Parameter
+        MXRN4;MatrixRunFromText;TEXT6;{'variableValue':'temp','variableKey' : 'variableKey'}
+
+        #Action;$Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 2;'Passed count not expected'
+
+        #Id;#Action;$Name
+        restored;Restore;'variableKey'
+
+        #Assert;#Message
+        restored.Out == 'my new value';'Restored value not expected'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on start';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnStart;Test case;OnStart;;"
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;$Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 1;'Passed count not expected'
+
+        #Id;#Action;$Decoraded;$Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;$Table;TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStart'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnStart</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on startOnError ( without error)';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"// "
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnStartOnError;Test case;OnStartOrError;;"
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;$Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 1;'Passed count not expected'
+
+        #Id;#Action;$Decoraded;$Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;$Table;TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnStart</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on startOnError ( with error)';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"// "
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnStartOnErrorWithError;Test case;OnStartOrError;;"
+        ~;"    #Fail"
+        ~;"    'Some fail'"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;$Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() ==1;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 0;'Passed count not expected'
+
+        #Id;#Action;$Decoraded;$Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;$Table;TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnErrorWithError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnFinish;Test case;OnFinish;;"
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;$Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 1;'Passed count not expected'
+
+        #Id;#Action;$Decoraded;$Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;$Table;TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnFinish'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnFinish</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish on error (without faied)';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnFinishOnError;Test case;OnFinishOrError;;"
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;$Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() ==0;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 1;'Passed count not expected'
+
+        #Id;#Action;$Decoraded;$Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;$Table;TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnFinishOnError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnFinish</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish on error (without faied)';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"// "
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnStartOnErrorWithFail;Test case;OnFinishOrError;;"
+        ~;"    #Fail"
+        ~;"    'Some fail'"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;$Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 1;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 0;'Passed count not expected'
+
+        #Id;#Action;$Decoraded;$Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;$Table;TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnErrorWithFail'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'test screenshot on finish on error';;;
+        #Id;#RawText;#Kind
+        TEXT6;Text;Matrix
+        ~;"// "
+        ~;"#Id;#TestCase;#Kind;#Depends;#For"
+        ~;"screenTestCaseOnError;Test case;OnError;;"
+        ~;"    #Fail"
+        ~;"    'Some fail'"
+        ~;""
+        ~;""
+        #EndRawText
+
+        #Id;#Action;$Text
+        MXRN4;MatrixRunFromText;TEXT6
+
+        #Action;$Matrix
+        MatrixWait;MXRN4.Out
+
+        #Assert;#Message
+        MXRN4.Out.failed() == 1;'Failed count not expected'
+
+        #Assert;#Message
+        MXRN4.Out.passed() == 0;'Passed count not expected'
+
+        #Id;#Action;$Decoraded;$Matrix
+        resTbl;ResultTable;true;MXRN4.Out
+
+        #Id;#Action;$Table;TestCaseId
+        TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnError'
+
+        #Assert;#Message
+        TBLSLCT1.Out.size() == 1;'Found more that one row'
+
+        #Id;#Let
+        screenShot;TBLSLCT1.Out.get(0).Screenshot
+
+        #Assert;#Message
+        !Str.IsNullOrEmpty(screenShot);'Screenshot is null or empty'
+
+        #Assert;#Message
+        screenShot.matches('<a href=".+?">OnError</a>');'String not matches'
+
+    #EndStep
+
+

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<dictionary>
+    <window name="Main">
+        <self/>
+        <onOpen/>
+        <run>
+            <button id="Button" uid="" class="" name="Button" text="" addition="Many"/>
+            <textBox id="TextBox" uid="TextBox" class="" name="" text="" addition="Many"/>
+            <table id="Table" uid="Table" class="" name="" text="" addition="Many"/>
+            <table id="Table1" uid="Table1" class="" name="" text="" addition="Many"/>
+            <checkBox id="CheckBox" uid="CheckBox" class="" text="" addition="Many"/>
+            <slider id="Slider" uid="Slider" class="" addition="Many"/>
+            <scrollBar id="ScrollBar" uid="Vertical ScrollBar" xpath="" class="" name="ScrollBar" addition="Many"/>
+            <comboBox id="ComboBox" uid="ComboBox" class="" name="" action="" addition="Many"/>
+            <radioButton id="RadioButton" uid="Green" xpath="" class="" action="" text="" addition="Many"/>
+            <tree id="Tree" uid="Tree" xpath="" class="" addition="Many"/>
+            <tabPanel id="TabPanel" uid="TabPanel" class="" addition="Many"/>
+            <label id="moveLabel" uid="moveLabel" class="" name="" text="" addition="Many"/>
+            <checkBox id="ToggleButton" uid="ToggleButton" class="" name="" addition="Many"/>
+            <progressBar id="ProgressBar" uid="ProgressBar" class="" name="" addition="Many"/>
+            <panel id="Panel" uid="Panel" class="" name="" addition="Many"/>
+            <dialog id="Dialog" uid="" xpath="" name="Dialog" title="" addition="Many"/>
+            <listView id="List" uid="List" class="" addition="Many"/>
+            <menu id="Menu" uid="MockWin" xpath="" class="" name="Application" action="" text="" addition="Many"/>
+            <menuItem id="MenuItem" xpath="" class="" name="MenuItem" action="" text="" addition="Many"/>
+            <treeItem id="TreeItem"/>
+            <toolTip id="Tooltip" text="" addition="Many"/>
+            <any id="Any" uid="Any" class="" name="" action="" text="" addition="Many"/>
+            <wait id="Wait" addition="Many"/>
+            <label id="Label" uid="CentralLabel" class="" name="" text="" addition="Many"/>
+            <button id="DialogCloseButton" name="Close"/>
+            <button id="buttonShowArea" name="showButton" addition="Many"/>
+            <button id="buttonHideArea" name="hideButton" addition="Many"/>
+            <button id="countButton" owner="" name="countButton"/>
+            <button id="countButtonClear" owner="" name="countButtonClear"/>
+            <label id="countLabel" uid="countLabel" owner="" name=""/>
+            <label id="pressLabel" uid="pressLabel" owner="" name=""/>
+            <label id="downUpLabel" uid="downUpLabel" owner="" name=""/>
+            <button id="invisibleButton" name="invisibleButton" visibility="Visible"/>
+            <button id="notEnabledButton" name="notEnabledButton"/>
+            <label id="sliderLabel" uid="sliderLabel" name="" addition="Many"/>
+            <button id="colorButton" name="colorButton"/>
+            <label id="pushLabel" uid="pushLabel" name="" addition="Many"/>
+            <label id="centralLabel" uid="CentralLabel" class="" name="" text="" addition="Many"/>
+            <label id="checkedLabel" uid="checkedLabel" owner="" name=""/>
+            <image id="Image" uid="" owner="" addition="Many" weak="true"/>
+            <menuItem id="Menu2" uid="" xpath="" class="" name="Menu2" action="" text=""/>
+            <splitter id="Splitter" class="" name="" addition="Many" weak="true"/>
+            <spinner id="Spinner" uid="Spinner" xpath="" class="" name="" addition="Many"/>
+            <label id="selectLabel" uid="selectLabel" owner="" name=""/>
+            <textBox id="protocolText" uid="protocolText" owner=""/>
+            <button id="protocolClear" uid="protocolClear" xpath="" owner=""/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="DialogForTestWaitWithoutRef">
+        <self/>
+        <onOpen>
+            <wait uid="" owner="owner" name="showButton" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="buttonShowArea" owner="owner" name="showButton"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton"/>
+        </run>
+        <onClose>
+            <wait uid="" owner="owner" name="hideButton" addition="WaitToDisappear" timeout="5000"/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="DialogForTestWaitWithRef">
+        <self/>
+        <onOpen>
+            <wait owner="owner" ref="buttonShowArea" addition="WaitToAppear" timeout="5000"/>
+        </onOpen>
+        <run>
+            <button id="buttonShowArea" owner="owner" name="showButton"/>
+            <button id="buttonHideArea" owner="owner" name="hideButton"/>
+        </run>
+        <onClose>
+            <wait owner="owner" ref="buttonHideArea" addition="WaitToDisappear" timeout="5000"/>
+        </onClose>
+        <close/>
+    </window>
+    <window name="Matchers">
+        <self>
+            <dialog id="Owner1" xpath="/Window"/>
+            <dialog id="Owner2" uid="MockWin" xpath="" name=""/>
+            <dialog id="Owner3" uid="" xpath="" class="" name="MockWin"/>
+        </self>
+        <onOpen/>
+        <run>
+            <button id="Button10" uid="Button" name=""/>
+            <button id="Button11" uid="Button" owner="Owner1" name=""/>
+            <button id="Button12" uid="Button" owner="Owner2" name=""/>
+            <button id="Button13" uid="Button" owner="Owner3" name=""/>
+            <button id="Button20" uid="" xpath="//Button[@uid=&amp;quot;Button&amp;quot;]" name="" text=""/>
+            <button id="Button21" uid="" xpath=".//Button[@uid=&amp;quot;Button&amp;quot;]" owner="Owner1" name="" text=""/>
+            <button id="Button22" uid="" xpath=".//Button[@uid=&amp;quot;Button&amp;quot;]" owner="Owner2" name="" text=""/>
+            <button id="Button23" uid="" xpath=".//Button[@uid=&amp;quot;Button&amp;quot;]" owner="Owner3" name="" text=""/>
+            <button id="Button30" uid="" class="" name="Button" text=""/>
+            <button id="Button31" uid="" owner="Owner1" class="" name="Button" text=""/>
+            <button id="Button32" uid="" owner="Owner2" class="" name="Button" text=""/>
+            <button id="Button33" uid="" owner="Owner3" class="" name="Button" text=""/>
+            <button id="ButtonMany" uid="" xpath="//Button[@name=&amp;quot;Any&amp;quot; or @name=&amp;quot;Button&amp;quot;]" class="" name="" text="" addition="Many"/>
+            <button id="ButtonManyNotPass" uid="" class="" name="Button" text=""/>
+            <button id="ButtonManyNotFail" uid="" xpath="//Button[@name=&amp;quot;Any&amp;quot; or @name=&amp;quot;Button&amp;quot;]" class="" name="" text=""/>
+            <button id="ButtonNormal" uid="" class="" name="Button" text=""/>
+            <button id="ButtonNormalVisible" uid="" class="" name="Button" text="" visibility="Visible"/>
+            <button id="ButtonNormalEnable" uid="" class="" name="Button" text="" visibility="Enable"/>
+            <button id="ButtonNotEnabled" uid="" class="" name="notEnabledButton" text=""/>
+            <button id="ButtonNotEnabledVisible" uid="" class="" name="notEnabledButton" text="" visibility="Visible"/>
+            <button id="ButtonNotEnabledEnabled" uid="" class="" name="notEnabledButton" text="" visibility="Enable"/>
+            <label id="matchersLabel" uid="matchersLabel" name=""/>
+            <button id="matchersButtonClear" owner="Owner1" name="matchersButtonClear"/>
+            <button id="invisibleButton" uid="" class="" name="invisibleButton" text=""/>
+            <button id="invisibleButtonVisible" uid="" class="" name="invisibleButton" text="" visibility="Visible"/>
+            <button id="invisibleButtonEnabled" uid="" class="" name="invisibleButton" text="" visibility="Enable"/>
+            <button id="ButtonWeak" uid="" class="" name="Button" text="" weak="true"/>
+            <button id="ButtonWeakNot" uid="" class="" name="Button" text=""/>
+            <listView id="ListBoxVisibility" uid="listBox1" class="" name="" text="" visibility="Visible"/>
+            <listView id="ListBoxNormal" uid="listBox1" class="" name="" text=""/>
+            <comboBox id="ComboBoxNormal" uid="ComboBox" class="" name="" action="" addition="Many"/>
+            <comboBox id="ComboBoxVisibility" uid="ComboBox" class="" name="" action="" addition="Many" visibility="Visible"/>
+            <button id="uidTemplate" uid="@{nameTemplate}" owner="Owner1"/>
+            <button id="xpathTemplate" uid="" xpath=".//button[@uid=&amp;quot;@{xpathTemplate}&amp;quot;]" owner="Owner1"/>
+            <button id="xpathTemplateNotFound" uid="" xpath=".//button[@uid=&amp;quot;@{anotherXpathTemplate}&amp;quot;]" owner="Owner1" name=""/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="SilverLight">
+        <self/>
+        <onOpen/>
+        <run>
+            <comboBox id="combo" xpath="//ComboBox[contains(@class,&amp;quot;AutoCompleteBox&amp;quot;) and contains(@uid,&amp;quot;autocompleteBox&amp;quot;)]"/>
+            <comboBox id="combo2" xpath="//ComboBox[contains(@class,&amp;quot;ComboBox&amp;quot;) and contains(@uid,&amp;quot;comboboxWithData&amp;quot;)]"/>
+            <comboBox id="combo" uid="comboboxSimple" xpath="" class=""/>
+            <comboBox id="combo3" uid="comboboxSimple2" xpath="" class=""/>
+            <comboBox id="comboCheckBoxes" uid="comboboxCheckboxes" xpath="" class=""/>
+            <table id="Table" xpath="//DataGrid"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="Dialog">
+        <self>
+            <dialog id="Dialog" uid="Dialog"/>
+        </self>
+        <onOpen/>
+        <run/>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>

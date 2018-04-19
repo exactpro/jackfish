@@ -1,0 +1,85 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#NameSpace
+testLib;Simple library for testing jf functionality
+    #Id;#SubCase;str
+    simpleSub;return string.toUppercase();
+        #Return
+        str.toUpperCase()
+
+    #EndSubCase
+
+    #Id;#SubCase;pathToReport
+    runBrowser;returned value - appConnection;pathToReport
+        #Id;#Action;$AppId;Browser;URL
+        APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;'file://' + new File(pathToReport).getAbsolutePath()
+
+        #Return
+        APPSTR1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;appCon
+    stopBrowser;;appCon
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndSubCase
+
+    #Id;#SubCase;plugin
+    runPlugin;returned value - appConnection;
+        #If
+        plugin == 'Chrome'
+            #Id;#Action;$AppId;Browser;URL
+            APPSTR1;ApplicationStart;mockWebApp;mockWebBrowser;mockWebURL
+
+        #EndIf
+
+        #If
+        plugin == 'Swing'
+            #Id;#Action;$AppId;Jar;Args;MainClass
+            APPSTR1;ApplicationStart;mockSwingApp;mockSwingJar;'';mockSwingClass
+
+        #EndIf
+
+        #If
+        plugin == 'JavaFx'
+            #Id;#Action;MainClass;Args;Jar;$AppId
+            APPSTR1;ApplicationStart;mockJavaFxMainClass;'';mockJavaFxJar;mockJavaFxApp
+
+        #EndIf
+
+        #If
+        plugin == 'Win'
+            #Id;#Action;$AppId;Exec;WorkDir;Args
+            APPSTR1;ApplicationStart;mockWinApp;mockWinExec;mockWinDir;''
+
+        #EndIf
+
+        #Return
+        APPSTR1.Out
+
+    #EndSubCase
+
+    #Id;#SubCase;TCName
+    testReportTableInsideLibrary;;
+        #Id;#Action;Column1;Column2
+        TBL1;TableCreate;;
+
+        #Action;$Table;Column1;Column2
+        TableAddValue;TBL1.Out;'value 1';'value 2'
+
+        #Action;$Table;$Title;$BeforeTestCase
+        TableReport;TBL1.Out;'Title';TCName
+
+    #EndSubCase
+
+#EndNameSpace
+

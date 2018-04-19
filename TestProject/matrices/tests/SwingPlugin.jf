@@ -1,0 +1,438 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#TestCase;#Kind;#Depends;#For
+Prepare;;;
+    #Id;#Global;#Let
+    plugin;1;'Swing'
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application start;Never;;
+    #Step;#Kind;#For;#Depends
+    'App start without any';;;
+        #Id;#Action;#Assert;$AppId
+        APPSTR2;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start without jar';;;
+        #Id;#Action;#Assert;$AppId;MainClass
+        APPSTR2;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING';
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with invalid class name';;;
+        #Id;#Action;#Assert;$AppId;Jar;MainClass
+        APPSTR2;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING';mockSwingJar;new Date()
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with invalid jar file';;;
+        #Id;#Action;#Assert;$AppId;Jar;MainClass
+        APPSTR2;ApplicationStart;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING';new Date();mockSwingClass
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with valid parameters';;;
+        #Id;#Action;$AppId;Jar;MainClass
+        APPSTR1;ApplicationStart;'SWING';mockSwingJar;mockSwingClass
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;APPSTR1.Out
+
+    #EndStep
+
+
+// 
+#TestCase;#Kind;#Depends;#For
+Appliaction connect;;;
+    #Step;#Kind;#For;#Depends
+    'App start win empty url';;;
+        #Id;#Action;#Assert;$AppId
+        APPSTR3;ApplicationConnectTo;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with invalid file to jnlp';;;
+        #Id;#Action;#Assert;$AppId;URL
+        APPSTR4;ApplicationConnectTo;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;'SWING';'fake url'
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'App start with valid jnlp file';;;
+        #Id;#Action;$AppId;URL
+        APPSTR5;ApplicationConnectTo;'SWING';mockSwingJNLPUrl
+
+        #Action;$Time
+        Wait;5000
+
+        #Action;$Dialog;table;headerCheckBox;footerCheckBox;footerTextBox;headerTextBox;fitCheckBox;Print;Show print dialog;interactiveCheckBox;$AppConnection
+        DialogValidate;'JNLPSwingApplication';1;1;1;1;1;1;1;1;1;APPSTR5.Out
+
+        #Action;$AppConnection
+        ApplicationStop;APPSTR5.Out
+
+        #OnError
+            #Action;$AppConnection
+            ApplicationStop;APPSTR5.Out
+
+            #Fail
+            error
+
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Application (Get properties, Move, Resize);;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Get properties';;;
+        #Id;#Action;$AppConnection;Title
+        APPPAR1;ApplicationGetProperties;appCon;
+
+        #Assert;#Message
+        APPPAR1.Out.Title == 'frame0';'Actula name : ' +APPPAR1.Out.Title
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Move';;;
+        #Action;$X;$Y;$AppConnection
+        ApplicationMove;10;10;appCon
+
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Resize';;;
+        #Action;$Resize;$AppConnection
+        ApplicationResize;Resize.Minimize;appCon
+
+        #Action;$Resize;$AppConnection
+        ApplicationResize;Resize.Maximize;appCon
+
+        #Action;$Resize;$AppConnection
+        ApplicationResize;Resize.Normal;appCon
+
+        #Id;#Action;$AppConnection;$Height;$Width
+        APPSZ1;ApplicationResize;appCon;200;200
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Appliaction negative;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;$AppConnection
+        APPR1;ApplicationRefresh;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;appCon
+
+        #Id;#Action;#Assert;$Navigate;$AppConnection
+        APPPNVG1;ApplicationNavigate;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;NavigateKind.BACK;appCon
+
+        #Id;#Action;#Assert;$AppConnection
+        APPNI1;ApplicationNewInstance;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;appCon
+
+        #Id;#Action;#Assert;$AppConnection
+        APPCW1;ApplicationCloseWindow;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;appCon
+
+        #Id;#Action;#Assert;$AppConnection
+        APPSW1;ApplicationSwitchTo;This.Kind == ErrorKind.EXCEPTION && This.Result == Result.Failed;appCon
+
+        #Id;#Action;$AppConnection
+        APPSTP1;ApplicationStop;appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Dialog get properties;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Let
+        x;1111
+
+        #Id;#Let
+        y;111
+
+        #Id;#Let
+        width;555
+
+        #Id;#Let
+        height;555
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Dialog';x;y;appCon
+
+        #Action;$Height;$Width;$Dialog;$AppConnection
+        DialogResize;height;width;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Size;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size.getWidth() == width && This.Out.Size.getWidth() == height  && This.Out.Position.getX() == x && This.Out.Position.getY() == y;;;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Position != null;;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Size;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed && This.Out.Size != null;;'Dialog';appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;This.Result == Result.Passed;'Dialog';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR7;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'Dialogg';appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR8;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR9;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Id;#Action;#Assert;$Dialog;$AppConnection
+        APPPAR10;DialogGetProperties;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;Dialog resize;Never;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative';;;
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;appCon
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';new Date()
+
+        #Action;#Assert;$Dialog;$AppConnection
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;
+
+        #Action;#Assert;$Dialog;$AppConnection;$Resize;$Height
+        DialogResize;This.Kind == ErrorKind.WRONG_PARAMETERS;'Dialog';appCon;Resize.Maximize;10
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Negative - Swing';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Resize
+        DialogResize;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;'Dialog';appCon;Resize.Maximize
+
+    #EndStep
+
+    // 
+    #Step;#Kind;#For;#Depends
+    'Positive';;;
+        #Action;#Assert;$Dialog;$AppConnection;$Height;$Width
+        DialogResize;This.Result == Result.Passed;'Dialog';appCon;500;500
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#Off;#TestCase;#Kind;#Depends;#For
+1;DialogMove;;;
+    #Id;#Step;#Kind;#For;#Depends
+    start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.DIALOG_NOT_FOUND;'DialogNotExistException';1;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';1;;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;1;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';;1;appCon
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;'Dialog';1;1;
+
+        #Action;#Assert;$Dialog;$X;$Y;$AppConnection
+        DialogMove;This.Result == Result.Failed && This.Kind == ErrorKind.EXPRESSION_ERROR;'Dialog';1;1;asd
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Positive;;;;
+        #Id;#Action;$Position;$Dialog;$AppConnection
+        APPPAR1;DialogGetProperties;;'Dialog';appCon
+
+        #Id;#Let
+        currentX;APPPAR1.Out.Position.getX()
+
+        #Id;#Let
+        currentY;APPPAR1.Out.Position.getY()
+
+        #Id;#Let
+        newX;currentX + 10
+
+        #Id;#Let
+        newY;currentY + 10
+
+        #Action;$Dialog;$X;$Y;$AppConnection
+        DialogMove;'Dialog';newX;newY;appCon
+
+        #Id;#Action;$Position;$Dialog;$AppConnection
+        APPPAR6;DialogGetProperties;;'Dialog';appCon
+
+        #Assert;#Message
+        APPPAR6.Out.Position.getX() == newX;'Error while moving by X from ' + currentX + ' to ' + newX
+
+        #Assert;#Message
+        APPPAR6.Out.Position.getY() == newY;'Error while moving by Y from ' + currentY + ' to ' + newY
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
+#TestCase;#Kind;#Depends;#For
+Do;;;
+    #Id;#Step;#Kind;#For;#Depends
+    Start;;;;
+        #Id;#Global;#Call;plugin
+        appCon;1;testLib.runPlugin;plugin
+
+    #EndStep
+
+    #Id;#Off;#Step;#Kind;#For;#Depends
+    Positive;1;;;;
+        #Id;#Global;#Let
+        cell1;1;'tr_1_td_1'
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;This.Result == Result.Passed && This.Out != '';Do.use(0,0,new Locator().kind(ControlKind.Label).text(cell1).visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL2;DialogFill;This.Result == Result.Passed && This.Out != '';Do.use(0, 0, 'cell1').getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL3;DialogFill;This.Result == Result.Passed && This.Out != '';Do.use(0,new Locator().kind(ControlKind.Label).text(cell1).visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL4;DialogFill;This.Result == Result.Passed && This.Out != '';Do.use(0, 'cell1').getValue();'Main';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Negative;;;;
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL1;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0,0,new Locator().kind(ControlKind.Label).text('any_wrong_text').visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL2;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0, -1, new Locator().kind(ControlKind.Label).text('tr_1_td_1').visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL3;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0,0, 'any_wrong_id_without_locator').getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL4;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use(0, -1, 'any_wrong_id_without_locator').getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL5;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.ELEMENT_NOT_FOUND;Do.use(0, new Locator().kind(ControlKind.Label).text('any_wrong_text').visibility(Visibility.Visible)).getValue();'Main';appCon
+
+        #Id;#Action;#Assert;Table;$Dialog;$AppConnection
+        DLGFLL6;DialogFill;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;Do.use( -1, 'any_wrong_id_without_locator').getValue();'Main';appCon
+
+    #EndStep
+
+    #Id;#Step;#Kind;#For;#Depends
+    Stop;;;;
+        #Action;$AppConnection
+        ApplicationStop;appCon
+
+    #EndStep
+
+
