@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="mock_win.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TabPanel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TabPanel</Value>
+    </Setting>
+    <Setting Name="dfdf" Type="System.Windows.Forms.ToolStripDropDownDirection" Scope="User">
+      <Value Profile="(Default)">BelowRight</Value>
+    </Setting>
+    <Setting Name="eee" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

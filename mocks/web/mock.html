@@ -1,0 +1,395 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<html>
+<title>Mock html</title>
+<head>
+	<script src="mock.js"></script>
+	<link rel="stylesheet" href="mock.css"/>
+	<script src="mock.js"></script>
+	<script src="jquery.js"></script>
+	<script src="jquery_ui.js"></script>
+	<script>
+	$(function() {
+		$("#slider").slider();
+		$("#slider").slider({
+			change : function(event, ui) {
+				console.log(event);
+					document.getElementById('sliderLabel').textContent = 'Slider_' + ui.value;
+					document.getElementById('centralLabel').textContent = 'Slider_click';
+			}
+		})
+		$('#toggleButton').click(function(){
+			var $button = $(this).toggleClass("down");
+			var className = $button[0].className;
+			document.getElementById("centralLabel").textContent = className.indexOf("down") == -1 ? "Up" : "Down";
+		});
+	});
+
+	var textBoxKeyUp = function(e, tb) {
+		console.log(e);
+		if (e.ctrlKey) {
+			centralLabel.textContent = "TextBox_up_Control";
+		} if (e.keyIdentifier === "Control" || e.key === "Control") {
+			centralLabel.textContent = "TextBox_up_Control";
+		} else if (e.keyIdentifier === "U+001B" || e.key==="Escape" || e.keyCode == 27) {
+			centralLabel.textContent = "TextBox_press_Escape";
+		} else if (tb.value.match(/^[a-zA-Z!]+$/)) {
+			document.getElementById('centralLabel').textContent = 'TextBox_' + tb.value;
+		}
+	};
+
+	var textBoxKeyDown = function(e, tb) {
+		console.log(e);
+		if (e.ctrlKey) {
+			centralLabel.textContent = "TextBox_down_Control";
+		} else if (e.keyIdentifier === "Control" || e.key === "Control") {
+			centralLabel.textContent = "TextBox_down_Control";
+		} else if (e.keyIdentifier === "Shift" || e.key === "Shift") {
+			centralLabel.textContent = "TextBox_down_Shift";
+		}
+	};
+
+	var comboBoxKeyUp = function(e, cb) {
+		if (cb.value.match(/^[a-zA-Z!]+$/)) {
+			document.getElementById('centralLabel').textContent = 'EditableComboBox_' + cb.value;
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelector('#checkbox').addEventListener('change', function(e) {console.log(e)});
+	});
+
+	var showArea = function(flag) {
+		if (flag) {
+			$("#hideButton").show();
+		} else {
+			$("#hideButton").hide();
+		}
+	};
+
+	var clearProtocol = function() {
+		document.getElementById('protocolText').value = "";
+	};
+
+	$(document).ready(function(e) {
+		$("#hideButton").hide();
+	});
+
+	var counter = 0;
+	var makeCounter = function(flag) {
+		if(!flag){
+			counter = -1;
+		}
+		counter++;
+		$('#countLabel').html(counter);
+	}
+
+	var NEWLINE = "\n";
+
+	var getControlName = function() {
+		var a = $('#centralLabel').text();
+		a = a.substring(0,a.indexOf("_"));
+		return a;
+	}
+
+	document.onkeypress = function(evt) {
+		var x = evt.which || evt.keyCode;
+		document.getElementById('protocolText').value += getControlName() + "_press_" + x + NEWLINE;
+	}
+
+	document.onkeydown = function(evt) {
+		evt = evt || window.event;
+		if (evt.keyCode == 27) {
+			$('#pressLabel').html(getControlName() + "_press_Escape");
+    	}
+    	if (evt.keyCode == 17) {
+			$('#downUpLabel').html(getControlName() + "_down_Control");
+    	}
+
+    	var x = evt.which || evt.keyCode;
+    	document.getElementById('protocolText').value += getControlName() + "_down_" + x + NEWLINE;
+	};
+
+	document.onkeyup = function(evt) {
+		evt = evt || window.event;
+    	if (evt.keyCode == 17) {
+			$('#downUpLabel').html(getControlName() + "_up_Control");
+    	}
+
+    	var x = evt.which || evt.keyCode;
+    	document.getElementById('protocolText').value += getControlName() + "_up_" + x + NEWLINE;
+	};
+
+	var scrollFire = function(element) {
+		var name = element.name;
+		if(name == null)
+		{
+			name = element.title;
+		}
+		document.getElementById('protocolText').value += name + "_scroll" + NEWLINE;
+	}
+
+	</script>
+</head>
+<body id="bodyId" name="bodyName" class="bodyClass" title="bodyTitle" text="bodyText" onload="addAllListeners()">
+
+<div id="divLabel">
+	<table>
+		<tbody>
+		<tr>
+			<td width="200px"><label id="centralLabel" class="add_listener" kindname="Label" func="123456" name="CentralLabel">CentralLabel</label></td>
+			<td width="200px"><label id="moveLabel">Move label</label></td>
+			<td width="200px"><label id="pressLabel" name="pressLabel">Press label</label></td>
+			<td width="200px"><label id="downUpLabel" name="downUpLabel">Down Up label</label></td>
+			<td width="200px"><label id="sliderLabel" name="sliderLabel">Down Up label</label></td>
+			<td width="200px"><label id="pushLabel" name="pushLabel">Push label</label></td>
+			<td width="200px"><label id="checkedLabel" name="checkedLabel">Checked label</label></td>
+			<td width="200px"><label id="selectLabel" name="selectLabel">Selected label</label></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divButton">
+	<button id="button" class="add_listener" kindname="Button" func="123456" name="Button" title="Button" >Button</button>
+	<!--style="position: absolute; top: 0; left: 0; width:100; height: 25;"-->
+</div>
+
+
+<div id="divInput">
+	<input id="input" class="add_listener" onkeyup="textBoxKeyUp(event,this)" onkeydown="textBoxKeyDown(event,this)" kindname="TextBox" func="123" name="TextBox" value="Green"/>
+</div>
+
+<div id="divTable">
+	<table id="table" border="1px" class="add_listener" kindname="Table" func="456" name="Table" width="400px">
+		<thead>
+			<tr>
+				<th>Head1</th>
+				<th>Head2</th>
+				<th>Head3</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_3</label></td>
+		</tr>
+		<tr style="margin:5px color:#aaa">
+			<td class="add_listener" kindname="Table" func="123456" style="margin:5px color:#fff"><label>tr_2_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456" style="color: #333; background-color: #fff"><label>tr_3_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456" style="color: #333; background-color: #fff"><label>tr_3_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456" style="color: #333; background-color: #fff"><label>tr_3_td_3</label></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divTable1" >
+	<label id="labelTable1"></label>
+	<table id="table1" border="1px" name="Table" width="400px">
+		<thead>
+		<tr>
+			<th>Head1</th>
+			<th>Head2</th>
+			<th>Head3</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td class="add_listener"  kindname="Table" func="123456"><label>tr_1_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_3</label></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divTable2">
+	<table id="tableDuplicateColumns">
+		<thead>
+			<tr>
+				<th>A</th>
+				<th>B</th>
+				<th>A</th>
+				<th>C</th>
+				<th>B</th>
+				<th>A</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divCheckbox">
+	<input id ="checkbox" type="checkbox" name="CheckBox" class="checkBoxUnChecked add_listener" func="123456" value="CheckBox" kindname="CheckBox" checked/>
+	CheckBox
+</div>
+
+<div id="divToggleBox">
+	<input id ="toggleb" type="checkbox" name="ToggleButton" class="toggleBoxUnChecked add_listener" func="123456" value="ToggleButton" kindname="ToggleButton" checked/>
+	ToggleButton
+</div>
+
+<div id="divSlider">
+	<div id="slider" name="Slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all add_listener" func="23456" kindname="Slider" style="width: 790; top: 10;">
+		<span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0" style="left: 0%;"></span>
+	</div>
+</div>
+
+<div id="divRadiogroup">
+	<input type="radio" class="add_listener" id="radioButton" name="RadioButton" kindname="RadioButton" func="123456" value="Green">Green<br>
+	<input type="radio" id="radioButton1" onclick="changeSelected(this)" name="RadioButton" kindname="RadioButton" value="Yellow">Yellow<br>
+	<input type="radio" name="RadioButton" value="Orange">Orange<br>
+	<input type="radio" name="RadioButton" value="Blue">Blue<br>
+	<label id="labelRadioGroup"></label>
+</div>
+
+<div id="panel" name="Panel" class="add_listener panel panel-default" kindname="Panel" func="123456">
+	Panel
+</div>
+
+<div id="divProgress">
+	<progress value="10" max="100" name="ProgressBar" id="ProgressBar" kindname="ProgressBar" func="123456" class="add_listener"></progress>
+</div>
+
+<div>
+	<dialog id="dialog" name="Dialog" class="add_listener" kindname="Dialog" func="123456" open>
+		This is an open dialog window aaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+		this aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+		very aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+		long aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+		height aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+		dialog aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+		we aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+		need aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+		80px aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+		min aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa<br>
+	</dialog>
+</div>
+
+<div id="divCombobox">
+	<label id="labelCombobox">Combobox example</label>
+	<select id="combobox" name="ComboBox" class="add_listener" kindname="ComboBox" func="123456" onchange="changeCombobox(this)" size="3" onscroll="scrollFire(this)">
+		<option value="Green" selected>Green</option>
+		<option value="Yellow">Yellow</option>
+		<option value="Orange">Orange</option>
+		<option value="Blue">Blue</option>
+	</select>
+</div>
+<div id="divEditableComboBox">
+	<div>
+		<select class="editableBox">
+			<option value="Green">Green</option>
+			<option value="Yellow">Yellow</option>
+			<option value="Orange">Orange</option>
+			<option value="Blue">Blue</option>
+		</select>
+		<input class="timeTextBox" onkeyup="comboBoxKeyUp(event,this)" id="editableComboBox" name="timebox"/>
+	</div>
+</div>
+
+<div id="divUL">
+	<label id="labelUL">List UL Example</label>
+	<ul id="List" title="List" name="List" class="add_listener" kindname="List" func="123456" style="width: 300px; height: 50px; overflow: auto"	onscroll="scrollFire(this)">
+		<li>Green</li>
+		<li>Yellow</li>
+		<li>Orange</li>
+		<li>Blue</li>
+	</ul>
+</div>
+
+<div id="divToggleButton">
+	<a id="toggleButton" class="toggleButton" name="ToggleButton" kindname="ToggleButton" func="23456" title="button">Press Me</a><br>
+</div>
+
+<div id="divAny">
+	<button id="any" class="add_listener" kindname="Any" name="Any" func="123456">Any</button>
+</div>
+
+<div id="divButtonsMany">
+	<button class="manyButton">ButtonMany0</button>
+	<button class="manyButton">ButtonMany1</button>
+	<button class="manyButton">ButtonMany2</button>
+</div>
+
+<!--<div id="divNavbar">-->
+    <!--<ul id="navbar">-->
+        <!--<li id="main" class="add_listener" kindname="Main" name="Main" func="123456">Main</li>-->
+        <!--<li id="news" class="add_listener" kindname="News" name="News" func="123456">News</li>-->
+        <!--<li>Contacts-->
+            <!--<ul>-->
+                <!--<li id="address" class="add_listener" kindname="Address" name="Address" func="123456">Address</li>-->
+                <!--<li id="phone" class="add_listener" kindname="Phone" name="Phone" func="123456">Phone</li>-->
+                <!--<li id="email" class="add_listener" kindname="Email" name="Email" func="123456">Email</li>-->
+            <!--</ul>-->
+        <!--</li>-->
+        <!--<li id="about" class="add_listener" kindname="About" name="About" func="123456">About</li>-->
+    <!--</ul>-->
+<!--</div>-->
+
+<div id="divFrame">
+    <iframe id="myIframe" name="MyFrame" class="add_listener" kindname="MyFrame" func="123456" src="iframe.html"></iframe>
+</div>
+
+<div id="divWithWait">
+	<button name="showButton" id="showButton" onclick="showArea(true)">showButton</button>
+	<button name="hideButton" id="hideButton" onclick="showArea(false)">hideButton</button>
+</div>
+
+<div id="divRepeat">
+	<button name="countButtonClear" id="countButtonClear" onclick="makeCounter(false)">Clear</button>
+	<button name="countButton" id="countButton" onclick="makeCounter(true)">+1</button>
+	<label  name="countLabel" id="countLabel">Count</label>
+</div>
+
+<div id="divVisibleEnabled">
+	<button name="notEnabledButton" id="notEnabledButton" disabled="true">NotEnabled</button>
+	<button name="invisibleButton" id="invisibleButton" hidden="true">Invisible</button>
+</div>
+
+<div id="divRectAndColor">
+	<button name="colorButton" id="colorButton" style="position: absolute; top: 800; left: 550; width:100; height: 25; color: #fff; background-color: red">#red</button>
+</div>
+
+<textarea id="protocolText" name="protocolText" cols="40" rows="5" style="position: absolute; top: 200; left: 500; width:300; height: 200;"></textarea>
+<button id="protocolClear" name="protocolClear" onclick="clearProtocol()" style="position: absolute; top: 400; left: 700; width:100; height: 25;" >Clear</button>
+
+<img src="ide.png" alt="Test Image" id="image" name="Image" class="add_listener" kindname="Image" func="123456" style="position: absolute; top: 475; left: 775; width:25; height: 25;" />
+
+</body>
+</html>

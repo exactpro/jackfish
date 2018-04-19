@@ -1,0 +1,206 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<html>
+<title>Layout html</title>
+<head>
+	<style>
+	.inline {
+		display: inline-block;
+
+	}
+	.self {
+		background-color : red;
+
+	}
+	.other {
+		background-color : black;
+
+	}
+	.owner {
+		border-color : gray;
+		border-style: solid;
+		margin-top : 10px;
+		margin-bottom : 10px;
+		width : 100%;
+		align-items: center;
+		display: inline-flex;
+
+	}
+	.owner_empty {
+		border-color : gray;
+		border-style: solid;
+		margin: 10px;
+		align-items: center;
+		display: inline-flex;
+	}
+	.owner_display {
+		border-color : gray;
+		border-style: solid;
+		margin: 10px;
+		align-items: center;
+	}
+	.default {
+		width : 150px;
+		height : 150px;
+
+	}
+	.check {
+		font-weight: bold;
+		width : 150px
+	}
+
+	#color {
+		color : #0000FF;
+
+	}
+
+	</style>
+</head>
+<body>
+<div>
+	<span>SELF = <font color="red">RED</font></span><br>
+	<span>OTHER = BLACK</span>
+
+</div>
+<div class="owner">
+	<div class="owner_empty ">
+		<span class="check">Check text</span>
+		<label id="text">text</label>
+	</div>
+	<div class="owner_empty">
+		<span class="check">Check color</span>
+		<label id="color">color</label>
+	</div>
+
+	<div class="owner_empty ">
+		<span class="check">Check visible</span>
+		<span id="visible">Visible</span>
+	</div>
+	<div class="owner_empty ">
+		<span class="check">Check count</span>
+		<div style="display:inline-block">
+			<label class="lbl" style="display:inline-block">1</label>
+			<label class="lbl" style="display:inline-block">2</label>
+			<label class="lbl" style="display:inline-block">3</label>
+		</div>
+	</div>
+</div>
+<div class="owner">
+	<div class="owner_empty">
+		<span class="check">Check backcolor</span>
+		<div id="backcolor" class="self default inline"></div>
+	</div>
+	<div class="owner_empty">
+		<span class="check">Check attr</span>
+		<div id="attr" attr="attr" class="default other inline"></div>
+	</div>
+
+	<div class="owner_empty">
+		<span class="check">Check tAligned/bAligned</span>
+		<div class="other default" id="otherTAligned"></div>
+		<div class="self default" id="selfTAligned" style="position:relative;margin-left:10px"></div>
+	</div>
+</div>
+<div class="owner">
+	<div class="owner_empty">
+		<span class="check">Check contains</span>
+		<div class="self default inline" id="selfContains">
+			<div class="other" id="otherContains" style="width:75px;height:75px;position:relative; left:25px; top:25px"></div>
+		</div>
+	</div>
+	<div class="owner_empty">
+		<span class="check">Check left</span>
+		<div class="self default inline" id="selfLeft"></div>
+		<div class="other default inline" id="otherLeft" style="margin-left:35px"></div>
+	</div>
+
+	<div class="owner_empty">
+		<span class="check">Check right</span>
+		<div class="other default inline" id="otherRight"></div>
+		<div class="self default inline" id="selfRight" style="margin-left:35px"></div>
+	</div>
+</div>
+<div class="owner">
+
+</div>
+<div class="owner">
+	<div class="owner_display">
+		<span class="check">Check top</span>
+		<div class="self default" id="selfTop"></div>
+		<div class="other default" id="otherTop" style="margin-top:32px"></div>
+	</div>
+	<div class="owner_display">
+		<span class="check">Check bottom</span>
+		<div class="other default" id="otherBottom"></div>
+		<div class="self default" id="selfBottom" style="margin-top:32px"></div>
+	</div>
+
+	<div class="owner_display">
+		<span class="check">Check inTop</span>
+		<div class="self default" id="selfInTop" style="width:100px;height:100px;position:relative;top:125px;left:25px"></div>
+		<div class="other default" id="otherInTop"></div>
+	</div>
+
+	<div class="owner_display">
+		<span class="check">Check inBottom</span>
+		<div class="other default" id="otherInBottom"></div>
+		<div class="self default" id="selfInBottom" style="width:100px;height:100px;position:relative;top:-125px;left:25px"></div>
+	</div>
+
+	<div class="owner_display">
+		<span class="check">Check onTop</span>
+		<div class="other default" id="otherOnTop"></div>
+		<div class="self default" id="selfOnTop" style="width:100px;height:100px;position:relative;top:-175px;left:25px"></div>
+	</div>
+
+	<div class="owner_display">
+		<span class="check">Check onBottom</span>
+		<div class="other default" id="otherOnBottom"></div>
+		<div class="self default" id="selfOnBottom" style="width:100px;height:100px;position:relative;top:-50px;left:25px"></div>
+	</div>
+
+	<div class="owner_display">
+		<span class="check">Check lAligned/rAligned</span>
+		<div class="other default" id="otherLAligned"></div>
+		<div class="self default" id="selfLAligned" style="position:relative;margin-top:10px"></div>
+	</div>
+</div>
+<div class="owner">
+	<div class="owner_empty">
+		<span class="check">Check inLeft</span>
+		<div class="other default inline" id="otherInLeft">
+			<div class="self" id="selfInLeft" style="width:115px;height:75px;position:relative; left:25px; top:25px"></div>
+		</div>
+	</div>
+	<div class="owner_empty">
+		<span class="check">Check inRight</span>
+		<div class="other default inline" id="otherInRight">
+			<div class="self" id="selfInRight" style="width:115px;height:75px;position:relative; left:25px; top:25px"></div>
+		</div>
+	</div>
+
+	<div class="owner_empty">
+		<span class="check">Check onLeft</span>
+		<div class="other default inline" id="otherOnLeft">
+			<div class="self" id="selfOnLeft" style="width:115px;height:75px;position:relative; left:-25px; top:25px"></div>
+		</div>
+	</div>
+	<div class="owner_empty">
+		<span class="check">Check onRight</span>
+		<div class="other default inline" id="otherOnRight">
+			<div class="self" id="selfOnRight" style="width:115px;height:75px;position:relative; left:100px; top:25px"></div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

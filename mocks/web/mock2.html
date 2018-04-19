@@ -1,0 +1,355 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<html>
+<title>Mock2 html</title>
+<head>
+	<script src="mock.js"></script>
+	<link rel="stylesheet" href="mock.css"/>
+	<script src="mock.js"></script>
+	<script src="jquery.js"></script>
+	<script src="jquery_ui.js"></script>
+	<script>
+	$(function() {
+		$("#slider").slider();
+		$("#slider").slider({
+			change : function(event, ui) {
+				console.log(event);
+					document.getElementById('sliderLabel').textContent = 'Slider_' + ui.value;
+					document.getElementById('centralLabel').textContent = 'Slider_click';
+			}
+		})
+		$('#toggleButton').click(function(){
+			var $button = $(this).toggleClass("down");
+			var className = $button[0].className;
+			document.getElementById("centralLabel").textContent = className.indexOf("down") == -1 ? "Up" : "Down";
+		});
+	});
+
+	var textBoxKeyUp = function(e, tb) {
+		console.log(e);
+		if (e.ctrlKey) {
+			centralLabel.textContent = "TextBox_up_Control";
+		} if (e.keyIdentifier === "Control" || e.key === "Control") {
+			centralLabel.textContent = "TextBox_up_Control";
+		} else if (e.keyIdentifier === "U+001B" || e.key==="Escape" || e.keyCode == 27) {
+			centralLabel.textContent = "TextBox_press_Escape";
+		} else if (tb.value.match(/^[a-zA-Z!]+$/)) {
+			document.getElementById('centralLabel').textContent = 'TextBox_' + tb.value;
+		}
+	};
+
+	var textBoxKeyDown = function(e, tb) {
+		console.log(e);
+		if (e.ctrlKey) {
+			centralLabel.textContent = "TextBox_down_Control";
+		} else if (e.keyIdentifier === "Control" || e.key === "Control") {
+			centralLabel.textContent = "TextBox_down_Control";
+		} else if (e.keyIdentifier === "Shift" || e.key === "Shift") {
+			centralLabel.textContent = "TextBox_down_Shift";
+		}
+	};
+
+	var comboBoxKeyUp = function(e, cb) {
+		if (cb.value.match(/^[a-zA-Z!]+$/)) {
+			document.getElementById('centralLabel').textContent = 'EditableComboBox_' + cb.value;
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelector('#checkbox').addEventListener('change', function(e) {console.log(e)});
+	});
+
+	var showArea = function(flag) {
+		if (flag) {
+			$("#hideButton").show();
+		} else {
+			$("#hideButton").hide();
+		}
+	};
+
+	$(document).ready(function(e) {
+		$("#hideButton").hide();
+	});
+
+	var counter = 0;
+	var makeCounter = function(flag) {
+		if(!flag){
+			counter = -1;
+		}
+		counter++;
+		$('#countLabel').html(counter);
+	}
+
+	document.onkeydown = function(evt) {
+		evt = evt || window.event;
+		var a = $('#moveLabel').text();
+		a = a.substring(0,a.length-5);
+		if (evt.keyCode == 27) {
+			var a = $('#moveLabel').text();
+			a = a.substring(0,a.length-5);
+			$('#pressLabel').html(a + "_press_Escape");
+    	}
+    	if (evt.keyCode == 17) {
+			$('#downUpLabel').html(a + "_down_Control");
+    	}
+	};
+
+	document.onkeyup = function(evt) {
+		evt = evt || window.event;
+		var a = $('#moveLabel').text();
+		a = a.substring(0,a.length-5);
+    	if (evt.keyCode == 17) {
+			$('#downUpLabel').html(a + "_up_Control");
+    	}
+	};
+
+	</script>
+</head>
+<body onload="addAllListeners()">
+
+<div id="divLabel">
+	<table>
+		<tbody>
+		<tr>
+			<td width="200px"><label id="centralLabel" class="add_listener" kindname="Label" func="123456" name="CentralLabel">CentralLabel</label></td>
+			<td width="200px"><label id="moveLabel">Move label</label></td>
+			<td width="200px"><label id="pressLabel" name="pressLabel">Press label</label></td>
+			<td width="200px"><label id="downUpLabel" name="downUpLabel">Down Up label</label></td>
+			<td width="200px"><label id="sliderLabel" name="sliderLabel">Down Up label</label></td>
+			<td width="200px"><label id="pushLabel" name="pushLabel">Push label</label></td>
+			<td width="200px"><label id="checkedLabel" name="checkedLabel">Checked label</label></td>
+			<td width="200px"><label id="selectLabel" name="selectLabel">Selected label</label></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divButton">
+	<button id="button" class="add_listener" kindname="Button" func="123456" name="Button">Button</button>
+</div>
+
+<div id="divInput">
+	<input id="input" class="add_listener" onkeyup="textBoxKeyUp(event,this)" onkeydown="textBoxKeyDown(event,this)" kindname="TextBox" func="123" name="TextBox"/>
+</div>
+
+<div id="divTable">
+	<table id="table" border="1px" class="add_listener" kindname="Table" func="456" name="Table" width="50%">
+		<thead>
+			<tr>
+				<th>Head1</th>
+				<th>Head2</th>
+				<th>Head3</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_3</label></td>
+		</tr>
+		<tr style="margin:5px color:#aaa">
+			<td class="add_listener" kindname="Table" func="123456" style="margin:5px color:#fff"><label>tr_2_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456" style="color: #333; background-color: #fff"><label>tr_3_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456" style="color: #333; background-color: #fff"><label>tr_3_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456" style="color: #333; background-color: #fff"><label>tr_3_td_3</label></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divTable1" >
+	<label id="labelTable1"></label>
+	<table id="table1" border="1px" name="Table" width="50%">
+		<thead>
+		<tr>
+			<th>Head1</th>
+			<th>Head2</th>
+			<th>Head3</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td class="add_listener"  kindname="Table" func="123456"><label>tr_1_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_1_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_2_td_3</label></td>
+		</tr>
+		<tr style="margin:5px">
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_1</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_2</label></td>
+			<td class="add_listener" kindname="Table" func="123456"><label>tr_3_td_3</label></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divTable2">
+	<table id="tableDuplicateColumns">
+		<thead>
+			<tr>
+				<th>A</th>
+				<th>B</th>
+				<th>A</th>
+				<th>C</th>
+				<th>B</th>
+				<th>A</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1</td>
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="divCheckbox">
+	<input id ="checkbox" type="checkbox" name="CheckBox" class="checkBoxUnChecked add_listener" func="123456" value="CheckBox" kindname="CheckBox" checked/>
+	CheckBox
+</div>
+
+<div id="divToggleBox">
+	<input id ="toggleb" type="checkbox" name="ToggleButton" class="toggleBoxUnChecked add_listener" func="123456" value="ToggleButton" kindname="ToggleButton" checked/>
+	ToggleButton
+</div>
+
+<div id="divSlider">
+	<div id="slider" name="Slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all add_listener" func="23456" kindname="Slider" style="width: 790; margin-left: 0px; left: -20; border-left-width: 0px;">
+		<span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0" style="left: 0%;"></span>
+	</div>
+</div>
+
+<div id="divRadiogroup">
+	<input type="radio" class="add_listener" id="radioButton" name="RadioButton" kindname="RadioButton" func="123456" value="Green">Green<br>
+	<input type="radio" id="radioButton1" onclick="changeSelected(this)" name="RadioButton" kindname="RadioButton" value="Yellow">Yellow<br>
+	<input type="radio" name="RadioButton" value="Orange">Orange<br>
+	<input type="radio" name="RadioButton" value="Blue">Blue<br>
+	<label id="labelRadioGroup"></label>
+</div>
+
+<div id="panel" name="Panel" class="add_listener panel panel-default" kindname="Panel" func="123456">
+	Panel
+</div>
+
+<div id="divProgress">
+	<progress value="10" max="100" name="ProgressBar" id="ProgressBar" kindname="ProgressBar" func="123456" class="add_listener"></progress>
+</div>
+
+<div id="divCombobox">
+	<label id="labelCombobox">Combobox example</label>
+	<select id="combobox" name="ComboBox" class="add_listener" kindname="ComboBox" func="123456" onchange="changeCombobox(this)">
+		<option value="Green">Green</option>
+		<option value="Yellow">Yellow</option>
+		<option value="Orange">Orange</option>
+		<option value="Blue">Blue</option>
+	</select>
+</div>
+<div id="divEditableComboBox">
+	<div>
+		<select class="editableBox">
+			<option value="Green">Green</option>
+			<option value="Yellow">Yellow</option>
+			<option value="Orange">Orange</option>
+			<option value="Blue">Blue</option>
+		</select>
+		<input class="timeTextBox" onkeyup="comboBoxKeyUp(event,this)" id="editableComboBox" name="timebox"/>
+	</div>
+</div>
+
+<dialog id="dialog" name="Dialog" class="add_listener" kindname="Dialog" func="123456" open>
+    This is an open dialog window
+</dialog>
+
+<div id="divUL">
+	<label id="labelUL">List UL Example</label>
+	<ul id="List" name="List" class="add_listener" kindname="List" func="123456">
+		<li>Green</li>
+		<li>Yellow</li>
+		<li>Orange</li>
+		<li>Blue</li>
+	</ul>
+</div>
+
+<div id="divToggleButton">
+	<a id="toggleButton" class="toggleButton" name="ToggleButton" kindname="ToggleButton" func="23456" title="button">Press Me</a><br>
+</div>
+<div id="divAny">
+	<button id="any" class="add_listener" kindname="Any" name="Any" func="123456">Any</button>
+</div>
+
+<div id="divButtonsMany">
+	<button class="manyButton">ButtonMany0</button>
+	<button class="manyButton">ButtonMany1</button>
+	<button class="manyButton">ButtonMany2</button>
+</div>
+
+<div id="divNavbar">
+    <ul id="navbar">
+        <li id="main" class="add_listener" kindname="Main" name="Main" func="123456">Main</li>
+        <li id="news" class="add_listener" kindname="News" name="News" func="123456">News</li>
+        <li>Contacts
+            <ul>
+                <li id="address" class="add_listener" kindname="Address" name="Address" func="123456">Address</li>
+                <li id="phone" class="add_listener" kindname="Phone" name="Phone" func="123456">Phone</li>
+                <li id="email" class="add_listener" kindname="Email" name="Email" func="123456">Email</li>
+            </ul>
+        </li>
+        <li id="about" class="add_listener" kindname="About" name="About" func="123456">About</li>
+    </ul>
+</div>
+
+<div id="divFrame">
+    <iframe id="myIframe" name="MyFrame" class="add_listener" kindname="MyFrame" func="123456" src="iframe.html"></iframe>
+</div>
+
+<div id="divImageIDE">
+    <img src="ide.png" alt="Test Image" id="image" name="Image" class="add_listener" kindname="Image" func="123456" />
+</div>
+
+<div id="divWithWait">
+	<button name="showButton" id="showButton" onclick="showArea(true)">Click me for show hidden area</button>
+	<button name="hideButton" id="hideButton" onclick="showArea(false)">Click me for hide showing area</button>
+</div>
+
+<div id="divRepeat">
+	<button name="countButtonClear" id="countButtonClear" onclick="makeCounter(false)">Clear</button>
+	<button name="countButton" id="countButton" onclick="makeCounter(true)">+1</button>
+	<label  name="countLabel" id="countLabel">Count</label>
+</div>
+
+<div id="divVisibleEnabled">
+	<button name="notEnabledButton" id="notEnabledButton" disabled="true">NotEnabled</button>
+	<button name="invisibleButton" id="invisibleButton" hidden="true">Invisible</button>
+</div>
+
+<div id="divRectAndColor">
+	<button name="colorButton" id="colorButton" style="position: absolute; top: 800; left: 550; width:100; height: 25; color: #fff; background-color: red">#red</button>
+</div>
+
+</body>
+</html>

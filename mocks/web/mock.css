@@ -1,0 +1,129 @@
+/*
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+*/
+
+div {
+	margin : 10px
+}
+.ui-widget-content {
+	border: 1px solid #aaaaaa;
+	background: #ffffff;
+	color: #222222;
+}
+.ui-widget {
+	font-family: Verdana,Arial,sans-serif;
+	font-size: 1.1em;
+}
+.ui-slider-horizontal {
+	height: .8em;
+}
+.ui-slider {
+	position: relative;
+	text-align: left;
+}
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+	border: 1px solid #d3d3d3;
+	background: #e6e6e6;
+	font-weight: normal;
+	color: #555555;
+}
+ui-slider-horizontal .ui-slider-handle {
+	top: -.3em;
+	margin-left: -.6em;
+}
+.ui-slider .ui-slider-handle {
+	border : 2px solid green;
+	position: absolute;
+	z-index: 2;
+	width: 0.8em;
+	height: 0.8em;
+	cursor: default;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.ui-slider .ui-slider-range {
+	position: absolute;
+	z-index: 1;
+	font-size: .7em;
+	display: block;
+	border: 0;
+	background-position: 0 0;
+}
+
+a {
+    background: #ccc;
+    cursor: pointer;
+    border-top: solid 2px #eaeaea;
+    border-left: solid 2px #eaeaea;
+    border-bottom: solid 2px #777;
+    border-right: solid 2px #777;
+    padding: 5px 5px;
+    }
+
+a.down {
+    background: #bbb;
+    border-top: solid 2px #777;
+    border-left: solid 2px #777;
+    border-bottom:solid 2px  #eaeaea;
+    border-right: solid 2px #eaeaea;
+    }
+
+#navbar ul{
+  display: none;
+  background-color: #f90;
+  position: absolute;
+  top: 100%;
+}
+#navbar li:hover ul { display: block; }
+#navbar, #navbar ul{
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+#navbar {
+  height: 30px;
+  background-color: #666;
+  padding-left: 25px;
+  min-width: 470px;
+}
+#navbar li {
+  float: left;
+  position: relative;
+  height: 100%;
+}
+#navbar li a {
+  display: block;
+  padding: 6px;
+  width: 100px;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+}
+#navbar ul li { float: none; }
+#navbar li:hover { background-color: #f90; }
+#navbar ul li:hover { background-color: #666; }
+
+.bodyClass {
+    color: black;
+}
+
+.editableBox {
+    width: 275px;
+    height: 30px;
+}
+.timeTextBox {
+    width: 254px;
+    margin-left: -278px;
+    height: 25px;
+    border: none;
+}

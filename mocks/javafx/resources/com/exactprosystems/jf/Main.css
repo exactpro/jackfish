@@ -1,0 +1,94 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+.root {
+    small-height    : 25;
+    medium-height   : 50;
+    large-height    : 75;
+    small-width     : 100;
+    medium-width    : 225;
+    large-width     : 250;
+}
+
+#centralLabel {
+    -fx-pref-width  : medium-width;
+    -fx-pref-height : small-height;
+}
+
+#scrollBar {
+    -fx-pref-width  : small-width;
+    -fx-pref-height : small-height;
+}
+
+#protocol {
+    -fx-pref-width  : medium-width;
+    -fx-pref-height : large-height;
+}
+
+#colorButton {
+    -fx-background-color : red;
+    -fx-text-fill : white;
+}
+
+.button,
+.toggle-button,
+.text-field,
+.pane,
+.infoLabels,
+.progress-bar,
+.spinner,
+.combo-box,
+.radio-button,
+.check-box,
+#protocolClear {
+    -fx-pref-width  : small-width;
+    -fx-pref-height : small-height;
+}
+
+.label {
+    -fx-pref-height : small-height;
+}
+
+.table-view {
+    -fx-pref-width  : large-width;
+    -fx-pref-height : large-height;
+}
+
+.table-view .table-row-cell:selected,
+.table-view .table-row-cell:focused,
+.table-view .table-row-cell:filled {
+	-fx-background-color: white;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: #333333;
+}
+
+.tree-view {
+    -fx-pref-width  : small-width;
+    -fx-pref-height : large-height;
+}
+
+.list-view {
+    -fx-pref-width  : small-width;
+    -fx-pref-height : medium-height;
+}
+
+.tab-pane {
+    -fx-pref-width  : large-width;
+    -fx-pref-height : medium-height;
+}
+
+.image-view {
+    -fx-image: url(../../../../../../core/resources/com/exactprosystems/jf/tool/css/general/icons/ide.png);
+}
+
+.pane {
+    -fx-background-color: #8fbc8f;
+}

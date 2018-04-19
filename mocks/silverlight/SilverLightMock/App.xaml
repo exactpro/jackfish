@@ -1,0 +1,17 @@
+﻿<Application xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:SampleData="clr-namespace:Expression.Blend.SampleData.ComboBoxData" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:SampleData1="clr-namespace:Expression.Blend.SampleData.TableData" xmlns:SampleData2="clr-namespace:Expression.Blend.SampleData.MultySelectData" xmlns:SampleData3="clr-namespace:Expression.Blend.SampleData.TreeViewDataSource" mc:Ignorable="d" 
+             x:Class="SilverLightMock.App"
+             >
+    <Application.Resources>
+
+        <SampleData3:TreeViewDataSource x:Key="TreeViewDataSource" d:IsDataSource="True"/>
+
+        <SampleData2:MultySelectData x:Key="MultySelectData" d:IsDataSource="True"/>
+
+        <SampleData1:TableData x:Key="TableData" d:IsDataSource="True"/>
+
+        <SampleData:ComboBoxData x:Key="ComboBoxData" d:IsDataSource="True"/>
+
+    </Application.Resources>
+</Application>
