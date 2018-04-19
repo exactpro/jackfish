@@ -1117,7 +1117,7 @@ RF;RegressionFramework
 
                     #Else
                         #Id;#Let
-                        stepResult;selectSteps[rowSteps].error
+                        stepResult;selectSteps[rowSteps].error.replace('\n','')
 
 
                     #EndIf
