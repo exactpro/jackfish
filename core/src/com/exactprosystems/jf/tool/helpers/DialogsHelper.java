@@ -43,6 +43,9 @@ import com.exactprosystems.jf.tool.custom.date.DateTimePicker;
 import com.exactprosystems.jf.tool.custom.date.DateTimePickerSkin;
 import com.exactprosystems.jf.tool.custom.helper.HelperFx;
 import com.exactprosystems.jf.tool.settings.Theme;
+
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -50,12 +53,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
@@ -75,6 +80,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -720,15 +726,60 @@ public abstract class DialogsHelper
 		Text nameText = new Text(name);
 		nameText.setFont(javafx.scene.text.Font.font(30));
 		String copyright = version + R.DIALOGS_HELPER_COPYRIGHT.get();
+		copyright = copyright.replaceAll("\\([cC]\\)", "\u00A9");
 		Text copyrightTxt = new Text(copyright);
 		dialog.getDialogPane().setHeader(new Label());
 		ImageView logo = new ImageView(img);
-		grid.add(logo, 0, 0,1,2);
+		AnchorPane anchorPane = new AnchorPane();
+		AnchorPane.setLeftAnchor(logo, 0.0);
+		AnchorPane.setRightAnchor(logo, 0.0);
+		AnchorPane.setBottomAnchor(logo, 0.0);
+		AnchorPane.setTopAnchor(logo, 0.0);
+
+		Group group = new Group();
+		String ls = System.lineSeparator();
+		group.getChildren().add(copyrightTxt);
+		Label developers = new Label("Developers : " + ls + ls
+				+ "Valery Florov"  + ls  
+				+ "Andrey Bystrov"  + ls 
+				+ "Andrey Smirnov"  + ls 
+				+ "Alexander Kruglov"  + ls 
+				+ "Victor Krasnovid");
+		group.getChildren().add(developers);
+		developers.setOpacity(0.0);
+
+		ParallelTransition parallelTransition = new ParallelTransition();
+		AtomicLong counter = new AtomicLong(0);
+		anchorPane.setOnMouseClicked(event ->
+		{
+			if (event.getX() < img.getWidth() && event.getY() < img.getHeight())
+			{
+				if (counter.incrementAndGet() >= 10)
+				{
+					counter.set(Long.MIN_VALUE);
+
+					FadeTransition copyrightFade = new FadeTransition(Duration.millis(2000), copyrightTxt);
+					copyrightFade.setFromValue(1.0);
+					copyrightFade.setToValue(0.0);
+					parallelTransition.getChildren().add(copyrightFade);
+
+					FadeTransition developersFade = new FadeTransition(Duration.millis(2000), developers);
+					developersFade.setFromValue(0.0);
+					developersFade.setToValue(1.0);
+					parallelTransition.getChildren().add(developersFade);
+
+					parallelTransition.play();
+				}
+			}
+		});
+		anchorPane.getChildren().add(logo);
+		grid.add(anchorPane, 0, 0, 1, 2);
 		grid.add(nameText, 1, 0);
-		grid.add(copyrightTxt,1,1);
+		grid.add(group, 1, 1);
 		dialog.getDialogPane().setContent(grid);
 		GridPane.setValignment(logo, VPos.TOP);
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
+		dialog.setOnHidden(event -> parallelTransition.stop());
 		dialog.show();
 	}
 
