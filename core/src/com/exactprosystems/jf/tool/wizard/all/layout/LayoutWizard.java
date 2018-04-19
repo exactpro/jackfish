@@ -1133,7 +1133,7 @@ public class LayoutWizard extends AbstractWizard
 						this.boxWithFields.getChildren().get(i + 1).requestFocus();
 					}
 				}
-				else if (keyCode == KeyCode.UP || (keyCode == KeyCode.TAB && keyEvent.isShiftDown()) || (keyCode == KeyCode.TAB || keyEvent.isShiftDown()))
+				else if (keyCode == KeyCode.UP || (keyCode == KeyCode.TAB && keyEvent.isShiftDown()) )
 				{
 					int i = this.boxWithFields.getChildren().indexOf(oneRow);
 					if (i > 0)
