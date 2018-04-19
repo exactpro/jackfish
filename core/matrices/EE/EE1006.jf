@@ -1,0 +1,56 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+Step 1;This matrix randomly failed;OnFinish;;APPSTR1.Out
+    #Action;#Time
+    Wait;1000
+
+    #Id;#Global;#Action;#AppId;#Browser;#URL
+    APPSTR1;1;ApplicationStart;Sys.osName().startsWith('Win') ? 'WEB_WIN' : 'WEB';'Chrome';'http://samples.galenframework.com/tutorial1/tutorial1.html'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;OnFinishOrError;Step 1;APPSTR1.Out
+    #Id;#Action;#Dialog;#AppConnection
+    DLGFLL1;DialogFill;'Menu';APPSTR1.Out
+
+    #Id;#Off;#Action;#AppConnection;#Width;#Height
+    APPSZ1;1;ApplicationResize;APPSTR1.Out;400;400
+
+    #Action;#Time
+    Wait;1000
+
+    #Off;#Assert;#Message
+    1;Rnd.rnd(0, 9) % 2 == 0;'Error by occasion'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;;;
+    #Id;#Action;#AppConnection
+    APPSTP1;ApplicationStop;APPSTR1.Out
+
+    #Id;#Action;#Decoraded
+    RESTBL1;ResultTable;true
+
+    #Id;#RawTable
+    table;Table
+    @;Step;Description;Expected
+    0;Step 1;Start application and declaration of variables;Start browser
+    1;Step 2;Resize browser;Browser resized
+    2;Step 3;Logout. Close application;Closing the browser
+    #EndRawTable
+
+    #Id;#Action;#RightTable;#RightAlias;#Condition;#LeftTable;#LeftAlias;#TestCaseId;#Result;#Error;#Screenshot
+    TBLJN1;TableLeftJoin;RESTBL1.Out;'a';'a.TestCaseId == b.Step';table;'b';'a.TestCaseId';'a.Result';'a.Error';'a.Screenshot'
+
+    #Action;#Table;#Title;#Numbers;#BeforeTestCase;#TestCaseId;#Result;#Description;#Expected;#Error;#Screenshot
+    TableReport;TBLJN1.Out;'Results';false;'Step 1';'Step Name';'Status';'Description';'Expected Result';'Actual Result';'Screenshots'
+
+

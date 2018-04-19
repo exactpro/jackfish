@@ -1,0 +1,88 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#NameSpace
+LIB;Standart libraries
+    #Id;#SubCase
+    qqq11111;This is test subcase
+    #EndSubCase
+
+    #Id;#SubCase;str
+    callLibFromLib2;;
+        #Id;#Call;str
+        CALL_1;LIB.qqq1;str
+
+        #Return
+        CALL_1
+
+    #EndSubCase
+
+    #Id;#SubCase
+    SUB_1;
+        #Id;#Action;$Decoraded
+        RESTBL1;ResultTable;true
+
+        #Action;$Table;$BeforeTestCase;$Numbers;$Title;TestCaseId;Result;Description;Expected Result;Error;Screenshot
+        TableReport;RESTBL1.Out;'Setup';false;'Total Report: ';'Step';'Status';'Description';'Expected Result';'Actual Result';'Screenshot'
+
+    #EndSubCase
+
+    #Id;#RepOff;#SubCase
+    TCStart;1;OnTestCaseStart
+        #Action;
+        Print;'TestCase started'
+
+        #Action;$Value;$Name
+        Store;true;'good'
+
+    #EndSubCase
+
+    #Id;#RepOff;#SubCase
+    TCFinish;1;OnTestCaseFinish
+        #Action;
+        Print;'TestCase finished'
+
+    #EndSubCase
+
+    #Id;#RepOff;#SubCase;error
+    TCError;1;OnTestCaseError;
+        #Action;
+        Print;'TestCase error' + error
+
+    #EndSubCase
+
+    #Id;#SubCase
+    SStart;OnStepStart
+        #Id;#Action;$Name
+        RST;Restore;'good'
+
+        #Assert;#Message
+        RST.Out;'previous'
+
+        #Action;$Value;$Name
+        Store;false;'good'
+
+    #EndSubCase
+
+    #Id;#SubCase
+    SFinish;OnStepFinish
+        #Action;$Value;$Name
+        Store;true;'good'
+
+    #EndSubCase
+
+    #Id;#SubCase;error
+    SError;OnStepError;
+        #Action;
+        Print;'Step error' + error
+
+    #EndSubCase
+
+#EndNameSpace
+

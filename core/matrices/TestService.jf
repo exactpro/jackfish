@@ -1,0 +1,27 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#TestCase
+Preparation
+    #Id;#Global;#Action;#ServiceId
+    SRVLD2;1;ServiceLoad;'TEST'
+
+    #Id;#Action;#ServiceConnection;#Port;#OnConnected
+    SRVSTRT1;ServiceStart;SRVLD2.Out;1251;'matrices/Socket.jf'
+
+
+#TestCase
+Cleanup
+    #Action;#Time
+    Wait;30000
+
+    #Id;#Action;#ServiceConnection
+    SRVSTP1;ServiceStop;SRVLD2.Out
+
+

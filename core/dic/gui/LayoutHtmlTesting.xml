@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<dictionary>
+    <window name="html0">
+        <self>
+            <panel id="html0" uid="html0"/>
+        </self>
+        <onOpen/>
+        <run>
+            <panel id="topRectangle" uid="topRectangle"/>
+            <panel id="leftRectangle" uid="leftRectangle"/>
+            <panel id="centerRectangle" uid="centerRectangle"/>
+            <panel id="inCenterRectangle" uid="inCenterRectangle"/>
+            <panel id="rightRectangle" uid="rightRectangle"/>
+            <panel id="bottomRectangle" uid="bottomRectangle"/>
+            <panel id="bigGreenRectangle" uid="bigGreenRectangle"/>
+            <panel id="smallRedRectangle" uid="smallRedRectangle"/>
+            <panel id="greenRectangle" uid="greenRectangle"/>
+            <panel id="redOnGreenRectangle" uid="redOnGreenRectangle"/>
+            <panel id="redRectangle" uid="redRectangle"/>
+            <panel id="greenOnRedRectangle" uid="greenOnRedRectangle"/>
+            <any xpath="//div" addition="Many"/>
+            <any id="fake1" class="sssssssssssss"/>
+            <any id="fake2" class="ffffffffffffffffff"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="html1">
+        <self>
+            <panel id="html1" uid="html1"/>
+        </self>
+        <onOpen/>
+        <run>
+            <panel id="topRectangle" uid="topRectangle"/>
+            <panel id="leftRectangle" uid="leftRectangle"/>
+            <panel id="centerRectangle" uid="centerRectangle"/>
+            <panel id="inCenterRectangle" uid="inCenterRectangle"/>
+            <panel id="rightRectangle" uid="rightRectangle"/>
+            <panel id="bottomRectangle" uid="bottomRectangle"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="html2">
+        <self>
+            <panel id="html2" uid="html2"/>
+        </self>
+        <onOpen/>
+        <run>
+            <panel id="bigGreenRectangle" uid="bigGreenRectangle"/>
+            <panel id="smallRedRectangle" uid="smallRedRectangle"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+    <window name="html3">
+        <self>
+            <panel id="html3" uid="html3"/>
+        </self>
+        <onOpen/>
+        <run>
+            <panel id="greenRectangle" uid="greenRectangle"/>
+            <panel id="redOnGreenRectangle" uid="redOnGreenRectangle"/>
+            <panel id="redRectangle" uid="redRectangle"/>
+            <panel id="greenOnRedRectangle" uid="greenOnRedRectangle"/>
+        </run>
+        <onClose/>
+        <close/>
+    </window>
+</dictionary>

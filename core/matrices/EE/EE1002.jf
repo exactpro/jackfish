@@ -1,0 +1,27 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+Step 1;This matrix always passed;;;
+    #Action;#Time
+    Wait;200
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;;;
+    #Action;#Time
+    Wait;200
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;;;
+    #Action;#Time
+    Wait;200
+
+

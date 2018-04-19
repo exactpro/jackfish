@@ -1,0 +1,52 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#NameSpace
+
+#EndNameSpace
+
+#Id;#TestCase;#Kind;#Depends;#For
+TestCase1;This matrix always passed;;;
+    #Action;$Time
+    Wait;200
+
+    #Step;#Kind;#For;#Depends
+    'Step 1';;;
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Step 2';;;
+    #EndStep
+
+    #Step;#Kind;#For;#Depends
+    'Step 3';;;
+        #Fail
+        'Actual is not equal expected'
+
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+FINAL;Final;;;
+    #Id;#Action;$Decoraded
+    RESTBL1;ResultTable;true
+
+    #Id;#Action;$Decoraded
+    RESTBL2;ResultTable;false
+
+    #Action;$Text;$Notifier
+    Show;'true ' +RESTBL1.Out[0].Matrix;Notifier.Info
+
+    #Action;$Time
+    Wait;1000
+
+    #Action;$Text;$Notifier
+    Show;'false' + RESTBL2.Out[0].Matrix;Notifier.Info
+
+

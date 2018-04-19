@@ -1,0 +1,9 @@
+/reports/
+/jackfish.jar
+/personal.ini
+/remote_out.txt
+version.properties
+*.rtf
+
+UserManualLocalBuild.*
+/temp/

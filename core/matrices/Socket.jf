@@ -1,0 +1,48 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Action;connection
+Print;parameter.Socket
+
+#Id;#Let
+value;parameter.Reader.readLine()
+
+#Action;value
+Print;value
+
+#Switch
+value
+    #Case
+    '0'
+        #Id;#Let
+        dummy;'zero'
+
+
+    #Case
+    '1'
+        #Id;#Let
+        dummy;'one'
+
+
+    #Case
+    '2'
+        #Id;#Let
+        dummy;'two'
+
+
+    #Default
+        #Id;#Let
+        dummy;'unknown'
+
+
+#EndSwitch
+
+#Action;dummy;send;flush
+Print;dummy;parameter.Writer.write(dummy + '\n');parameter.Writer.flush()
+

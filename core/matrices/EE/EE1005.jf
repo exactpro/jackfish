@@ -1,0 +1,49 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+Step 1;This matrix failed to pass;;;
+    #Action;#Time
+    Wait;1000
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;;;
+    #Action;#Time
+    Wait;1000
+
+    #Id;#Action;#Name
+    RST;Restore;'counter'
+
+    #Id;#Let
+    counter;RST.Out
+
+    #If
+    counter == null
+        #Id;#Let
+        counter;0
+
+    #EndIf
+
+    #Id;#Let
+    counter;counter + 1
+
+    #Action;#Value;#Name
+    Store;counter;'counter'
+
+    #Assert;#Message
+    counter > 5;'Time to fail'
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+Step 2;Working;;;
+    #Action;#Time
+    Wait;1000
+
+

@@ -1,0 +1,29 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+1;Test case;;;
+    #Step;#Kind
+    '1';OnFinishOrError
+    #EndStep
+
+    #Step;#Kind
+    '2';OnFinishOrError
+    #EndStep
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+cl;cl;;;
+    #Id;#Action;#Decoraded
+    RESTBL1;ResultTable;true
+
+    #Action;#BeforeTestCase;#Table;#Title
+    TableReport;'1';RESTBL1.Out;'1'
+
+

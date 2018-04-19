@@ -1,0 +1,1 @@
+java -Xmx4G -jar jackfish.jar -config=config.xml

@@ -1,0 +1,20 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Action;#Time
+Wait;2000;
+
+#Global;#Id;#Let
+1;f;123
+
+#Action;#Time
+Wait;2000;
+
+#Action;#Str;#f
+Print;'m2';f

@@ -1,0 +1,42 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+#Id;#TestCase;#Kind;#Depends;#For
+INIT;Test case;;;
+    #Id;#RawTable
+    table;Table
+    @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority;Multi
+    0;;matrices/EE/EE1001;;Steps;;;;0;
+    1;;matrices/EE/EE1002;;;3;4;;1;
+    2;;matrices/EE/EE1003;This is a special name;Chrome;;;;1;
+    3;;matrices/EE/EE1004;;Chrome;;;;1;
+    4;;matrices/EE/EE1005;;Chrome;;;;1;
+    5;;matrices/EE/EE1006;;FireFox;;;;2;
+    6;;matrices/EE/EE1007;;FireFox;;;;3;
+    #EndRawTable
+
+    #Id;#Action;$DefaultValue;$HelpKind;$Title
+    name;Input;'Test';HelpKind.String;'Give memorable name of this regression'
+
+    #Id;#Global;#Let
+    date;1;DateTime.current().shiftTime(0, 0, 1)
+
+    #Call;table;name
+    RF.RunAll;table;name.Out
+
+
+#TestCase;#Kind;#Depends;#For
+Summary report;;;
+    #Call;date
+    RF.repSummary;date
+
+    #Call;pathToSave;date
+    RF.repCsvExport;'reports';date
+
+

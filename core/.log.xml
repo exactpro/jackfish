@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="LogMainFile" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="logs/main.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="Append" value="false" />
+		<param name="Threshold" value="ALL" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p %d{yyyy-MM-dd HH:mm:ss.SSS} [%10t] %c{1}:%-3L - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="LogGuiFile" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="logs/gui.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="Append" value="false" />
+		<param name="Threshold" value="ALL" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p %d{yyyy-MM-dd HH:mm:ss.SSS} [%10t] %c{1}:%-3L - %m%n" />
+		</layout>
+	</appender>
+
+	<logger name="com.exactprosystems.jf.tool">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogGuiFile"/>
+ 	</logger>
+
+	<logger name="com.exactprosystems.jf.documents">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+
+	<logger name="com.exactprosystems.testtools">
+  		<level value="ALL"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+	<logger name="com.exactprosystems.jf.actions">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+	<logger name="com.exactprosystems.jf.app">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+	<logger name="com.exactprosystems.jf.client">
+  		<level value="ALL"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+	<logger name="com.exactprosystems.jf.common">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+	<logger name="com.exactprosystems.jf.functions">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+	<logger name="com.exactprosystems.jf.service">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+	<logger name="com.exactprosystems.jf.sql">
+  		<level value="INFO"/>
+  		<appender-ref ref="LogMainFile"/>
+ 	</logger>
+
+	<logger name="quickfix" additivity="false">
+		<level value="ERROR" />
+		<appender-ref ref="LogMainFile" />
+	</logger>
+	
+	<logger name="org.mvel2" additivity="false">
+		<level value="NONE" />
+		<appender-ref ref="LogMainFile" />
+	</logger>
+
+</log4j:configuration>

@@ -1,0 +1,71 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+// This matrix only present functions available for Zip such as create, add, load, remove, extract, save.
+// Please don't run this matrix!
+#Id;#TestCase;#Kind;#Depends;#For
+simple commands;;;;
+    // Create new Zip in memory
+    #Id;#Let
+    zip;Zip.create()
+
+    // You can add content from some file (NOT directory)
+    #Assert;#Message
+    zip.add('fileName');
+
+    // You can load content from some archive. You will get Zip which contains all files from root of predetermined archive (but not from inner directories)
+    #Assert;#Message
+    zip.load('archiveName');
+
+    // You can extract 1 file from Zip to path (path = existing directory)
+    #Assert;#Message
+    zip.extract('fileName', 'path');
+
+    // You can remove 1 file from Zip
+    #Assert;#Message
+    zip.remove('fileName');
+
+    // You can save all contents of Zip to path (existing file)
+    #Assert;#Message
+    zip.save('path');
+
+    // You can get names(List<String>) of all files in Zip
+    #Assert;#Message
+    zip.names();
+
+
+#Id;#TestCase;#Kind;#Depends;#For
+simple examples;;;;
+    // Create new Zip
+    #Id;#Let
+    zip;Zip.create()
+
+    // Add to zip few files (after that Zip will contains 2 files inside: 1.txt and 2.txt) and save zip as archive in predetermined place (archive should contains 2 files)
+    #Assert;#Message
+    zip.add('path/to/file/1.txt').add('path/to/file/2.txt').save('folder/archive.zip');
+
+    // Add files from some archive(which contains file load.txt) to zip. Also you can check zip contains load.txt
+    #Assert;#Message
+    zip.load('path/to/archive').names().contains('load.txt') == true;
+
+    // Now You can extract file load.txt from zip to predetermined place (folder which should be exists)
+    #Assert;#Message
+    zip.extract('load.txt', '/exctract/path');
+
+    // You can check file 'load.txt'
+    #Assert;#Message
+    new File('/extract/path/load.txt').exists() == true;
+
+    // Some file not need anymore? 
+    // Then remove it by name!
+    // Are You not sure? Just check zip - no fileName inside! Magic!
+    #Assert;#Message
+    zip.remove('fileName').names().contains('fileName') == false;
+
+

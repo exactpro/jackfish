@@ -1,0 +1,1920 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+// //==============================================
+// // Regression Framework v 1.0
+// //==============================================
+#Id;#NameSpace
+RF;RegressionFramework
+    // //==============================================
+    // // Runs all matrixes which names are enumerated in the column  Name
+    // // of the table and puts results into database
+    // //==============================================
+    #Id;#SubCase;table;name
+    RunAll;Run all matrixes from table;;
+        #Assert;#Message
+        table != null && table instanceof Table;'The parameter table should be Table'
+
+        #Assert;#Message
+        table.columnIsPresent('Off');'Table should contain the column Off'
+
+        #Assert;#Message
+        table.columnIsPresent('Scenario');'Table should contain the column Scenario'
+
+        #Assert;#Message
+        table.columnIsPresent('TestSet');'Table should contain the column TestSet'
+
+        #Assert;#Message
+        table.columnIsPresent('Start');'Table should contain the column Start'
+
+        #Assert;#Message
+        table.columnIsPresent('Finish');'Table should contain the column Finish'
+
+        #Assert;#Message
+        table.columnIsPresent('Performer');'Table should contain the column Performer'
+
+        #Assert;#Message
+        table.columnIsPresent('Priority');'Table should contain the column Priority'
+
+        #Assert;#Message
+        table.columnIsPresent('Multi');'Table should contain the column Multi'
+
+        #Id;#Call
+        SQL;Connect
+
+        #Id;#Let
+        curD;DateTime.current()
+
+        #Id;#Let
+        needD;DateTime.date(curD.years(),curD.months(),curD.days(),curD.hours(),curD.minutes(),curD.seconds())
+
+        #Id;#Action;$Connection;$Query;Name;CreateTime;ToolVersion;AppVersion
+        selectRunId;SQLinsert;SQL;'INSERT INTO runs (name, create_time, duration, tool_version, app_version) VALUES (?, ?, -1, ?, ?)\u003b';name;needD;VersionInfo.getVersion();config_version
+
+        #Id;#Let
+        runId;selectRunId.Out[0]
+
+        #Id;#Let
+        totalCount;0
+
+        #Id;#Let
+        successCount;0
+
+        #Id;#Let
+        failedCount;0
+
+        #Id;#Let
+        begin;System.currentTimeMillis()
+
+        #Id;#Action;$Decoraded
+        standartResult;ResultTable;false
+
+        #Action;Before start all matrices
+        Print;''
+
+        #Id;#Call
+        CALL_1;printMemory
+
+        #Action;$Str
+        Print;'============================'
+
+        // // Main loop
+        #ForEach;#In
+        row;table
+            #If
+            !Str.IsNullOrEmpty(row.Off)
+                #Continue
+
+            #EndIf
+
+            #Id;#Let
+            start;Str.IsNullOrEmpty(row.Start) ? 0 : Integer.parseInt(row.Start)
+
+            #Id;#Let
+            finish;Str.IsNullOrEmpty(row.Finish) ? 0 : Integer.parseInt(row.Finish)
+
+            #For;#From;#To;#Step
+            counter;start;finish;1
+                #Id;#Let
+                manual;!(new File(row.Scenario + '.jf').exists())
+
+                #Id;#Let
+                scenario;new File(row.Scenario).getName()
+
+                #Id;#Let
+                scenarioName;row.containsKey('Name') && !Str.IsNullOrEmpty(row.Name) ? row.Name : scenario
+
+                #Id;#Action;$Connection;$Query;RunId;Scenario;Counter;Performer;Priority;Manual;StartTime;Host;User;TestSet;Multi
+                selectScenarioId;SQLinsert;SQL;'INSERT INTO scenarios (run_id, scenario, counter, performer, priority, manual, start_time, host, username, test_set, multi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';runId;scenarioName;counter;row.Performer;row.Priority;manual ? 1 : 0;DateTime.current();Sys.hostName();Sys.userName();row.TestSet;Str.IsNullOrEmpty(row.Multi) ? 0 : 1
+
+                #Id;#Let
+                scenarioId;selectScenarioId.Out[0]
+
+                #If
+                !manual
+                    #Id;#Let
+                    totalCount;totalCount + 1
+
+                    #Action;$Str
+                    Print;'Starting: ' + scenarioName
+
+                    #Id;#Call
+                    CALL_3;printMemory
+
+                    #Id;#Action;$Matrix;$Parameter
+                    MXRN;MatrixRun;row.Scenario + '.jf';counter
+
+                    #Action;$Matrix
+                    MatrixWait;MXRN.Out
+
+                    #Action;$Connection;$Query;Passed;Failed;Report;ScenarioId
+                    SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsBlob();scenarioId
+
+                    #Id;#Action;$Decoraded;$Matrix
+                    resultTab;ResultTable;false;MXRN.Out
+
+                    #Action;Passed;Failed
+                    Print;MXRN.Out.passed();MXRN.Out.failed()
+
+                    #Action;$Str
+                    Print;'============================'
+
+                    #Id;#Let
+                    successCount;successCount + (MXRN.Out.failed() == 0 ? 1 : 0)
+
+                    #Id;#Let
+                    failedCount;failedCount + (MXRN.Out.failed() > 0 ? 1 : 0)
+
+                    #ForEach;#In
+                    details;resultTab.Out
+                        #Switch
+                        _rf_dialect
+                            #Case
+                            'MYSQL'
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Step;Time;Result;Error;Screenshot
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, ?)';scenarioId;'' + details.TestCase;'' + details.StepIdentity;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+
+
+                            #Case
+                            'MSSQL'
+                                #Id;#Action;$Connection;$Query;ScenarioId;Testcase;Step;Time;Result;Error;Screenshot
+                                selectDetails;SQLinsert;SQL;'INSERT INTO details (scenario_id, testcase, step, time, result, error, screenshot) VALUES (?, ?, ?, ?, ?, ?, CONVERT(VARBINARY(MAX),?))';scenarioId;'' + details.TestCase;'' + details.StepIdentity;details.Time;'' + details.Result;'' + details.Error;Converter.storableToBlob(details.Screenshot)
+
+
+                            #Default
+                                #Fail
+                                'Unknown SQL dialect: ' + _rf_dialect
+
+
+                        #EndSwitch
+
+                        #For;#From;#To;#Step
+                        i;standartResult.Out.getHeaderSize();resultTab.Out.getHeaderSize() - 1;1
+                            #Id;#RawText;#Kind
+                            TEXT6;Text;Sql
+                            ~;"INSERT INTO user_details (details_id, name, value) VALUES (?, ?, ?);"
+                            #EndRawText
+
+                            #Action;$Connection;$Query;detailsId;name;value
+                            SQLinsert;SQL;TEXT6.toString();selectDetails.Out[0];resultTab.Out.getHeader(i);details[resultTab.Out.getHeader(i)]
+
+                        #EndFor
+
+                    #EndForEach
+
+                    #If
+                    (MXRN.Out.failed() > 0) && (isdef _rf_default_handler) && (!(Str.IsNullOrEmpty(_rf_default_handler)))
+                        #Id;#Action;$Matrix;$Parameter
+                        ERRMX;MatrixRun;_rf_default_handler;scenario
+
+                        #Id;#Action;$Matrix
+                        MXWT1;MatrixWait;ERRMX.Out
+
+                    #EndIf
+
+                #EndIf
+
+            #EndFor
+
+            #OnError
+                #Action;Error
+                Print;error
+
+
+        #EndForEach
+
+        #Action;After end all matrices
+        Print;''
+
+        #Id;#Call
+        CALL_2;printMemory
+
+        #Id;#Action;$Query;$Connection;ScenarioId
+        SQLSLCT18;SQLselect;'SELECT * FROM details where step != \'null\' and scenario_id = ?';SQL;scenarioId
+
+        #Id;#Action;$Table;result
+        TBLSLCT1;TableSelect;SQLSLCT18.Out;'Passed'
+
+        #Id;#Action;$Table;result
+        TBLSLCT2;TableSelect;SQLSLCT18.Out;'Failed'
+
+        #Action;Passed Steps;Failed Steps
+        Print;TBLSLCT1.Out.size();TBLSLCT2.Out.size()
+
+        #Action;Total matrixes;Passed
+        Print;totalCount;successCount
+
+        #Action;$Connection;$Query;Duration;RunId
+        SQLexecute;SQL;'UPDATE runs SET duration = ? WHERE id = ?';(int)(System.currentTimeMillis() - begin);runId
+
+        #Action;$Connection
+        SQLdisconnect;SQL
+
+        #Assert;#Message
+        failedCount == 0;'Regression failed'
+
+        #Return
+        runId
+
+    #EndSubCase
+
+    #Id;#SubCase
+    printMemory;
+        #Id;#Let
+        totalMemory;def () { return Runtime.getRuntime().totalMemory() }
+
+        #Id;#Let
+        maxMemory;def () { return Runtime.getRuntime().maxMemory() }
+
+        #Id;#Let
+        freeMemory;def () { return Runtime.getRuntime().freeMemory() }
+
+        #Id;#Let
+        convertToMb;def(l) { return l / 1024 / 1024}
+
+        #Action;Mem
+        Print;convertToMb(totalMemory())+ ' mb / ' + convertToMb(freeMemory())+ ' mb / ' +  convertToMb(totalMemory() - freeMemory()) + ' mb'
+
+    #EndSubCase
+
+    // //==============================================
+    // // Shows the overall report
+    // //==============================================
+    #Id;#SubCase;date
+    repOverall;Overall progress;
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Call;sql;date
+        runId;runIdFromDate;SQL;date
+
+        #Id;#Let
+        title;'Overall ' + Str.asString(runId.name) + (date == null ? '' : (' on ' + DateTime.strDate(date)))
+
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText;#Kind
+                TEXT4;Text;Sql
+                ~;"SELECT  "
+                ~;"	sp.count AS 'Passed', "
+                ~;"	sf.count AS 'Failed'"
+                ~;"FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
+                ~;"LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON true "
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText;#Kind
+                TEXT4;Text;Sql
+                ~;"SELECT  "
+                ~;"	sp.count AS 'Passed', "
+                ~;"	sf.count AS 'Failed' "
+                ~;"FROM (SELECT COUNT(id) AS count FROM scenarios WHERE failed = 0 AND run_id = ? ) AS sp "
+                ~;"LEFT JOIN (SELECT COUNT(id) AS count FROM scenarios WHERE failed <> 0 AND run_id = ? ) AS sf ON 1=1"
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
+
+        #Id;#Action;$Connection;$Query;runId;runId
+        select;SQLselect;SQL;TEXT4.toString();runId.id;runId.id
+
+        #Id;#Action;$ReportName;$Version
+        REP1;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
+
+        #Action;$Type;$Table;$ToReport;$Title;$Colors
+        ChartReport;ChartKind.Pie;select.Out;REP1.Out;'{{4 ' + title + ' 4}}';{ 'Passed' : Color.GREEN, 'Failed' : Color.RED }
+
+        #Action;$Table;$Title;$Numbers;$ToReport
+        TableReport;select.Out;'Table';false;REP1.Out
+
+        #Action;$Report;$Passed;$Failed
+        ReportFinish;REP1.Out;(int)select.Out[0].Passed;(int)select.Out[0].Failed
+
+        #Action;$Report
+        ReportShow;REP1.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
+    // // Delete the summary report
+    // //==============================================
+    #Id;#SubCase;date
+    deleteSummary;deleteSummary;
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText;#Kind
+                TEXT1;delete from details;Sql
+                ~;"DELETE FROM details"
+                ~;"WHERE scenario_id IN ("
+                ~;"    SELECT id FROM scenarios"
+                ~;"    WHERE run_id IN ("
+                ~;"        SELECT id FROM runs"
+                ~;"        WHERE create_time=?"
+                ~;"    )"
+                ~;")"
+                #EndRawText
+
+                #Id;#RawText;#Kind
+                TEXT2;delete from scenarios;Sql
+                ~;"DELETE FROM scenarios"
+                ~;"WHERE run_id IN ("
+                ~;"    SELECT id FROM runs"
+                ~;"    WHERE create_time=?"
+                ~;")"
+                #EndRawText
+
+                #Id;#RawText;#Kind
+                TEXT3;delete from runs;Sql
+                ~;"DELETE FROM runs WHERE create_time=?"
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText;#Kind
+                TEXT1;delete from details;Sql
+                ~;"DELETE FROM details "
+                ~;"WHERE scenario_id in ("
+                ~;"    SELECT scenario_id "
+                ~;"    FROM details AS d "
+                ~;"    LEFT JOIN scenarios AS s "
+                ~;"    ON d.scenario_id = s.id "
+                ~;"    WHERE s.id in ("
+                ~;"        SELECT id FROM scenarios "
+                ~;"        WHERE  run_id in ("
+                ~;"             SELECT run_id "
+                ~;"             FROM scenarios AS s "
+                ~;"             LEFT JOIN runs AS r "
+                ~;"                  ON r.id = s.run_id "
+                ~;"                  WHERE r.id = (SELECT id FROM runs WHERE create_time = ?)"
+                ~;"        )"
+                ~;"    )"
+                ~;")"
+                #EndRawText
+
+                #Id;#RawText;#Kind
+                TEXT2;delete from scenarios;Sql
+                ~;"DELETE FROM scenarios "
+                ~;"WHERE run_id in ("
+                ~;"SELECT run_id FROM scenarios AS s "
+                ~;"LEFT JOIN runs AS r "
+                ~;"ON r.id = s.run_id "
+                ~;"WHERE r.id = ("
+                ~;"SELECT id FROM runs WHERE create_time = ?"
+                ~;")"
+                ~;")"
+                #EndRawText
+
+                #Id;#RawText;#Kind
+                TEXT3;delete from runs;Sql
+                ~;"DELETE FROM runs WHERE id in (SELECT id FROM runs WHERE create_time = ?);"
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
+
+        #Id;#Action;$Query;$Connection;date_date
+        SQLEXEC1;SQLexecute;TEXT1.toString();SQL;date
+
+        #Id;#Action;$Query;$Connection;date_date
+        SQLEXEC1;SQLexecute;TEXT2.toString();SQL;date
+
+        #Id;#Action;$Query;$Connection;date_date
+        SQLEXEC1;SQLexecute;TEXT3.toString();SQL;date
+
+    #EndSubCase
+
+    // //==============================================
+    // // Shows the summary report
+    // //==============================================
+    #Id;#SubCase;date
+    repSummary;Summary report;
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Call;sql;date
+        runId;runIdFromDate;SQL;date
+
+        #Id;#Call;sql;date
+        times;timesFromDate;SQL;date
+
+        #Id;#Let
+        title;'Consolidated Report '  + Str.asString(runId.name) + (date == null ? '' : (' on ' +DateTime.strDate(date)))
+
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText;#Kind
+                TEXT2;Text;Sql
+                ~;"SELECT "
+                ~;"  r.tool_version,"
+                ~;"  r.app_version,"
+                ~;"  s.scenario, "
+                ~;"  s.manual, "
+                ~;"  DATE(s.start_time) AS date, "
+                ~;"  TIME(s.start_time) AS time, "
+                ~;"  IF(s.failed > 0, 'Failed', IF (s.passed > 0, 'Passed', 'Unknown')) AS result, "
+                ~;"  s.performer AS performer, "
+                ~;"  s.test_set AS testSet, "
+                ~;"  s.host AS host, "
+                ~;"  s.username AS username,"
+                ~;"  s.report AS report"
+                ~;"FROM scenarios AS s "
+                ~;"LEFT JOIN runs AS r ON r.id = ?"
+                ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText;#Kind
+                TEXT2;Text;Sql
+                ~;"SELECT "
+                ~;"  r.tool_version,"
+                ~;"  r.app_version,"
+                ~;"  s.scenario, "
+                ~;"  s.manual, "
+                ~;"  CONVERT(DATE, s.start_time) AS date,"
+                ~;"  CONVERT(TIME, s.start_time) AS time, "
+                ~;"  CASE "
+                ~;"	WHEN s.failed <> 0 THEN  0 "
+                ~;"	WHEN s.passed <> 0 THEN 1"
+                ~;"	ELSE -1 "
+                ~;"  END AS result,"
+                ~;"  s.performer AS performer, "
+                ~;"  s.test_set AS testSet, "
+                ~;"  s.host AS host, "
+                ~;"  s.username AS username,"
+                ~;"  s.report AS report"
+                ~;"FROM scenarios AS s "
+                ~;"LEFT JOIN runs AS r ON r.id = ?"
+                ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
+
+        #Id;#Action;$Connection;$Query;runId;runId
+        select;SQLselect;SQL;TEXT2.toString();runId.id;runId.id
+
+        #Id;#Let
+        table;select.Out
+
+        #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+        TableReplace;'Failed';table;{'result'};true;0
+
+        #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+        TableReplace;'Passed';table;{'result'};true;1
+
+        #Id;#Action;$Table;result
+        passed;TableSelect;table;'Passed'
+
+        #Id;#Action;$Table;result
+        failed;TableSelect;table;'Failed'
+
+        #Action;$Table;$Colored;$Hyperlink
+        TableConsiderColumnsAs;table;'result';'report'
+
+        #Id;#Action;$ReportName;$Version
+        REP1;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
+
+        #Action;$Table;$Title;$ToReport;$Numbers;$ReportValues;testSet;scenario;result;date;time;username;host;report
+        TableReport;table;'{{4' + title + '4}}';REP1.Out;false;true;'Test set';'Matrix Name';'Execution Status';'Execution Date';'Execution Time';'Executed By';'Execution Machine';'Report link'
+
+        #Action;$Passed;$Failed;$Report;$StartTime;$FinishTime
+        ReportFinish;passed.Out.size();failed.Out.size();REP1.Out;times.startTime;times.finishTime
+
+        #Action;$Report
+        ReportShow;REP1.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
+    // // Export the last regression set to xml file for import into QC
+    // //==============================================
+    #Id;#SubCase;date;pathToSave
+    repXmlExport;Export to XML file;;
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Call;sql;date
+        runId;RF.runIdFromDate;SQL;date
+
+        #Id;#RawText;#Kind
+        testSetText;Text;Sql
+        ~;"SELECT s.test_set, s.host"
+        ~;"FROM scenarios AS s "
+        ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
+        ~;"GROUP BY s.test_set; "
+        #EndRawText
+
+        #Id;#Action;runId;$Query;$Connection
+        testSetQuery;SQLselect;runId.id;testSetText.toString();SQL
+
+        #Id;#Let
+        hostname;testSetQuery.Out.size() > 0 ? testSetQuery.Out[0].host : null
+
+        #ForEach;#In
+        testSet;testSetQuery.Out
+            #Id;#RawText;#Kind
+            totalCountSQL;Text;Sql
+            ~;"SELECT COUNT(d.id) AS count,SUM(d.time) AS time"
+            ~;"FROM details AS d"
+            ~;"WHERE d.scenario_id IN ("
+            ~;"	select distinct id from scenarios"
+            ~;"where test_set= ? and run_id = ?"
+            ~;")"
+            #EndRawText
+
+            #Id;#Action;test_set;run_id;$Query;$Connection
+            SQLSLCT1;SQLselect;testSet.test_set;runId.id;totalCountSQL.toString();SQL
+
+            #Id;#Let
+            totalCount;SQLSLCT1.Out.size() > 0 ? SQLSLCT1.Out[0].count : null
+
+            #Id;#Let
+            totalTime;SQLSLCT1.Out.size() > 0 ? SQLSLCT1.Out[0].time : null
+
+            #Id;#RawText;#Kind
+            failuresSQL;Text;Sql
+            ~;"SELECT COUNT(d.id) AS count "
+            ~;"FROM details AS d"
+            ~;"WHERE d.scenario_id IN ("
+            ~;"	select distinct id from scenarios"
+            ~;"where test_set= ? and run_id = ?"
+            ~;") and result = 'Failed'"
+            #EndRawText
+
+            #Id;#Action;test_set;runId;$Query;$Connection
+            SQLSLCT2;SQLselect;testSet.test_set;runId.id;failuresSQL.toString();SQL
+
+            #Id;#Let
+            failures;SQLSLCT2.Out.size() > 0 ? SQLSLCT2.Out[0].count : null
+
+            #Id;#Action
+            xml;XmlCreate
+
+            #Id;#Action;name;failures;tests;time;$NodeName;$Xml
+            rootNode;XmlAddNode;testSet.test_set;failures;totalCount;totalTime / 1000;'testsuites';xml.Out
+
+            #Id;#Action;$Xpath;$Xml
+            XML1;XmlFindFirst;'//testsuites';xml.Out
+
+            #Switch
+            _rf_dialect
+                #Case
+                'MYSQL'
+                    #Id;#RawText;#Kind
+                    TEXT5;Text;Sql
+                    ~;"SELECT "
+                    ~;"  s.id, s.scenario, "
+                    ~;"  IF(s.failed > 0, 'Failed', IF (s.passed > 0, 'Passed', 'Unknown')) AS status, "
+                    ~;"  s.host, "
+                    ~;"  s.username, "
+                    ~;"  DATE(s.start_time) AS date, "
+                    ~;"  TIME(s.start_time) AS time "
+                    ~;"FROM scenarios AS s"
+                    ~;"WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    #EndRawText
+
+
+                #Case
+                'MSSQL'
+                    #Id;#RawText;#Kind
+                    TEXT5;Text;Sql
+                    ~;"SELECT "
+                    ~;"  s.id, s.scenario, "
+                    ~;"  CASE "
+                    ~;"	WHEN s.failed <> 0 THEN  0 "
+                    ~;"	WHEN s.passed <> 0 THEN 1"
+                    ~;"	ELSE -1 "
+                    ~;"  END AS status,"
+                    ~;"  s.host, "
+                    ~;"  s.username, "
+                    ~;"  CONVERT(DATE, s.start_time) AS date, "
+                    ~;"  CONVERT(TIME, s.start_time) AS time "
+                    ~;"FROM scenarios AS s"
+                    ~;"WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    #EndRawText
+
+
+                #Default
+                    #Fail
+                    'Unknown SQL dialect: ' + _rf_dialect
+
+
+            #EndSwitch
+
+            #Id;#Action;$Connection;$Query;runId;testSet
+            query;SQLselect;SQL;TEXT5.toString();runId.id;testSet.test_set
+
+            #Id;#Let
+            scenarios;query.Out
+
+            #For;#From;#To;#Step
+            rowScenarios;0;(int)scenarios.size - 1;1
+                #Id;#RawText;#Kind
+                countTSQL;Text;Sql
+                ~;"SELECT COUNT(id) AS tests, SUM(time) as totalTime  "
+                ~;"FROM details"
+                ~;"WHERE scenario_id = ?"
+                #EndRawText
+
+                #Id;#Action;scenarioId;$Query;$Connection
+                SQLSLCT3;SQLselect;scenarios[rowScenarios].id;countTSQL.toString;SQL
+
+                #Id;#Let
+                TStests;SQLSLCT3.Out.size() > 0 ? SQLSLCT3.Out[0].tests : null
+
+                #Id;#Let
+                TStotalTime;SQLSLCT3.Out.size() > 0 ? SQLSLCT3.Out[0].totalTime : null
+
+                #Id;#RawText;#Kind
+                failCountTSQL;Text;Sql
+                ~;"SELECT count(result) as fail"
+                ~;"FROM details"
+                ~;"WHERE result = 'Failed' and scenario_id = ? "
+                #EndRawText
+
+                #Id;#Action;scenarioId;$Query;$Connection
+                SQLSLCT4;SQLselect;scenarios[rowScenarios].id;failCountTSQL.toString();SQL
+
+                #Id;#Let
+                failTS;SQLSLCT4.Out.size() > 0 ? SQLSLCT4.Out[0].fail : null
+
+                #Id;#RawText;#Kind
+                errorcountSQL;Text;Sql
+                ~;"SELECT count(error) as error"
+                ~;"FROM details"
+                ~;"WHERE error <> 'null' and scenario_id = ? "
+                #EndRawText
+
+                #Id;#Action;scenarioId;$Query;$Connection
+                SQLSLCT6;SQLselect;scenarios[rowScenarios].id;errorcountSQL.toString();SQL
+
+                #Id;#Let
+                errorTS;SQLSLCT6.Out.size() > 0 ? SQLSLCT6.Out[0].error : null
+
+                #Action;hostname;timestamp;failures;time;tests;$NodeName;$Xml;name;errors;skipped;disabled
+                XmlAddNode;hostname;scenarios[rowScenarios].date + 'T' + scenarios[rowScenarios].time;failTS;TStotalTime /1000;TStests;'testsuite';XML1.Out;scenarios[rowScenarios].scenario;errorTS;0;0
+
+                #Id;#Action;$Xml
+                XML2;XmlChildren;XML1.Out
+
+                #Id;#Let
+                last;XML2.Out[XML2.Out.size - 1]
+
+                #Id;#RawText;#Kind
+                findTestCase;Text;Sql
+                ~;"SELECT testcase, time, error from details"
+                ~;"where scenario_id = ?"
+                #EndRawText
+
+                #Id;#Action;scenarioId;$Query;$Connection
+                SQLSLCT5;SQLselect;scenarios[rowScenarios].id;findTestCase.toString();SQL
+
+                #Action;$Table;$Title
+                TableReport;SQLSLCT5.Out;'1234'
+
+                #ForEach;#In
+                testCases;SQLSLCT5.Out
+                    #Action;name;classname;time;$NodeName;$Xml
+                    XmlAddNode;testCases.testcase;scenarios[rowScenarios].scenario;testCases.time /1000;'testcase';last
+
+                    #If
+                    !testCases.error.equals('null')
+                        #Id;#Action;$Xml
+                        XML4;XmlChildren;last
+
+                        #Action;type;message;$NodeName;$Xml
+                        XmlAddNode;'testFailure';testCases.error;'failure';XML4.Out[XML4.Out.size - 1]
+
+                    #EndIf
+
+                #EndForEach
+
+            #EndFor
+
+            #Id;#Let
+            fileName;'regression ' + testSet.test_set + '.xml'
+
+            #Id;#Let
+            filePath;pathToSave + '/' +fileName
+
+            #Action;$Xml;$File
+            XmlSaveToFile;XML1.Out;filePath
+
+        #EndForEach
+
+    #EndSubCase
+
+    #Id;#SubCase;date;pathToSave;matrixName
+    repXmlExport2;Export to XML file;;;
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Id;#Call;sql;date
+        runId;RF.runIdFromDate;SQL;date
+
+        #Id;#RawText;#Kind
+        findTotalTime;Text;Sql
+        ~;"SELECT SUM(time) AS time FROM details WHERE scenario_id IN (SELECT id FROM scenarios WHERE run_id = ?) AND step ='null'"
+        #EndRawText
+
+        #Id;#Action;id;$Query;$Connection
+        SQLSLCT14;SQLselect;runId.id;findTotalTime.toString();SQL
+
+        #Id;#Let
+        totalDuration;SQLSLCT14.Out.size() > 0 ? SQLSLCT14.Out[0].time : null
+
+        #Id;#RawText;#Kind
+        totalCountSQL;Text;Sql
+        ~;"SELECT COUNT(d.id) AS tCount"
+        ~;"FROM details d"
+        ~;"WHERE d.scenario_id IN ("
+        ~;"SELECT DISTINCT id "
+        ~;"FROM scenarios"
+        ~;"WHERE run_id = ? and test_set <> '' "
+        ~;") AND step = 'null'"
+        #EndRawText
+
+        #Id;#Action;runId;$Query;$Connection
+        SQLSLCT7;SQLselect;runId.id;totalCountSQL.toString();SQL
+
+        #Id;#Let
+        totalCount;SQLSLCT7.Out.size() > 0 ? SQLSLCT7.Out[0].tCount : null
+
+        #Id;#RawText;#Kind
+        totalFailedSQL;Text;Sql
+        ~;"SELECT COUNT(d.id) AS tCount"
+        ~;"FROM details d"
+        ~;"WHERE d.scenario_id IN ("
+        ~;"SELECT DISTINCT id "
+        ~;"FROM scenarios"
+        ~;"WHERE run_id = ?"
+        ~;") and d.result = 'Failed'  AND step ='null'"
+        #EndRawText
+
+        #Id;#Action;runId;$Query;$Connection
+        SQLSLCT8;SQLselect;runId.id;totalFailedSQL.toString();SQL
+
+        #Id;#Let
+        totalFailed;SQLSLCT8.Out.size() > 0 ? SQLSLCT8.Out[0].tCount : null
+
+        #Id;#Action
+        xml;XmlCreate
+
+        #Id;#Action;time;tests;name;failures;$NodeName;$Xml
+        rootNode;XmlAddNode;totalDuration / 1000;totalCount;matrixName;totalFailed;'testsuites';xml.Out
+
+        #Id;#Action;$Xpath;$Xml
+        XML3;XmlFindFirst;'//testsuites';xml.Out
+
+        #Id;#RawText;#Kind
+        totalScenarios;Text;Sql
+        ~;"SELECT DISTINCT scenario  "
+        ~;"FROM scenarios"
+        ~;"WHERE run_id = ? and test_set <> ''"
+        ~;" "
+        #EndRawText
+
+        #Id;#Action;runId;$Query;$Connection
+        SQLSLCT9;SQLselect;runId.id;totalScenarios.toString();SQL
+
+        #Id;#Let
+        scenarios;SQLSLCT9.Out
+
+        #Id;#RawText;#Kind
+        findHostSQL;Text;Sql
+        ~;"SELECT DISTINCT host FROM scenarios WHERE run_id = ?"
+        #EndRawText
+
+        #Id;#Action;id;$Query;$Connection
+        SQLSLCT13;SQLselect;runId.id;findHostSQL.toString();SQL
+
+        #Id;#Let
+        host;SQLSLCT13.Out[0].host
+
+        #For;#From;#To;#Step
+        rowScenarios;0;(int)scenarios.size - 1;1
+            #Id;#RawText;#Kind
+            countTSQL;Text;Sql
+            ~;"SELECT COUNT(id) AS tests, SUM(time) AS totalTime"
+            ~;"FROM details"
+            ~;"WHERE scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?)  AND step ='null'"
+            #EndRawText
+
+            #Id;#Action;scenario;id;$Query;$Connection
+            SQLSLCT10;SQLselect;scenarios[rowScenarios].scenario;runId.id;countTSQL.toString();SQL
+
+            #Id;#Let
+            TStests;SQLSLCT10.Out.size() > 0 ? SQLSLCT10.Out[0].tests : null
+
+            #Id;#Let
+            TStotalTime;SQLSLCT10.Out.size() > 0 ? SQLSLCT10.Out[0].totalTime : null
+
+            #Id;#RawText;#Kind
+            failCountTSQL;Text;Sql
+            ~;"SELECT COUNT(result) as fail"
+            ~;"FROM details"
+            ~;"WHERE result = 'Failed' and scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) AND step ='null'"
+            #EndRawText
+
+            #Id;#Action;scenario;id;$Query;$Connection
+            SQLSLCT11;SQLselect;scenarios[rowScenarios].scenario;runId.id;failCountTSQL.toString();SQL
+
+            #Id;#Let
+            failTS;SQLSLCT11.Out.size() > 0 ? SQLSLCT11.Out[0].fail : null
+
+            #Id;#RawText;#Kind
+            errorcountSQL;Text;Sql
+            ~;"SELECT count(error) as error"
+            ~;"FROM details"
+            ~;"WHERE error <> 'null' AND scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) AND step ='null'"
+            #EndRawText
+
+            #Id;#Action;scenario;id;$Query;$Connection
+            SQLSLCT12;SQLselect;scenarios[rowScenarios].scenario;runId.id;errorcountSQL.toString();SQL
+
+            #Id;#Let
+            errorTS;SQLSLCT12.Out.size() > 0 ? SQLSLCT12.Out[0].error : null
+
+            #Switch
+            _rf_dialect
+                #Case
+                'MYSQL'
+                    #Id;#RawText;#Kind
+                    TEXT7;Text;Sql
+                    ~;"SELECT TIME(MIN(start_time)) AS time,"
+                    ~;"DATE(MIN(start_time)) AS date"
+                    ~;"FROM scenarios WHERE id IN (SELECT id FROM scenarios WHERE run_id = ? AND scenario = ?)"
+                    #EndRawText
+
+
+                #Case
+                'MSSQL'
+                    #Id;#RawText;#Kind
+                    TEXT7;Text;Sql
+                    ~;"SELECT CONVERT(TIME, MIN(start_time)) AS time,"
+                    ~;"CONVERT(DATE, MIN(start_time)) AS date"
+                    ~;"FROM scenarios WHERE id IN (SELECT id FROM scenarios WHERE run_id = ? AND scenario = ?)"
+                    #EndRawText
+
+
+                #Default
+                    #Fail
+                    'Unknown SQL dialect: ' + _rf_dialect
+
+
+            #EndSwitch
+
+            #Id;#Action;id;scenario;$Query;$Connection
+            SQLSLCT15;SQLselect;runId.id;scenarios[rowScenarios].scenario;TEXT7.toString();SQL
+
+            #Id;#Let
+            date;SQLSLCT15.Out.size() > 0 ? SQLSLCT15.Out[0].date : null
+
+            #Id;#Let
+            time;SQLSLCT15.Out.size() > 0 ? SQLSLCT15.Out[0].time : null
+
+            #Action;$NodeName;timestamp;time;tests;skipped;name;hostname;failures;errors;$Xml
+            XmlAddNode;'testsuite';date + 'T' + time;TStotalTime /1000;TStests;0;scenarios[rowScenarios].scenario;host;failTS;errorTS;XML3.Out
+
+            #Id;#RawText;#Kind
+            findAllIdsForScenario;Text;Sql
+            ~;"SELECT id FROM details WHERE scenario_id IN (SELECT id FROM scenarios WHERE scenario = ? AND run_id = ?) GROUP BY testcase"
+            #EndRawText
+
+            #Id;#Action;scenario;id;$Query;$Connection
+            SQLSLCT16;SQLselect;scenarios[rowScenarios].scenario;runId.id;findAllIdsForScenario;SQL
+
+            #Id;#Let
+            scenarioIds;SQLSLCT16.Out
+
+            #Id;#Action;$Xml
+            XML5;XmlChildren;XML3.Out
+
+            #Id;#Let
+            last;XML5.Out[XML5.Out.size - 1]
+
+            #ForEach;#In
+            id;scenarioIds
+                #Id;#RawText;#Kind
+                infoFromDetails;Text;Sql
+                ~;"SELECT testcase, time, error FROM details WHERE id = ?"
+                #EndRawText
+
+                #Id;#Action;id;$Query;$Connection
+                SQLSLCT17;SQLselect;id.id;infoFromDetails.toString();SQL
+
+                #Action;classname;name;time;$NodeName;$Xml
+                XmlAddNode;scenarios[rowScenarios].scenario;SQLSLCT17.Out[0].testcase;SQLSLCT17.Out[0].time / 1000;'testcase';last
+
+                #If
+                !SQLSLCT17.Out[0].error.equals('null')
+                    #Id;#Action;$Xml
+                    XML6;XmlChildren;last
+
+                    #Action;message;type;$NodeName;$Xml
+                    XmlAddNode;SQLSLCT17.Out[0].error;'testFailure';'failure';XML6.Out[XML6.Out.size - 1]
+
+                #EndIf
+
+            #EndForEach
+
+        #EndFor
+
+        #Id;#Let
+        fileName;'regression ' + matrixName + '.xml'
+
+        #Id;#Let
+        filePath;pathToSave + '/' +fileName
+
+        #Action;$Xml;$File
+        XmlSaveToFile;XML3.Out;filePath
+
+    #EndSubCase
+
+    // //==============================================
+    // // Export the last regression set to csv file for import into QC
+    // //==============================================
+    #Id;#SubCase;date;pathToSave
+    repCsvExport;Export to CSV file;;
+        #Id;#Call
+        SQL;Connect
+
+        #Id;#Call;sql;date
+        runId;runIdFromDate;SQL;date
+
+        #Id;#RawText;#Kind
+        testSetText;Text;Sql
+        ~;"SELECT "
+        ~;"  s.test_set "
+        ~;"FROM scenarios AS s "
+        ~;"WHERE s.test_set <> '' AND s.manual = 0 AND s.run_id = ?"
+        ~;"GROUP BY s.test_set; "
+        #EndRawText
+
+        #Id;#Action;$Query;$Connection;runId
+        testSetQuery;SQLselect;testSetText.toString();SQL;runId.id
+
+        #ForEach;#In
+        testSet;testSetQuery.Out
+            #Id;#Let
+            countSteps;0
+
+            #Id;#Action;Test Name;Execution Status;Execution Date;Execution Time;Executed By;Execution Machine
+            createTable;TableCreate;;;;;;
+
+            #Id;#Let
+            resultTable;createTable.Out
+
+            #Switch
+            _rf_dialect
+                #Case
+                'MYSQL'
+                    #Id;#RawText;#Kind
+                    TEXT5;Text;Sql
+                    ~;"SELECT "
+                    ~;"  s.id, s.scenario, "
+                    ~;"  IF (s.failed > 0, 'Failed', "
+                    ~;"	IF (s.passed > 0, 'Passed', "
+                    ~;"		'Unknown' "
+                    ~;"	    )"
+                    ~;"     ) AS status, "
+                    ~;"  s.host, "
+                    ~;"  s.username, "
+                    ~;"  DATE(s.start_time) AS date, "
+                    ~;"  TIME(s.start_time) AS time "
+                    ~;"FROM scenarios AS s"
+                    ~;"WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    #EndRawText
+
+
+                #Case
+                'MSSQL'
+                    #Id;#RawText;#Kind
+                    TEXT5;Text;Sql
+                    ~;"SELECT "
+                    ~;"  s.id, s.scenario, "
+                    ~;"  CASE "
+                    ~;"	WHEN s.failed <> 0 THEN  0 "
+                    ~;"	WHEN s.passed <> 0 THEN 1"
+                    ~;"	ELSE -1 "
+                    ~;"  END AS status, "
+                    ~;"  s.host, "
+                    ~;"  s.username, "
+                    ~;"  CONVERT(DATE, s.start_time) AS date, "
+                    ~;"  CONVERT(TIME, s.start_time) AS time "
+                    ~;"FROM scenarios AS s"
+                    ~;"WHERE s.manual = 0 AND s.run_id = ? AND s.test_set = ? ; "
+                    #EndRawText
+
+
+                #Default
+                    #Fail
+                    'Unknown SQL dialect: ' + _rf_dialect
+
+
+            #EndSwitch
+
+            #Id;#Action;$Connection;$Query;runId;testSet
+            query;SQLselect;SQL;TEXT5.toString();runId.id;testSet.test_set
+
+            #Id;#Let
+            scenarios;query.Out
+
+            #For;#From;#To;#Step
+            rowScenarios;0;(int)scenarios.size - 1;1
+                #Id;#RawText;#Kind
+                selectFromTableText;Text;Sql
+                ~;"SELECT d.scenario_id, d.error  FROM details AS d "
+                ~;"WHERE scenario_id = ? "
+                ~;"AND "
+                ~;"	(NOT EXISTS (SELECT 1 FROM details WHERE scenario_id = ? AND step <> 'null') OR step <> 'null')"
+                ~;"  ;"
+                #EndRawText
+
+                #Id;#Action;$Connection;$Query;scenario_id;scenario_id
+                selectFromTable;SQLselect;SQL;selectFromTableText.toString();scenarios[rowScenarios].id;scenarios[rowScenarios].id
+
+                #Id;#Let
+                selectSteps;selectFromTable.Out
+
+                #Action;$Table;Test Name;Execution Status;Execution Date;Execution Time;Executed By;Execution Machine
+                TableAddValue;resultTable;scenarios[rowScenarios].scenario;scenarios[rowScenarios].status;scenarios[rowScenarios].date;scenarios[rowScenarios].time;scenarios[rowScenarios].username;scenarios[rowScenarios].host
+
+                #For;#From;#To;#Step
+                rowSteps;0;(int)selectSteps.size - 1;1
+                    #If
+                    rowSteps >= countSteps
+                        #Id;#Let
+                        countSteps;countSteps + 1
+
+                        #Action;$Table;$Columns
+                        TableAddColumns;resultTable;'Step' + countSteps
+
+                    #EndIf
+
+                    #Id;#Let
+                    step;'Step' + (rowSteps + 1)
+
+                    #If
+                    selectSteps[rowSteps].error.equals('null')
+                        #Id;#Let
+                        stepResult;''
+
+                    #Else
+                        #Id;#Let
+                        stepResult;selectSteps[rowSteps].error.replace('\n','')
+
+
+                    #EndIf
+
+                    #Let
+                    resultTable[rowScenarios].put(step, stepResult)
+
+                #EndFor
+
+            #EndFor
+
+            #Id;#Let
+            stepHeaders;new ArrayList()
+
+            #For;#From;#To;#Step
+            i;1;countSteps;1
+                #Let
+                stepHeaders.add('Step' + i)
+
+            #EndFor
+
+            #Action;$Replace;$Table;$Search;$Columns
+            TableReplace;'';resultTable;'null';stepHeaders.toArray()
+
+            #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+            TableReplace;'Failed';resultTable;{'Execution Status'};true;0
+
+            #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+            TableReplace;'Unknown';resultTable;{'Execution Status'};true;-1
+
+            #Action;$Replace;$Table;$Columns;$MatchCell;$Search
+            TableReplace;'Passed';resultTable;{'Execution Status'};true;1
+
+            #Id;#Let
+            fileName;testSet.test_set + DateTime.strDate(runId.create_time, '_yyyyMMdd_HHmmss') + '.csv'
+
+            #Action;$Table;$File;$Delimiter
+            TableSaveToFile;resultTable;pathToSave + '/' +fileName;','
+
+        #EndForEach
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects  all details of all scenarios of last regression in readable form
+    // //==============================================
+    #Id;#SubCase;date
+    repLastAllDetails;Shows a report of last details;
+        #Id;#Call
+        SQL;Connect
+
+        #Id;#Call;sql;date
+        runId;runIdFromDate;SQL;date
+
+        #Id;#Let
+        title;'Details '  + Str.asString(runId.name) + (date == null ? '' : (' on ' +DateTime.strDate(date)))
+
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText;#Kind
+                TEXT1;Text;Sql
+                ~;"SELECT "
+                ~;"  s.scenario, "
+                ~;"  DATE(s.start_time) AS date, "
+                ~;"  TIME(s.start_time) AS time, "
+                ~;"  s.performer, "
+                ~;"  s.host, "
+                ~;"  s.username, "
+                ~;"  d.testcase, "
+                ~;"  d.step, "
+                ~;"  d.time, "
+                ~;"  d.result, "
+                ~;"  d.error, "
+                ~;"  d.screenshot "
+                ~;"FROM scenarios AS s "
+                ~;"LEFT JOIN details AS d ON d.scenario_id = s.id "
+                ~;"WHERE s.manual = 0 AND s.run_id = ?"
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText;#Kind
+                TEXT1;Text;Sql
+                ~;"SELECT "
+                ~;"  s.scenario, "
+                ~;"  CONVERT(date,s.start_time) AS date, "
+                ~;"  CONVERT(time, s.start_time) AS time, "
+                ~;"  s.performer, "
+                ~;"  s.host, "
+                ~;"  s.username, "
+                ~;"  d.testcase, "
+                ~;"  d.step, "
+                ~;"  d.time, "
+                ~;"  d.result, "
+                ~;"  d.error, "
+                ~;"  d.screenshot "
+                ~;"FROM scenarios AS s "
+                ~;"LEFT JOIN details AS d ON d.scenario_id = s.id "
+                ~;"WHERE s.manual = 0 AND s.run_id = ?"
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
+
+        #Id;#Action;$Connection;$Query;runId
+        select;SQLselect;SQL;TEXT1.toString();runId.id
+
+        #Id;#Let
+        table;select.Out
+
+        #Id;#Action;$Table;result
+        passed;TableSelect;table;'Passed'
+
+        #Id;#Action;$Table;result
+        failed;TableSelect;table;'Failed'
+
+        #Action;$Table;$Columns;$MatchCell;$Search;$Replace
+        TableReplace;table;{ 'step', 'error' };true;'null';''
+
+        #Action;$Table;$Columns;$MatchCell;$Search;$Replace
+        TableReplace;table;{ 'screenshot'};true;'null';''
+
+        #Action;$Table;$Colored;$Hyperlink
+        TableConsiderColumnsAs;table;'result';'screenshot'
+
+        #Id;#Action;$ReportName;$Version
+        report;ReportStart;title;'JF: ' + runId.tool_version + '  APP: ' + runId.app_version
+
+        #Action;$Table;$Title;$ToReport;$Numbers;$ReportValues;scenario;testcase;step;result;error;screenshot
+        TableReport;table;'{{4' + title + '4}}';report.Out;false;true;'Matrix';'TestCase Name';'Step name';'Status';'Result';'Screenshots'
+
+        #Action;$Report;$Passed;$Failed
+        ReportFinish;report.Out;passed.Out.size();failed.Out.size()
+
+        #Action;$Report
+        ReportShow;report.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects history of all runs and evaluate average factor of success.
+    // //==============================================
+    #Id;#SubCase
+    repProgress;Shows progress during whole period
+        #Id;#Call
+        SQL;RF.Connect
+
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#Action;$Connection;$Query
+                select;SQLselect;SQL;'SELECT DATE(r.create_time) AS `Period`, AVG(s.passed / (s.passed + s.failed)) AS `Average` FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
+
+
+            #Case
+            'MSSQL'
+                #Id;#Action;$Connection;$Query
+                select;SQLselect;SQL;'SELECT MAX(CONVERT(date,r.create_time)) AS "Period", AVG(s.passed / (s.passed + s.failed)) AS "Average" FROM runs AS r LEFT JOIN scenarios AS s ON s.run_id = r.id GROUP BY r.id'
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
+
+        #Id;#Action;$ReportName
+        REP2;ReportStart;'Progress'
+
+        #Action;$Type;$Table;$Title;Labels;$ToReport
+        ChartReport;ChartKind.Line;select.Out;'{{4 Progress 4}}';'Period';REP2.Out
+
+        #Action;$Report;$Passed;$Failed
+        ReportFinish;REP2.Out;0;0
+
+        #Action;$Report
+        ReportShow;REP2.Out.getReportName()
+
+    #EndSubCase
+
+    // //==============================================
+    // // Collects all run dates and returns them as a list
+    // //==============================================
+    #Id;#SubCase
+    listOfDates;List of run dates
+        #Id;#Call
+        SQL;Connect
+
+        #Id;#Action;$Connection;$Query
+        query;SQLselect;SQL;'SELECT name, create_time FROM runs ORDER BY create_time DESC'
+
+        #Id;#Let
+        reportDataList;new LinkedHashMap()
+
+        #ForEach;#In
+        row;query.Out
+            #Id;#Let
+            dateTimeItem;DateTime.strDateTime(row.create_time)
+
+            #Let
+            reportDataList.put(dateTimeItem, row.name)
+
+        #EndForEach
+
+        #Return
+        reportDataList
+
+    #EndSubCase
+
+    // //==============================================
+    // // For empty date returns the last runs.id, for non-empty - the last id, which
+    // // create_date not less than desired
+    // //==============================================
+    #Id;#SubCase;sql;date
+    runIdFromDate;Gets runs.id for desired date;;
+        #Assert;#Message
+        sql != null;'SQL connection is NULL'
+
+        #If
+        date == null
+            #Id;#RawText;#Kind
+            query;Text;Sql
+            ~;"SELECT "
+            ~;"  r.name, "
+            ~;"  r.tool_version,"
+            ~;"  r.app_version,"
+            ~;"  r.id,"
+            ~;"  r.create_time"
+            ~;"FROM runs AS r"
+            ~;"WHERE r.id = (SELECT MAX(id) AS id FROM runs)"
+            #EndRawText
+
+            #Id;#Action;$Connection;$Query
+            select1;SQLselect;sql;query.toString()
+
+            #Return
+            select1.Out.size() > 0 ? { 'name' : select1.Out[0].name, 'id' : select1.Out[0].id, 'tool_version' : select1.Out[0].tool_version, 'app_version' : select1.Out[0].app_version, 'create_time' : select1.Out[0].create_time }: { '' : null }
+
+        #EndIf
+
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText;#Kind
+                query;Text;Sql
+                ~;"SELECT name, id, tool_version, app_version, create_time, duration "
+                ~;"FROM runs "
+                ~;"WHERE create_time <= ? "
+                ~;"ORDER BY create_time DESC "
+                ~;"LIMIT 1 "
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText;#Kind
+                query;Text;Sql
+                ~;"SELECT TOP 1 name, id, tool_version, app_version, create_time, duration   "
+                ~;"FROM runs "
+                ~;"WHERE create_time <= ? "
+                ~;"ORDER BY create_time DESC  "
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
+
+        #Id;#Action;$Connection;$Query;CreateTime
+        select2;SQLselect;sql;query.toString();date
+
+        #Return
+        select2.Out.size() > 0 ? { 'name' : select2.Out[0].name, 'id' : select2.Out[0].id, 'tool_version' : select2.Out[0].tool_version, 'app_version' : select2.Out[0].app_version, 'create_time' :  select2.Out[0].create_time, 'duration' :  select2.Out[0].duration}: { '' : null }
+
+    #EndSubCase
+
+    // //==============================================
+    // // For empty date returns the last runs.id, for non-empty - the last id, which
+    // // create_date not less than desired
+    // //==============================================
+    #Id;#SubCase;sql;date
+    timesFromDate;Gets runs.create_time & duration for desired date;;
+        #Assert;#Message
+        sql != null;'SQL connection is NULL'
+
+        #If
+        date == null
+            #Id;#Action;$Connection;$Query
+            select1;SQLselect;sql;'SELECT r.create_time, r.duration FROM runs AS r WHERE r.id = (SELECT MAX(id) AS id FROM runs)'
+
+            #Return
+            select1.Out.size() > 0 ? { 'startTime' : select1.Out[0].create_time, 'finishTime' :  DateTime.add(select1.Out[0].create_time, 0, 0, select1.Out[0].duration /1000)}  : {}
+
+        #EndIf
+
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#RawText;#Kind
+                query;Text;Sql
+                ~;"SELECT r.create_time, r.duration "
+                ~;"FROM runs AS r "
+                ~;"WHERE r.id = (SELECT id  "
+                ~;"FROM runs "
+                ~;"WHERE create_time <= ?  "
+                ~;"ORDER BY create_time DESC "
+                ~;"LIMIT 1 )"
+                #EndRawText
+
+
+            #Case
+            'MSSQL'
+                #Id;#RawText;#Kind
+                query;Text;Sql
+                ~;"SELECT r.create_time, r.duration "
+                ~;"FROM runs AS r "
+                ~;"WHERE r.id = (SELECT TOP 1 id "
+                ~;"FROM runs "
+                ~;"WHERE create_time <= ?  "
+                ~;"ORDER BY create_time DESC)"
+                #EndRawText
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
+
+        #Id;#Action;$Connection;$Query;CreateTime
+        select2;SQLselect;sql;query.toString();date
+
+        #Return
+        select2.Out.size() > 0 ? { 'startTime' : select2.Out[0].create_time, 'finishTime' :  DateTime.add(select2.Out[0].create_time, 0, 0, select2.Out[0].duration /1000)}  : {}
+
+    #EndSubCase
+
+    // //=============================================
+    // // Show results with user justification for current runId. If a TC was failed in
+    // // previos run and user fill the error column, the error will appear on the
+    // // current table
+    // //=============================================
+    #Id;#SubCase;date
+    showResults;Show result for user;
+        #Id;#Call
+        sqlCon;Connect
+
+        #Id;#Call;sql;date
+        runIdFromDate;runIdFromDate;sqlCon;date
+
+        #Id;#Let
+        runId;runIdFromDate.id
+
+        #Id;#Action;scenario_id;scenario_name;testcase_name;scenario_counter;reason
+        TBL1;TableCreate;;;;;
+
+        // select previous runId
+        #Id;#Action;$Query;$Connection;currentId
+        prevIdTable;SQLselect;'SELECT id FROM runs WHERE id = (select MAX(id) FROM runs WHERE id < ?)';sqlCon;runId
+
+        // select all failed scenarios from current runs
+        #Id;#Action;$Query;$Connection;currentId
+        table;SQLselect;'SELECT * from scenarios where failed != 0 AND run_id = ?';sqlCon;runId
+
+        #Id;#Let
+        prevRunIdExists;!prevIdTable.Out.isEmpty()
+
+        // for each row we can try to get prev or current reason
+        #ForEach;#In
+        row;table.Out
+            #If
+            row.multi == '0'
+                #Id;#Let
+                re;''
+
+                // 
+                #If
+                prevRunIdExists
+                    #Id;#RawText;#Kind
+                    TEXT8;Text;Sql
+                    ~;"SELECT reason FROM results where scenario_id = ("
+                    ~;"  SELECT id FROM scenarios WHERE run_id = ? AND scenario = ? AND counter = ?"
+                    ~;")"
+                    #EndRawText
+
+                    #Id;#Action;$Query;$Connection;runId;scenario;counter
+                    SQLSLCT20;SQLselect;TEXT8.toString();sqlCon;prevIdTable.Out[0].id;row.scenario;row.counter
+
+                    #Id;#Let
+                    re;SQLSLCT20.Out.isEmpty() ? '' : SQLSLCT20.Out[0].reason
+
+                #EndIf
+
+                #Id;#Action;$Query;$Connection;scenId;counter
+                SQLSLCT21;SQLselect;'SELECT reason FROM results WHERE scenario_id = ? AND scenario_counter = ?';sqlCon;row.id;row.counter
+
+                #If
+                !SQLSLCT21.Out.isEmpty()
+                    #Id;#Let
+                    re;SQLSLCT21.Out[0].reason
+
+                #EndIf
+
+                #Action;$Table;scenario_id;scenario_name;testcase_name;scenario_counter;reason
+                TableAddValue;TBL1.Out;row.id;row.scenario;'';row.counter;re
+
+            #Else
+                #Id;#Action;$Query;$Connection;scenId
+                tableFromDet;SQLselect;'SELECT testcase FROM details WHERE scenario_id = ? AND result = \'Failed\'';sqlCon;row.id
+
+                #ForEach;#In
+                det;tableFromDet.Out
+                    #Id;#Let
+                    re;''
+
+                    #If
+                    prevRunIdExists
+                        #Id;#RawText;#Kind
+                        TEXT8;Text;Sql
+                        ~;"SELECT reason FROM results where scenario_id = ("
+                        ~;"  SELECT id FROM scenarios WHERE run_id = ? AND scenario = ? AND counter = ?"
+                        ~;") AND testcase_name = ?"
+                        #EndRawText
+
+                        #Id;#Action;$Query;$Connection;runId;scenario;counter;testcaseName
+                        SQLSLCT20;SQLselect;TEXT8.toString();sqlCon;prevIdTable.Out[0].id;row.scenario;row.counter;det.testcase
+
+                        #Id;#Let
+                        re;SQLSLCT20.Out.isEmpty() ? '' : SQLSLCT20.Out[0].reason
+
+                    #EndIf
+
+                    #Id;#Action;$Query;$Connection;scenId;counter;tcName
+                    SQLSLCT21;SQLselect;'SELECT reason FROM results WHERE scenario_id = ? AND scenario_counter = ? AND testcase_name = ?';sqlCon;row.id;row.counter;det.testcase
+
+                    #If
+                    !SQLSLCT21.Out.isEmpty()
+                        #Id;#Let
+                        re;SQLSLCT21.Out[0].reason
+
+                    #EndIf
+
+                    #Action;$Table;scenario_id;scenario_name;testcase_name;scenario_counter;reason
+                    TableAddValue;TBL1.Out;row.id;row.scenario;det.testcase;row.counter;re
+
+                #EndForEach
+
+
+            #EndIf
+
+        #EndForEach
+
+        #Id;#Action;$Table;$Title;scenario_name;testcase_name;scenario_counter;reason
+        TBEDT1;TableEdit;TBL1.Out;'try to edit it';false;false;false;true
+
+        #If
+        TBEDT1.Out
+            #ForEach;#In
+            row;TBL1.Out
+                #Id;#Action;$Query;$Connection;scenarioId;scenarioName;counter;testcaseName
+                SQLSLCT19;SQLselect;'SELECT * FROM results WHERE scenario_id = ? AND scenario_name = ? AND scenario_counter = ? AND testcase_name = ?';sqlCon;row.scenario_id;row.scenario_name;row.scenario_counter;row.testcase_name
+
+                #If
+                SQLSLCT19.Out.isEmpty()
+                    #Id;#Action;$Query;$Connection;scenarioId;name;counter;testcaseName;reason
+                    in;SQLinsert;'INSERT INTO results (scenario_id, scenario_name, scenario_counter, testcase_name, reason) VALUES (?, ?, ?, ?, ?)\u003b';sqlCon;row.scenario_id;row.scenario_name;row.scenario_counter;row.testcase_name;row.reason
+
+                #Else
+                    #Id;#Action;$Query;$Connection;reason;id
+                    ex;SQLexecute;'UPDATE results SET reason = ? WHERE id = ?';sqlCon;row.reason;SQLSLCT19.Out[0].id
+
+
+                #EndIf
+
+            #EndForEach
+
+            #Action;$Text;$Notifier
+            Show;'Successful update table \'results\'';Notifier.Success
+
+            #Id;#Action;$ReportName
+            REP3;ReportStart;'Result table'
+
+            #Action;$Table;$Title;$ToReport;$ReportValues;$Numbers
+            TableReport;TBL1.Out;'Result table';REP3.Out;true;false
+
+            #Action;$Passed;$Report;$Failed
+            ReportFinish;0;REP3.Out;0
+
+            #Action;$Report
+            ReportShow;REP3.Out.getReportName()
+
+        #Else
+            #Action;$Text;$Notifier
+            Show;'Nothing saved';Notifier.Info
+
+
+        #EndIf
+
+    #EndSubCase
+
+    // //==============================================
+    // // Esteblishes connection to SQL server using variable set that is set
+    // // by RF.SetVar
+    // // This subcase checks that all needed tables exist. If not it creates them.
+    // //==============================================
+    #Id;#SubCase
+    Connect;Connect to SQL
+        #Assert;#Message
+        isdef _rf_dialect && _rf_dialect != null;'The variable _rf_dialect is null or undefinded'
+
+        #Assert;#Message
+        isdef _rf_type && _rf_type != null;'The variable _rf_ype is null or undefinded'
+
+        #Assert;#Message
+        isdef _rf_host && _rf_host != null;'The variable _rf_host is null or undefinded'
+
+        #Assert;#Message
+        isdef _rf_base && _rf_base != null;'The variable _rf_base is null or undefinded'
+
+        #Assert;#Message
+        isdef _rf_user && _rf_user != null;'The variable _rf_user is null or undefinded'
+
+        #Assert;#Message
+        isdef _rf_password && _rf_password != null;'The variable _rf_password is null or undefinded'
+
+        #Id;#Action;$User;$Server;$Base;$Sql;$Password
+        SQLCNT;SQLconnect;_rf_user;_rf_host;_rf_base;_rf_type;_rf_password
+
+        #Id;#Let
+        tablesAreNotExists;true
+
+        #Switch
+        _rf_dialect
+            #Case
+            'MYSQL'
+                #Id;#Action;$Query;$Connection
+                chck1;SQLselect;'check table runs fast';SQLCNT.Out
+
+                #Id;#Action;$Query;$Connection
+                chck2;SQLselect;'check table scenarios fast';SQLCNT.Out
+
+                #Id;#Action;$Query;$Connection
+                chck3;SQLselect;'check table details fast';SQLCNT.Out
+
+                #Id;#Action;$Query;$Connection
+                chck4;SQLselect;'check table user_details fast';SQLCNT.Out
+
+                #Id;#Action;$Query;$Connection
+                chck5;SQLselect;'check table results fast';SQLCNT.Out
+
+                #Id;#Let
+                tablesAreNotExists;!(chck1.Out[0].Msg_text == 'OK' && chck2.Out[0].Msg_text == 'OK' && chck3.Out[0].Msg_text == 'OK' && chck4.Out[0].Msg_text == 'OK' && chck5.Out[0].Msg_text =='OK')
+
+
+            #Case
+            'MSSQL'
+                #Id;#Action;$Query;$Connection
+                chck1;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'runs\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
+
+                #Id;#Action;$Query;$Connection
+                chck2;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'scenarios\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
+
+                #Id;#Action;$Query;$Connection
+                chck3;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'details\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
+
+                #Id;#Action;$Query;$Connection
+                chck4;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'user_details\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
+
+                #Id;#Action;$Query;$Connection
+                chck5;SQLselect;'SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME =\'results\' and TABLE_SCHEMA=SCHEMA_NAME()';SQLCNT.Out
+
+                #Id;#Let
+                tablesAreNotExists;chck1.Out.isEmpty() || chck2.Out.isEmpty() || chck3.Out.isEmpty() || chck4.Out.isEmpty() || chck5.Out.isEmpty()
+
+
+            #Default
+                #Fail
+                'Unknown SQL dialect: ' + _rf_dialect
+
+
+        #EndSwitch
+
+        #If
+        tablesAreNotExists
+            #Action;$Text;$Notifier
+            Show;'Creating tables';Notifier.Info
+
+            #Switch
+            _rf_dialect
+                #Case
+                'MYSQL'
+                    #Id;#RawText;#Kind
+                    query1;create;Sql
+                    ~;"CREATE TABLE IF NOT EXISTS `runs` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `create_time` datetime DEFAULT NULL,"
+                    ~;"  `duration` int(11) DEFAULT NULL,"
+                    ~;"  `tool_version` VARCHAR(100) NULL,"
+                    ~;"  `app_version` VARCHAR(100) NULL,"
+                    ~;"  `name` VARCHAR(300) NULL,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;"
+                    #EndRawText
+
+                    #Id;#RawText;#Kind
+                    query2;create;Sql
+                    ~;"CREATE TABLE IF NOT EXISTS `scenarios` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `run_id` int(11) NOT NULL,"
+                    ~;"  `scenario` varchar(256) NOT NULL,"
+                    ~;"  `test_set` VARCHAR(256) NULL,"
+                    ~;"  `counter` int(3) DEFAULT NULL,"
+                    ~;"  `performer` varchar(256) DEFAULT NULL,"
+                    ~;"  `priority` int(1) DEFAULT NULL,"
+                    ~;"  `manual` int(1) DEFAULT NULL,"
+                    ~;"  `start_time` datetime DEFAULT NULL,"
+                    ~;"  `host` varchar(45) DEFAULT NULL,"
+                    ~;"  `username` varchar(45) DEFAULT NULL,"
+                    ~;"  `passed` int(11) DEFAULT '0',"
+                    ~;"  `failed` int(11) DEFAULT '0',"
+                    ~;"  `multi` int(1) DEFAULT '0',"
+                    ~;"  `report` longblob,"
+                    ~;"  `done` int(1) DEFAULT NULL,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8;"
+                    #EndRawText
+
+                    #Id;#RawText;#Kind
+                    query3;create;Sql
+                    ~;"CREATE TABLE IF NOT EXISTS `details` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `scenario_id` int(11) NOT NULL,"
+                    ~;"  `testcase` varchar(256) DEFAULT NULL,"
+                    ~;"  `step` varchar(256) DEFAULT NULL,"
+                    ~;"  `time` int(11) DEFAULT NULL,"
+                    ~;"  `result` varchar(45) DEFAULT NULL,"
+                    ~;"  `error` varchar(1000) DEFAULT NULL,"
+                    ~;"  `screenshot` longblob,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8;"
+                    #EndRawText
+
+                    #Id;#RawText;#Kind
+                    query4;create;Sql
+                    ~;"CREATE TABLE IF NOT EXISTS `user_details` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `details_id` int(11) NOT NULL,"
+                    ~;"  `name` varchar(100) NOT NULL,"
+                    ~;"  `value` varchar(256) DEFAULT NULL,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+                    #EndRawText
+
+                    #Id;#RawText;#Kind
+                    query5;create;Sql
+                    ~;"CREATE TABLE IF NOT EXISTS `results` ("
+                    ~;"  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                    ~;"  `scenario_id` int(11) NOT NULL,"
+                    ~;"  `scenario_name` varchar(256) NOT NULL,"
+                    ~;"  `scenario_counter` int(11) DEFAULT NULL,"
+                    ~;"  `testcase_name` varchar(256) DEFAULT NULL,"
+                    ~;"  `reason` varchar(512) DEFAULT NULL,"
+                    ~;"  PRIMARY KEY (`id`)"
+                    ~;") ENGINE=InnoDB AUTO_INCREMENT=834 DEFAULT CHARSET=utf8;"
+                    #EndRawText
+
+
+                #Case
+                'MSSQL'
+                    #Id;#RawText;#Kind
+                    query1;create;Sql
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'runs' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    ~;"CREATE TABLE runs "
+                    ~;"("
+                    ~;"  id int IDENTITY(1,1) PRIMARY KEY NOT NULL ,  "
+                    ~;"  create_time datetime DEFAULT NULL,  "
+                    ~;"  duration int DEFAULT NULL,"
+                    ~;"  tool_version VARCHAR(100) NULL,"
+                    ~;"  app_version VARCHAR(100) NULL,"
+                    ~;"  name VARCHAR(300) NULL"
+                    ~;") ;"
+                    #EndRawText
+
+                    #Id;#RawText;#Kind
+                    query2;create;Sql
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'scenarios' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    ~;"CREATE TABLE  scenarios  "
+                    ~;"("
+                    ~;"  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    ~;"  run_id int NOT NULL,"
+                    ~;"  scenario varchar(256) NOT NULL,"
+                    ~;"  test_set varchar(256) DEFAULT NULL,"
+                    ~;"  counter int DEFAULT '0',"
+                    ~;"  performer varchar(100) DEFAULT NULL,"
+                    ~;"  priority int DEFAULT NULL,"
+                    ~;"  env varchar(100) DEFAULT NULL,"
+                    ~;"  manual int DEFAULT NULL,"
+                    ~;"  start_time datetime DEFAULT NULL,"
+                    ~;"  host varchar(45) DEFAULT NULL,"
+                    ~;"  username varchar(45) DEFAULT NULL,"
+                    ~;"  passed int DEFAULT '0',"
+                    ~;"  failed int DEFAULT '0',"
+                    ~;"  multi int DEFAULT '0',"
+                    ~;"  report VARBINARY(MAX),"
+                    ~;"  done int DEFAULT NULL"
+                    ~;");"
+                    ~;" "
+                    #EndRawText
+
+                    #Id;#RawText;#Kind
+                    query3;create;Sql
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'details' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    ~;"CREATE TABLE details "
+                    ~;"("
+                    ~;"  id int  IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    ~;"  scenario_id int NOT NULL,"
+                    ~;"  testcase varchar(256) DEFAULT NULL,"
+                    ~;"  step varchar(256) DEFAULT NULL,"
+                    ~;"  time int DEFAULT NULL,"
+                    ~;"  result varchar(45) DEFAULT NULL,"
+                    ~;"  error varchar(1000) DEFAULT NULL,"
+                    ~;"  screenshot VARBINARY(MAX)"
+                    ~;" );"
+                    #EndRawText
+
+                    #Id;#RawText;#Kind
+                    query4;create;Sql
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'user_details' and TABLE_SCHEMA=SCHEMA_NAME())"
+                    ~;"CREATE TABLE user_details "
+                    ~;"("
+                    ~;"  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    ~;"  details_id int NOT NULL,"
+                    ~;"  name varchar(100) NOT NULL,"
+                    ~;"  value varchar(256) DEFAULT NULL"
+                    ~;");"
+                    #EndRawText
+
+                    #Id;#RawText;#Kind
+                    query5;create;Sql
+                    ~;"IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'results' and TABLE_SCHEMA=SCHEMA_NAME()) "
+                    ~;"CREATE TABLE  results  "
+                    ~;"("
+                    ~;"  id int IDENTITY(1,1) PRIMARY KEY NOT NULL,"
+                    ~;"  scenario_id int NOT NULL,"
+                    ~;"  scenario_name varchar(256) NOT NULL,"
+                    ~;"  scenario_counter int DEFAULT NULL,"
+                    ~;"  testcase_name varchar(256) DEFAULT NULL,"
+                    ~;"  reason varchar(512) DEFAULT NULL"
+                    ~;");"
+                    ~;" "
+                    #EndRawText
+
+
+                #Default
+                    #Fail
+                    'Unknown SQL dialect: ' + _rf_dialect
+
+
+            #EndSwitch
+
+            #Action;$Query;$Connection
+            SQLexecute;query1.toString();SQLCNT.Out
+
+            #Action;$Query;$Connection
+            SQLexecute;query2.toString();SQLCNT.Out
+
+            #Action;$Query;$Connection
+            SQLexecute;query3.toString();SQLCNT.Out
+
+            #Action;$Query;$Connection
+            SQLexecute;query4.toString();SQLCNT.Out
+
+            #Action;$Query;$Connection
+            SQLexecute;query5.toString();SQLCNT.Out
+
+        #EndIf
+
+        #Return
+        SQLCNT.Out
+
+    #EndSubCase
+
+#EndNameSpace
+
