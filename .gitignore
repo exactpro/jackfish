@@ -1,7 +1,7 @@
 #elcipse files
 .metadata
 .recommenders
-#.settings
+.settings
 .classpath
 .project
 RemoteSystemsTempFiles
@@ -26,7 +26,6 @@ core/services
 core/sql
 
 logs
-.log.xml
 .settings.xml
 
 version.properties
