@@ -1,0 +1,42 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2018, Exactpro Systems LLC
+ * www.exactpro.com
+ * Build Software to Test Software
+ *
+ * All rights reserved.
+ * This is unpublished, licensed software, confidential and proprietary
+ * information which is the property of Exactpro Systems LLC or its licensors.
+ ******************************************************************************/
+description = "Plugin for swing applications"
+ext.jarName = "swing.jar"
+ext.javaVersion = 1.7
+
+archivesBaseName = 'jackfish-app-swing'
+
+dependencies {
+	compile project(':api')
+
+	compile group: 'org.jvnet.hudson', name: 'netx', version: '0.5-hudson-2'
+	compile group: 'org.easytesting', name: 'fest-swing', version: '1.2.1'
+	compile group: 'log4j', name: 'log4j', version: '1.2.17'
+}
+
+jar {
+	manifest {
+		attributes(
+			'Main-class' : 'com.exactprosystems.jf.app.SwingRemoteApplication',
+			'Class-Path' : '.'
+		)
+	}
+	from { 
+		configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+	from('META-INF') {
+		into 'META-INF'
+		include 'services/*.*' 
+	}
+	
+}
+distribute.doLast {
+	copyTo(project, rootProject.appsDir)
+}

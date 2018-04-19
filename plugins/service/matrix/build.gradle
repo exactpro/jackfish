@@ -1,0 +1,36 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2018, Exactpro Systems LLC
+ * www.exactpro.com
+ * Build Software to Test Software
+ *
+ * All rights reserved.
+ * This is unpublished, licensed software, confidential and proprietary
+ * information which is the property of Exactpro Systems LLC or its licensors.
+ ******************************************************************************/
+description = 'Plugin for service matrix'
+ext.jarName = 'test.jar'
+
+dependencies {
+	compile project(':api')
+	compile group: 'log4j', name: 'log4j', version: '1.2.17'
+}
+
+jar {
+	manifest {
+		attributes(
+				'Main-class' : '',
+				'Class-Path' : '.'
+		)
+	}
+	from {
+		configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+	from('META-INF') {
+		into 'META-INF'
+		include 'services/*.*'
+	}
+}
+
+distribute.doLast {
+	copyTo(project, rootProject.servicesDir)
+}
