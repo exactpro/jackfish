@@ -1,0 +1,788 @@
+version 4.5.9
+1. New column add in regression table. This column mean, what 1 matrix = 1 scenario ( empty value) or 1 matrix = many scenarios (filled value).
+2. New column on scenario table into databases : Multi. Value 0 mean that 1 matrix = 1 scenario and value 1 mean that 1 matrix = many scenarios.
+For add the Multi column, need drop database and rerun regression matrix, or use this SQL script
+ALTER TABLE scenario ADD Mutli int(1)
+
+--------------------------------------------------------------------------------
+19.05.2017
+Change version to 4.5.1
+--------------------------------------------------------------------------------
+
+18.05.2017 4.5.2399
+Remove not mandatory field in the action ApplicationNewInstance.
+This parameter moved to plugin.
+Now, in web plugin added new parameter 'WhereOpen'. Avaliable values :
+ 'tab' : open the  new page in a new tab;
+ 'window' : open the new page in a new window;
+ 'url' : open the new page in a current page;
+
+--------------------------------------------------------------------------------
+18.05.2017 4.5.2394
+Feature #42203
+Win plugin- ApplicationResize- add possibility to move main window.
+
+Add new action ApplicationMove. Move the main window to X and Y coordinates.
+Example :
+
+#Action;$X;$Y;$AppConnection
+ApplicationMove;300;300;APPSTR1.Out
+
+
+Added a new not mandatory field Normal to action ApplicationResize.
+If the field Normal is true, the main window will resize to a normal state ( initial state)
+--------------------------------------------------------------------------------
+15.05.2017 4.5.0
+Added ctrl+c ctrl+v keyboard events in help and reports
+
+--------------------------------------------------------------------------------
+15.05.2017 4.5.0
+RM42116 feature : action Input
+
+--------------------------------------------------------------------------------
+11.05.2017 4.5.0
+RM41371 feature : [parser] new syntax for matrices
+
+save your matrices in new syntax.
+
+using:
+java -jar jackfish.jar -config=yourconfig.xml -new
+
+convert from old syntax:
+java -jar jackfish.jar -config=yourconfig.xml -convertTo=newfolder
+
+
+--------------------------------------------------------------------------------
+25.04.2017 4.4.0.2310
+RM41842 bug : Local vars from highest levels are invisible in lowest
+
+--------------------------------------------------------------------------------
+18.04.2017 4.4.0.2297
+Fixed modifier keys in web plugin
+
+--------------------------------------------------------------------------------
+18.04.2017 4.4.0.2291
+RM41303 feature : [clients] create client adapter for using services from SailFish
+
+--------------------------------------------------------------------------------
+20.04.2017 4.4.0.2282
+Bug #41623 IE11 Published isn't moved to front layer.
+Added the new parameter for the ApplicationStart/Connect action on win plugin - AlwaysToFront.
+Default value - false.
+If this parameter are true, the application will always move to the front layer.
+Don't use with parameter with value true for connecting to a context menu.
+RM41743 bug : Do.wait() -> Another name of element is displayed in the report.
+
+--------------------------------------------------------------------------------
+18.04.2017 4.4.0.2280
+RM41742 bug : Actions help -> add additional info for select
+
+--------------------------------------------------------------------------------
+18.04.2017 4.4.0.2274
+Bug #41718 [WIN] DialogClose throws FeatureNotSupportedException. Fixed
+Bug #41717 EmptyCondition doesn't work. Fixed
+RM41727 bug : Action "Result Table" parameter "Decorate" does not work correctly
+
+--------------------------------------------------------------------------------
+17.04.2017 4.4.0.2272
+Feature #41704 [JF] JF position saving.
+Bug #41623 IE11 Published isn't moved to front layer
+RM41696 bug : New functionality for file rename
+17.04.2017 4.4.0.2269
+Fix 41616 bug : fixed slow work in "win plugin" when combobox has many children
+
+--------------------------------------------------------------------------------
+13.04.2017 4.4.0.2259
+RM41647 bug : JackFish does not save Russian symbol after reload the matrix
+RM41192 feature : For Action TableCompareTwo, add the function to retrieve the data displayed in the report using the Out parameter.
+
+--------------------------------------------------------------------------------
+12.04.2017 4.4.0 2257
+Add ability to convert matrix with old syntax to the new one.
+To do it just run JF with key -convertTo=<name_of_destination_folder>
+
+--------------------------------------------------------------------------------
+06.04.2017 4.4.0.2244
+Fix 41452. Now any elements gets focus through events only
+
+--------------------------------------------------------------------------------
+06.04.2017 4.4.0.2231
+RM40706. Implement necessary behavior. Can change it Settings -> Matrix -> checkbox Fold new items
+--------------------------------------------------------------------------------
+
+03.04.2017 4.4.0.2228
+RM41381 [JF] Multiple creation of JF empty tab after drag-n-drop selected tab from one to another place when other tabs occupy all JF tabs-bar space .Fixed.
+--------------------------------------------------------------------------------
+03.04.2017 4.4.0.2224
+RM41429 bug : [SGII] [JF] ActionItem TableCompareTwo works incorrectly
+
+--------------------------------------------------------------------------------
+03.04.2017 4.4.0.2222
+RM41272 bug : changed awt focus to event
+
+--------------------------------------------------------------------------------
+03.04.2017 4.4.0.2219
+RM 39455 feature : ability to select and copy multiply rows from JF console
+
+--------------------------------------------------------------------------------
+01.04.2017 4.4.0.2218
+RM41272 bug : Dialogs in swing plugin doesn't grab focus now
+
+--------------------------------------------------------------------------------
+01.04.2017 4.4.0.2215
+RM41397 feature : new column kind Colored for Table is needed
+
+--------------------------------------------------------------------------------
+01.04.2017 4.4.0.2214
+RM41397 feature : new column kind Hyperlink for Table is needed
+
+--------------------------------------------------------------------------------
+01.04.2017 4.4.0.2211
+RM41387 bug : table.setHeader(<id>, 'new title') is not working.
+
+--------------------------------------------------------------------------------
+31.03.2017 4.4.0.2208
+RM41192 feature : For Action TableCompareTwo, add the function to retrieve the data displayed in the report using the Out parameter.
+
+--------------------------------------------------------------------------------
+31.03.2017 4.4.0.2205
+If matrix is new or doesn't have name, save dialog appear when closing her
+
+--------------------------------------------------------------------------------
+29.03.2017 4.4.0.2203
+RM39476 feature : new action MessageReport
+
+--------------------------------------------------------------------------------
+29.03.2017 4.4.0.2202
+RM41348
+Inconsistent behavior of 'Add parameter' command from menu for Action SubCase. Fixed
+
+--------------------------------------------------------------------------------
+29.03.2017 4.4.0.2198
+RM41325 bug : If Browser hangs, JF too hangs
+
+--------------------------------------------------------------------------------
+29.03.2017 4.4.0.2195
+RM38890
+White box instead the screenshot. Fixed
+
+--------------------------------------------------------------------------------
+28.03.2017 4.4.0.2188
+RM41229 bug : [Vars] Vars editor is not correct working
+
+--------------------------------------------------------------------------------
+27.03.2017 4.4.0.2186
+RM41276 bug : it is impossible to save in var-file any values contains \
+
+--------------------------------------------------------------------------------
+27.03.2017 4.4.0.2185
+RM41275 report is show with a very long horizontal scroll bar
+fixed
+--------------------------------------------------------------------------------
+
+27.03.2017 4.4.0.2181
+RM39611 Unavailability to remove more than one row at the same time
+Add ability to remove many rows and columns
+Return context menu to grid on a matrix
+
+--------------------------------------------------------------------------------
+27.03.2017 4.4.0.2180
+RM36642 Console -> Preservation of the console size at the time of saving of matrix : implemented
+--------------------------------------------------------------------------------
+
+27.03.2017 4.4.0.2178
+RM41205 Undo function -> The data which is been repaired is not displayed : fixed
+
+--------------------------------------------------------------------------------
+27.03.2017 4.4.0.2174
+RM41106 It is not possible to commit/push UNSTAGED files. Fixed
+
+--------------------------------------------------------------------------------
+27.03.2017 4.4.0.2173
+RM41228 bug : TextReport action is not found in JF
+
+--------------------------------------------------------------------------------
+24.03.2017 4.4.0.2171
+RM41035 feature : Repeating Groups Functionality
+
+--------------------------------------------------------------------------------
+23.03.2017 4.4.0.2160
+RM41147 feature : remove extra version info
+
+--------------------------------------------------------------------------------
+22.03.2017 4.4.0.2155
+RM39634 feature : Pick color feature
+
+--------------------------------------------------------------------------------
+22.03.2017 4.4.0.2149
+RM40466 feature : [JF] [Web] Add possibility to switch between windows by url
+
+--------------------------------------------------------------------------------
+21.03.2017 4.4.0.2143
+RM39614 Unavailability to create table with defined size. Implemented
+
+--------------------------------------------------------------------------------
+21.03.2017 4.4.0.2142
+RM39937 A size of JackFish is saved then JackFish reopenning. Implemented
+
+--------------------------------------------------------------------------------
+21.03.2017 4.4.0.2141
+RM38455 Immediate changes for text input fields. Implemented
+
+--------------------------------------------------------------------------------
+21.03.2017 4.4.0.2139
+RM40936 During work with a second matrix, the focus shifts to the first matrix.
+Fixed. Now, new docs will has name with indexes, if current name is presented
+
+--------------------------------------------------------------------------------
+21.03.2017 4.4.0.2138
+RM41060 Show executing item only one : implemented
+
+--------------------------------------------------------------------------------
+20.03.2017 4.4.0.2136
+40497 bug : aggregate conditions (or, and) work improperly
+
+--------------------------------------------------------------------------------
+20.03.2017 4.4.0.2136
+40497 feature : ApplicationGetProperties -> All parameters doesn't contain parameters
+
+--------------------------------------------------------------------------------
+20.03.2017 4.4.0.2134
+RM41051 bug: TableReport action does not work correctly
+
+--------------------------------------------------------------------------------
+20.03.2017 4.4.0.2133
+RM40894 bug: Dialog wizard | Element's counter is not working
+
+--------------------------------------------------------------------------------
+20.03.2017 4.4.0.2131
+RM40938 An ability to expand text boxes in the Merge Editor window. Implemented
+
+--------------------------------------------------------------------------------
+20.03.2017 4.4.0.2129
+RM40995 Jf can't open merge editor, when file contains more than 1 conflict. Fixed
+--------------------------------------------------------------------------------
+17.03.2017 4.4.0.2125
+RM40909 bug : Components count in XPath builder doesn't equal count when we click test all components
+
+--------------------------------------------------------------------------------
+17.03.2017 4.4.0.2124
+RM41027 feature : [Fix] add support of milliseconds in UTCtimestamp type
+
+--------------------------------------------------------------------------------
+17.03.2017 4.4.0.2120
+RM40993 bug : Button Open doesn't work in the Report
+
+--------------------------------------------------------------------------------
+17.03.2017 4.4.0.2116
+RM40897 add icons for all windows/alerts on tool
+
+--------------------------------------------------------------------------------
+17.03.2017 4.4.0.2115
+RM40969 Attribute "enabled" in path interferes with locating elements : fixed
+
+--------------------------------------------------------------------------------
+16.03.2017 4.4.0.2114
+RM40962 Do.toggle() doesn't work for CheckBox element (win plugin) : fixed
+
+--------------------------------------------------------------------------------
+16.03.2017 4.4.0.2112
+RM40918 feature : New operation Do.checkList() 
+
+--------------------------------------------------------------------------------
+16.03.2017 4.4.2110
+RM37481 Add flexibility to actions' fields when typing : implemented
+
+--------------------------------------------------------------------------------
+15.03.2017 4.4.0.2104
+RM38903 feature : Closing Report Window if you have closed the latest tab in Report Window 
+RM38890	bug : White box instead the screenshot
+
+--------------------------------------------------------------------------------
+15.03.2017 4.4.0.2102
+RM34024
+RM39987
+Change behaviour for getting xml document from plugins side.
+Now, we zip it on plugin side and unzip on core side.
+
+--------------------------------------------------------------------------------
+15.03.2017 4.4.0.2098
+RM40826 Matrix tab show marker of current item if colors off
+RM39290 Execution triangle has hang-up
+--------------------------------------------------------------------------------
+15.03.2017 4.4.0.2097
+RM40888 bug : Action RawTable is working incorrectly
+--------------------------------------------------------------------------------
+14.03.2017 4.4.0.2096
+RM40898 bug : Wrong numbers after test all components
+
+--------------------------------------------------------------------------------
+14.03.2017 4.4.0.2095
+RM40044 feature : JackFish | Dictionary | Disable an addition of dialogues to the dictionary and elements within a dialog with the same names.
+
+--------------------------------------------------------------------------------
+14.03.2017 4.4.0.2092
+RM40886 feature : If to add an element with a tag label, then parameter ID of created JF item will be empty
+
+--------------------------------------------------------------------------------
+14.03.2017 4.4.0.2091
+Methods getRow, getRowByIndex, getRowIndexes and select now availables for JTree elements in swing plagin.
+
+--------------------------------------------------------------------------------
+
+13.03.2017 4.4.0.2090
+RM40864 Action RawText is working incorrectly : fixed. Now, hotkeys for matrix don't work into text input controls
+--------------------------------------------------------------------------------
+
+13.03.2017 4.4.0.2089
+RM39588 bug : Action TableSetValue is passed when enter nonexistent column
+
+--------------------------------------------------------------------------------
+13.03.2017 4.4.0.2088
+RM40490 bug : Report Off or Report On are not followed with any specific markings applied to the TAB or offer to save changes made to it.
+
+--------------------------------------------------------------------------------
+11.03.2017 4.4.0.2085
+RM40836 feature : chrome driver was updated. Change on your configuration for plugins path to chrome driver from 2.27 to 2.28
+
+--------------------------------------------------------------------------------
+11.03.2017 4.4.0.2084
+RM40859 bug : JF add all modified files to commit instead of selected. Fixed
+
+--------------------------------------------------------------------------------
+10.03.2017 4.4.0.2083
+RM38953 bug: Failed to load class
+
+--------------------------------------------------------------------------------
+10.03.2017 4.4.0.2082
+RM40705 bug: There is no TEXT box go RawText action after opening matrix.
+
+--------------------------------------------------------------------------------
+10.03.2017 4.4.0.2081
+RM39874 bug: [Core] Directory 'resources' in .zip file
+
+--------------------------------------------------------------------------------
+10.03.2017 4.4.0.2080
+RM38890 bug: White box instead the screenshot
+
+--------------------------------------------------------------------------------
+10.03.2017 4.4.0.2079
+RM40006 bug: Lead time of TC equals lead time of OnError if OnError is executed.
+
+--------------------------------------------------------------------------------
+10.03.2017 4.4.0.2078
+RM37267 fixed
+
+--------------------------------------------------------------------------------
+09.03.2017 4.4.0.2075
+RM38355 feature : Add able to open csv-file from navigation panel. Implemented
+
+--------------------------------------------------------------------------------
+09.03.2017 4.4.0.2074
+RM40351
+Fixed. Replace all window separator ( \ )to unix separator ( / ) on .gitignore file
+
+--------------------------------------------------------------------------------
+09.03.2017 4.4.0.2073
+RM40129 bug: File has not been opened after 'G' button is clicked
+
+--------------------------------------------------------------------------------
+07.03.2017 4.4.0.2067
+Feature #40772 implemented. Added tokens :
+NUM_LOCK, NUM_DIVIDE, NUM_SEPARATOR, NUM_MULTIPLY, NUM_MINUS, NUM_DIG7, NUM_DIG8, NUM_DIG9, NUM_PLUS, NUM_DIG4, NUM_DIG5, NUM_DIG6, NUM_DIG1, NUM_DIG2, NUM_DIG3, NUM_DIG0, NUM_DOT, NUM_ENTER
+
+--------------------------------------------------------------------------------
+07.03.2017 4.4.0.2066
+RM39988 bug: Changes in subcases don't apply without reloading matrix
+
+--------------------------------------------------------------------------------
+06.03.2017 4.4.0.2065
+RM40372 bug: Dialog Wizard- not the best Xpath and ID
+
+--------------------------------------------------------------------------------
+06.03.2017 4.4.0.2063
+RM40470 bug: [JF] [Web] Xpath builder sets invalid value for button
+
+--------------------------------------------------------------------------------
+02.03.2017 4.4.0.2058
+RM40679 bug: Action Do.getTableSize() returns value in string format
+
+--------------------------------------------------------------------------------
+02.03.2017 4.4.0.2056
+RM40670 fixed. Now, if node have invalid attribute, this attribute not will added to the node.
+
+--------------------------------------------------------------------------------
+02.03.2054 4.4.0.2048
+RM40665 bug : [TableSort] Sorting for integer isn't correct
+RM40491 : fixed
+
+--------------------------------------------------------------------------------
+01.03.2017 4.4.0.2048
+RM40353 bug : fixed
+RM40352 bug : fixed
+40661 bug : Fix messages are created incorrectly
+
+--------------------------------------------------------------------------------
+01.03.2017 4.4.0.2046
+RM40634 bug : for ClientEncode action Message field dissappeares after save/load a matrix
+
+--------------------------------------------------------------------------------
+23.02.2017 4.4.0.2037
+RM40512 Opportunity to get index of first row is found by value
+
+--------------------------------------------------------------------------------
+21.02.2017 4.4.0.2026
+RM40433 win plugin getList correctly
+
+--------------------------------------------------------------------------------
+20.02.2017 4.4.0.2024
+RM40372 add ability to find via text
+
+--------------------------------------------------------------------------------
+17.02.2017 4.4.0.2011
+RM40332 wizard improvment
+
+grabbing mechanism was removed. rely on dialog wizard 
+
+
+--------------------------------------------------------------------------------
+16.02.2017 4.4.0.2009
+RM40332 implement wizard settings for win plugin
+
+--------------------------------------------------------------------------------
+16.02.2017 4.4.0.2009
+RM40332 implement wizard settings for win plugin
+
+--------------------------------------------------------------------------------
+16.02.2017 4.4.0.2006
+RM40356 bug : Dictionary-Xpath-build incorrect dom
+
+--------------------------------------------------------------------------------
+16.02.2017 4.4.0.2004
+RM40342 when wizard opens, error message is appear fixed.
+
+--------------------------------------------------------------------------------
+15.02.2017 4.4.0.1997
+RM40330 Do.getTableSize() now work correctly for empty table in web plugin
+
+--------------------------------------------------------------------------------
+15.02.2017 4.4.0.1994
+RM40318 feature : [wizard] Columns field and Weak checkbox on Change element Dialog.
+
+--------------------------------------------------------------------------------
+15.02.2017 4.4.0.1993
+RM40316 feature : [wizard] The ability to copy attribute value.
+
+--------------------------------------------------------------------------------
+15.02.2017 4.4.0.1991
+RM40317 feature : [wizard] The ability to find only visible elements.
+
+--------------------------------------------------------------------------------
+14.02.2017 4.4.0.1986
+RM40301 git ignore : fixed. Now, add possibilities for append to .gitignore file
+
+--------------------------------------------------------------------------------
+08.02.2017 4.3.0.1941
+RM40207 feature : Add parameter AppConnection to action ApplicationConnectTo to reuse plugin instance
+
+--------------------------------------------------------------------------------
+08.02.2017 4.3.0.1938
+RM40096 feature : correct xpath in the dictionary if it starts with // and the ownerId is not empty
+
+--------------------------------------------------------------------------------
+06.02.2017 4.3.0.1926
+RM40031 bug : JackFish | Dictionary | Spaces should be cut in the beginning and in the end of names of dialogues and elements
+
+--------------------------------------------------------------------------------
+02.02.2017 4.3.0.1908
+Full text search in help added
+
+--------------------------------------------------------------------------------
+02.02.2017 4.3.0.1904
+RM40047 bug : change RawText not display * on tab with matrix.
+Fixed for RawTable, RawText and Csv
+
+--------------------------------------------------------------------------------
+01.02.2017 4.3.0.1901
+#40053 feature: Add operation for parsing string into sequence of keypresses
+
+Do.sequence('test')
+
+--------------------------------------------------------------------------------
+01.02.2017 4.3.0.1893
+#40029 feature: Add opportunity the use of Map as Expected result for Check action
+#40030 feature: Add the comparison result as a table for Check action
+
+--------------------------------------------------------------------------------
+31.01.2017 4.3.0.1889
+#40022 feature: Steps- Add textbox with used plugin ( it's look like a Test Case)
+
+--------------------------------------------------------------------------------
+28.01.2017 4.3.0.1880
+#39966 bug: JF - does not work copy and paste in matrix.
+
+--------------------------------------------------------------------------------
+27.01.2017 4.3.0.1869
+#39863 bug: Memory leaks example
+
+!! strong issue. it prevents to run many matrices due memory leak. 
+
+--------------------------------------------------------------------------------
+26.01.2017 4.3.0.1863
+Added possible to specify coordinates for ImageGet action
+
+--------------------------------------------------------------------------------
+26.01.2017 4.3.0.1860
+#39905 feature: version for project  
+
+--------------------------------------------------------------------------------
+23.01.2017 4.3.0.1837
+#39811 bug:  Global Handler doesn't work 
+
+--------------------------------------------------------------------------------
+20.01.2017 4.3.0.1826
+#39634 feature:  DateTime.dayOfWeek() DateTime.getDayOfWeek(dateTime) 
+
+--------------------------------------------------------------------------------
+19.01.2017 4.3.0.1821
+#39710 feature:  new action TableEdit
+
+--------------------------------------------------------------------------------
+16.01.2017 4.3.0.1810
+The database structure for Regression framework is a bit changed:
+runs - fields added: tool_version, app_version
+fields removed: test_set
+  
+--------------------------------------------------------------------------------
+13.01.2017 4.3.0.1804
+Added description for all table actions
+--------------------------------------------------------------------------------
+10.1.2017 4.3.0.1791
+Added "getList" functionality for html lists (such as ul,ol)
+--------------------------------------------------------------------------------
+27.12.2016 4.3.0.1782
+RM39316 fixed
+--------------------------------------------------------------------------------
+27.12.2016 4.3.0.1781
+RM39046 implemented
+--------------------------------------------------------------------------------
+23.12.2016 4.3.0.1778
+#39247 fixed
+#38975 fixed
+--------------------------------------------------------------------------------
+13.12.2016 4.3.0.1752
+#39026 fixed
+--------------------------------------------------------------------------------
+13.12.2016 4.3.0.1746
+#38111 fixed - now we can work with elements, witch contain any unicode symbols
+--------------------------------------------------------------------------------
+13.12.2016 4.3.0.1739
+RM38964 fixed
+--------------------------------------------------------------------------------
+12.12.2016 4.3.0.1732
+RM38936 fixed.
+--------------------------------------------------------------------------------
+12.12.2016 4.3.0.1725
+Fix issue - https://redmine.exactpro.com/issues/38841
+--------------------------------------------------------------------------------
+09.12.2016 4.3.0.1724
+Fix issue - https://redmine.exactpro.com/issues/38916
+--------------------------------------------------------------------------------
+09.12.2016 4.3.0.1723
+RM38880_get_indexes fixed
+________________________________________________________________________________
+09.12.2016 4.3.0.1719
+RM38883 implemented
+________________________________________________________________________________
+09.12.2016 4.3.0.1716
+RM38830 Can't select time in ByTime parameter in Wait action - fixed.
+________________________________________________________________________________
+09.12.2016 4.3.0.1715
+Feature #38856 implemented - added textArea for editing RawText item
+
+--------------------------------------------------------------------------------
+08.12.2016 4.3.0.1711
+RM38838 fixed.
+
+--------------------------------------------------------------------------------
+07.12.2016 4.3.0.1707
+RM38805 implemented. Added new not mandatory field into TableReport
+
+--------------------------------------------------------------------------------
+07.12.2016 4.3.0.1705
+#38518 feature: add #RepOff tag for the each item instead ReportOn & ReportOff items
+
+now each action / items in matrix have new flag RepOff. It swiches off the technical report
+for itself and for all subsidiary  items.
+
+--------------------------------------------------------------------------------
+07.12.2016 4.3.0 1705
+Description for App actions was added
+
+--------------------------------------------------------------------------------
+06.12.2016 4.3.0.1699
+Now Do.getList() is available for swing plugin
+
+--------------------------------------------------------------------------------
+06.12.2016 4.3.0.1698
+#38740 resolved. Now Do.getList() is available for web plugin
+
+--------------------------------------------------------------------------------
+06.12.2016 4.3.0.1697
+#38727 delete library from gui : implemented necessary behaviour
+
+--------------------------------------------------------------------------------
+06.12.2016 4.3.0.1696
+1 - #38552 feature: appeared second version of dragNdrop. Now you can specify starting
+coords.
+
+For example:
+You have two elements with ID-s 'elementDrag' and 'elementDrop'. On the 'elementDrag'
+you write Do.dragNdrop(10, 10, 'elementDrop', 20, 20). Where 10,10 this are coords of
+'elementDrag' (start coords) and 20,20 this are coords of 'elementDrop' (end coords)
+
+2 - How define coords inside element?
+- Open Xpath builder in dictionary
+- Select element, which you need (rectangle must appeared around of element)
+- And hover mouse on element in preview frame
+
+--------------------------------------------------------------------------------
+05.12.2016 4.3.0.1695
+#38653 feature: it is possible to make desktop screenshots directly from Testcases and Steps
+
+--------------------------------------------------------------------------------
+05.12.2016 4.3.0.1693
+#38726 refresh libs : fixed;
+
+--------------------------------------------------------------------------------
+05.12.2016 4.3.0.1692
+#38720 fixed. Now tableLoadFromDir is not created Table if directory doesn't exists.
+--------------------------------------------------------------------------------
+02.12.2016 4.3.0.1689
+#38644 fixed. Now XmlAddNode sets attributes correctly
+--------------------------------------------------------------------------------
+02.12.2016 4.3.0.1687
+#38681 fixed.
+
+--------------------------------------------------------------------------------
+02.12.2016 4.3.0.1686
+
+#38699 fix: 	Action For starts calculating since 1
+
+--------------------------------------------------------------------------------
+01.12.2016 4.3.0.1683
+Feature #38454
+Implemented for all app plugins new parameter - logLevel. Default level - ALL.
+Available values are : ALL, DEBUG, INFO, WARN, ERROR, FATAL, OFF, TRACE
+Be careful, log level - case sensitive
+
+--------------------------------------------------------------------------------
+01.12.2016 4.3.0.1682
+
+#37970 fix: Unknown value of err in case of error appeared in call subcase
+
+--------------------------------------------------------------------------------
+30.11.2016 4.3.0.1680
+
+#38653 feature: need a DesktopScreenshot action
+
+some example
+
+#Id;#Action;#Description
+DSK1;DesktopScreenshot;'The full screenshot'
+#Id;#Action;#Image
+IMGRPT1;ImageReport;DSK1.Out
+
+--------------------------------------------------------------------------------
+30.11.2016 4.3.0.1678
+Fix #37959.
+downgraded selenium for v2.53.1
+Testing Ubuntu:
+         Chrome 54.0.2840.100 (64-bit) work
+         Firefox 46.0 work
+Testing Windows7
+         Chrome 54.0.2840.99 m (64-bit) work
+         Firefox 46.0 work
+         InternetExplorer 11.0.9600.18349 work
+
+--------------------------------------------------------------------------------
+30.11.2016 4.3.0.1676
+Bug #38584 fixed. Now, we can use name of action into action assert
+
+--------------------------------------------------------------------------------
+25.11.2016 4.3.0.1674
+Feature #38552 Add an action for realization drag-and-drop added.
+
+For use this, you need use operation Do.dragNdrop('another', x,y)
+where
+'another' - id of another element on which we need dropped current element. If this value is null, dropped will use absolute coordinates
+x - x offest (int)
+y - y offest (int)
+--------------------------------------------------------------------------------
+
+28.11.2016 4.3.0 1671
+#38570 fixed : If icon and text of JLabel is null, return empty string
+--------------------------------------------------------------------------------
+25.11.2016 4.3.0.1667
+#38551 fixed: Action Dialog Validate works with whole dialog instead of selected elements
+
+--------------------------------------------------------------------------------
+24.11.2016 4.3.0.1661
+#38539 Feature: Regression Framework
+See the library with namespace RF. It should help with building regression set.
+
+--------------------------------------------------------------------------------
+24.11.2016 4.3.0.1661
+Fixed Bug #38516
+
+--------------------------------------------------------------------------------
+24.11.2016 4.3.0.1655
+#38521 Dictionary spinner fixed
+--------------------------------------------------------------------------------
+23.11.2016 4.3.0.1653
+#38515 feature: get the opportunity save all report with images into BLOB as archieve
+
+--------------------------------------------------------------------------------
+23.11.2016 4.3.0.1652
+#38463 fixed: Name of action "CALL"
+
+--------------------------------------------------------------------------------
+23.11.2016 4.3.0.1650
+fixed Bug #36929
+
+--------------------------------------------------------------------------------
+23.11.2016 4.3.0.1648
+Fixed #38498 : add Operation setValue to Spinner
+
+--------------------------------------------------------------------------------
+22.11.2016 4.3.0.1641
+
+#38204 New feature: The new action SetHandler was added.
+#38487 Fixed: here is no possible to use additional fields with names Result, Out, Reason
+
+--------------------------------------------------------------------------------
+21.11.2016 4.3.0.1634
+Fixed :
+#38281 implement for web plugin
+#38246 iterate was over cells, now, iterate over columns
+#38281 implement for swing plugin
+#38281 implement for win plugin
+
+--------------------------------------------------------------------------------
+14.11.2016  4.3.0.1630
+#37710 Fixed 
+added logger to sharp side
+--------------------------------------------------------------------------------
+14.11.2016  4.3.0.1628
+
+#38262 Fixed: JF-version not appear in titlebar
+--------------------------------------------------------------------------------
+09.11.2016  4.3.0.1622
+
+#38176 Migration from svn to git
+
+Pay your attention to fact that names of all web drivers in the folder apps
+were changed. Correct them in your project's config file.
+
+--------------------------------------------------------------------------------
+

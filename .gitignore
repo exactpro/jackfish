@@ -1,0 +1,58 @@
+#elcipse files
+.metadata
+.recommenders
+.settings
+.classpath
+.project
+RemoteSystemsTempFiles
+Servers
+
+#Java files
+build
+srcgen
+shared
+gen
+bin
+
+#CShart files
+*.suo
+obj
+
+#JF files
+#files contains generated .jar files
+core/apps
+core/clients
+core/services
+core/sql
+
+logs
+.settings.xml
+
+version.properties
+#all from src don't ignore
+!/*/src/**/*/
+#all from resources don't ignore
+!/*/resources/**/*
+!/plugins/app/win/resources/com/exactprosystems/jf/app/bin/
+
+#temp files
+.*.swp
+.~*.*#
+
+#test files
+derby.log
+
+#IntelliJ IDEA files
+*.iml
+*.iws
+.idea
+out
+
+#tomcat files
+apache-tomcat*
+
+#build info file
+buildinfo.htm
+BuildProject
+.gradle/
+*.zip

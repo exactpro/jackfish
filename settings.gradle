@@ -1,0 +1,40 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2018, Exactpro Systems LLC
+ * www.exactpro.com
+ * Build Software to Test Software
+ *
+ * All rights reserved.
+ * This is unpublished, licensed software, confidential and proprietary
+ * information which is the property of Exactpro Systems LLC or its licensors.
+ ******************************************************************************/
+pluginRepositories {
+	maven {
+		url 'shared'
+	}
+	maven { // for gradle fast plugin
+		url 'http://arti.exactpro.com/libs-snapshot'
+	}
+	gradlePluginPortal()
+}
+
+include	'core',
+		'api',				//api
+							//app plugins
+		'plugins:app:javafx',
+		'plugins:app:web',
+		'plugins:app:swing',
+		'plugins:app:win',
+							//app mocks
+		'mocks:swing',
+		'mocks:win',
+		'mocks:javafx',
+							//UIAdapter
+		'csharp:UIAdapter',
+							//clients
+		'plugins:client:dts',
+		'plugins:client:fix',
+		'plugins:client:sfclient',
+							//services
+		'plugins:service:matrix',
+		'plugins:service:sailfish'
+

@@ -1,0 +1,321 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2018, Exactpro Systems LLC
+ * www.exactpro.com
+ * Build Software to Test Software
+ *
+ * All rights reserved.
+ * This is unpublished, licensed software, confidential and proprietary
+ * information which is the property of Exactpro Systems LLC or its licensors.
+ ******************************************************************************/
+plugins {
+	id 'java'
+	id 'maven'
+	id "com.jfrog.artifactory" version "2.2.5"
+	id "us.kirchmeier.capsule" version "1.0.2"
+	id 'com.ullink.msbuild' version '2.16'
+}
+
+artifactoryPublish.skip = true
+
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+import org.gradle.plugins.ide.eclipse.model.AccessRule
+
+defaultTasks 'createTool'
+
+configurations {
+	sqlData
+	unixDriver
+	winDriver
+	macDriver
+}
+
+repositories {
+	maven {
+		name "ArtifactoryLocal" //used for local builds
+		url "${project.rootDir}/artifactory"
+	}
+
+	maven {
+		name "ExactproArtifactory"
+		url "http://arti.exactpro.com/libs-release/"
+	}
+}
+
+dependencies {
+	sqlData(group:	'mysql',									name: 'mysql-connector-java',  version: '5.1.26')
+	sqlData(group:	'com.oracle',								name: 'ojdbc7',				version: '12.1.0.1')
+	sqlData(group:	'org.postgresql',							name: 'postgresql',			version: '9.0-801.jdbc4')
+	sqlData(group:	'com.microsoft.sqlserver',					name: 'mssql-jdbc',			version: '6.1.0.jre8', transitive : false)
+
+	unixDriver(group: 'com.googleapis.storage.chromedriver',	name: 'chromedriver-linux',	version: '2.37',	classifier: 'x64', ext: 'elf')
+	unixDriver(group: 'org.mozilla.geckodriver',				name: 'geckodriver-linux',	version: '0.19.1',	classifier: 'x86', ext: 'elf')
+	unixDriver(group: 'org.mozilla.geckodriver',				name: 'geckodriver-linux',	version: '0.19.1',	classifier: 'x64', ext: 'elf')
+
+	winDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-win',	version: '2.37',	classifier: 'x86', ext: 'exe')
+	winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',	version: '0.19.1',	classifier: 'x86', ext: 'exe')
+	winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',	version: '0.19.1',	classifier: 'x64', ext: 'exe')
+	winDriver(group: 'org.seleniumhq.iedriverserver',			name: 'iedriverserver',		version: '3.8.0',	classifier: 'x86', ext: 'exe')
+	winDriver(group: 'org.seleniumhq.iedriverserver',			name: 'iedriverserver',		version: '3.8.0',	classifier: 'x64', ext: 'exe')
+
+	macDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-mac',	version: '2.37',	classifier: 'x64', ext: 'bin')
+	macDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-mac',	version: '0.19.1',	classifier: 'x64', ext: 'bin')
+}
+
+rootProject.ext {
+	jfVersion = '4.5.12'
+	version = jfVersion + '.' + (System.getProperty('revision') ?: 'local_build')
+	println version
+
+	jfSourceDir	= rootProject.rootDir.path + '/core'
+	appsDir		= jfSourceDir + '/apps';
+	clientsDir	= jfSourceDir + '/clients';
+	docsDir		= jfSourceDir + '/docs';
+	libjfDir	= jfSourceDir + '/libjf';
+	dicDir		= jfSourceDir + '/dic';
+	matricesDir	= jfSourceDir + '/matrices';
+	servicesDir	= jfSourceDir + '/services';
+	sqlDir		= jfSourceDir + '/sql';
+	reportsDir	= jfSourceDir + '/reports';
+	coreProject	= 'core';
+	sharedDir = file("${project.rootDir}/shared");
+
+	copyTo		= { Project proj, String dest ->
+		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.archivesBaseName + '-' + proj.version + '.jar')
+		def d = Paths.get(dest + '/' + proj.ext.jarName)
+		Files.copy(s, d, StandardCopyOption.REPLACE_EXISTING)
+	}
+
+	copyAllFiles = { File src, File dest ->
+		copyFolder(src,dest);
+	}
+
+	copyFolder = {File src, File dest ->
+		if(src.isDirectory()){
+			//if directory not exists, create it
+			if(!dest.exists()){
+				dest.mkdir();
+			}
+
+			//list all the directory contents
+			String[] files = src.list();
+
+			for (String file : files) {
+				//construct the src and dest file structure
+				File srcFile = new File(src, file);
+				File destFile = new File(dest, file);
+				//recursive copy
+				copyFolder(srcFile,destFile);
+			}
+
+		}else{
+			//if file, then copy it
+			//Use bytes stream to support all file types
+			InputStream inS = new FileInputStream(src);
+			OutputStream out = new FileOutputStream(dest);
+
+			byte[] buffer = new byte[1024];
+
+			int length;
+			//copy the file content in bytes
+			while ((length = inS.read(buffer)) > 0){
+				out.write(buffer, 0, length);
+			}
+
+			inS.close();
+			out.close();
+		}
+	}
+}
+
+
+allprojects {
+	ext {
+		// Set defaults
+		if (!project.hasProperty("revision")) {
+			revision = '00000' // mark local builds
+		}
+		if (!project.hasProperty('build_number')) {
+	    	build_number = '0000' // mark local builds
+		}
+		if (!project.hasProperty('git_hash')) {
+	        git_hash = 'local_build'
+	    }
+	}
+}
+
+subprojects {
+	apply plugin: 'maven'
+	apply plugin: 'java'
+	apply plugin: 'idea'
+	apply plugin: 'eclipse'
+	apply plugin: 'artifactory'
+	apply plugin: "us.kirchmeier.capsule"
+
+	group = 'com.exactprosystems.jf'
+	version = rootProject.ext.jfVersion + '-SNAPSHOT'
+
+	defaultTasks 'distribute'
+
+	def rootProjectLocation = getRootProject().getRootDir().getAbsolutePath();
+	def projectName = getProject().getName();
+
+	def dir = {String s -> rootProjectLocation + '/' + projectName + s};
+
+	def releaseDir = dir('/release');
+	def buildDir = dir('/build');
+
+	repositories {
+		maven {
+			name "ExactproArtifactory"
+			url "http://arti.exactpro.com/libs-release/"
+		}
+		maven {
+			name "ArtifactoryLocal" //used for local builds
+			url "${project.rootDir}/artifactory"
+		}
+		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
+		mavenCentral()
+	}
+	
+	buildscript { // artifacrory plugin
+	    configurations.all {
+	       resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	    }
+	}
+
+	configurations.all {
+       resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+
+	clean {
+		new File(releaseDir).deleteDir()
+	}
+
+	sourceSets {
+		main {
+			java {
+				srcDir('src')
+			}
+			resources {
+				srcDir('resources')
+			}
+		}
+	}
+
+	eclipse {
+	    classpath {
+	        file {
+	            whenMerged {
+	                def jre = entries.find { it.path.contains 'org.eclipse.jdt.launching.JRE_CONTAINER' }
+	                jre.accessRules.add(new AccessRule('3', '**'))
+	            }
+	        }
+	    }
+	}
+
+	idea {
+		module {
+			outputDir = file('bin');
+		}
+	}
+
+	compileJava {
+		options.warnings = false;
+		options.deprecation = false;
+	}
+
+	task distribute() { // TODO implement distribute.doLast for all plugins which need it
+		dependsOn clean, jar
+	}
+	
+	jar {
+    	manifest {
+        	attributes('Implementation-Version': "${revision}")
+        	attributes('Git_Hash': "${git_hash}")
+        }
+    }
+
+	uploadArchives {
+	    repositories.mavenDeployer {
+	        uniqueVersion = false // publish non unique snapshots to local repository
+	        repository(url: "file://${sharedDir}")
+	        doLast {
+		    // Remove any invalid maven-metadata.xml files that may have been created
+		    // for SNAPSHOT versions that are *not* uniquely versioned.
+			    pom*.each { pom ->
+			        if (pom.version.endsWith('-SNAPSHOT')) {
+			            final File artifactDir = new File(rootProject.ext.sharedDir,
+			                    pom.groupId.replace('.', '/')
+			                    + '/' + pom.artifactId
+			                    + '/' + pom.version)
+			            delete fileTree(dir: artifactDir, include: 'maven-metadata.xml*')
+			        }
+			    }
+			}
+	    }
+	    doFirst { sharedDir.mkdirs() }
+	}
+}
+
+task makeTool() {
+	subprojects.each {
+		dependsOn("${it.path}:distribute")
+	}
+
+	delete fileTree('.') {
+		include 'build_*.zip'
+	}
+}
+
+task copyData(type: Copy) {
+	dependsOn makeTool;
+	destinationDir = project(':core').projectDir;
+
+	into ('sql') {
+		from configurations.sqlData
+	}
+
+	into ('apps/unix') {
+		from configurations.unixDriver
+	}
+	rename '^(.*)\\.elf$', '$1.'
+	fileMode 0755
+
+	into ('apps/win') {
+		from configurations.winDriver
+	}
+
+	into ('apps/mac') {
+		from configurations.macDriver
+	}
+	rename '^(.*)\\.bin$', '$1.'
+	fileMode 0755
+}
+
+
+task createTool(type: Zip) {
+	dependsOn copyData
+
+	destinationDir new File('.')
+	archiveName = 'build_' + rootProject.ext.version + '.zip'
+
+	from (jfSourceDir) {
+		exclude("build*")
+		exclude(".*")
+		exclude("src")
+		exclude("bin")
+		exclude("resources")
+		exclude("reports/*")
+		exclude("logs")
+		exclude("remote_out.txt")
+	}
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '3.0' //we want gradle 3.0 to run this project
+}
+
+clean {
+}
