@@ -1,7 +1,7 @@
 #elcipse files
 .metadata
 .recommenders
-.settings
+#.settings
 .classpath
 .project
 RemoteSystemsTempFiles
