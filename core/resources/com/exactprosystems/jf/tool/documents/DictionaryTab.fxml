@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.Double?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.documents.guidic.DictionaryFxController">
+	<center>
+		<SplitPane fx:id="splitPane" dividerPositions="0.85" orientation="VERTICAL" >
+			<items>
+				<ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="900" maxWidth="1.7976931348623157E308" prefHeight="700.0" prefWidth="1457.0">
+					<content>
+						<GridPane fx:id="mainGridPane"  alignment="CENTER" >
+							<fx:define>
+								<Double fx:id="widthNavigation" fx:value="767.0"/>
+								<Double fx:id="widthInfo" fx:value="600.0"/>
+								<Double fx:id="height" fx:value="375.0"/>
+								<Double fx:id="heightActions" fx:value="300.0"/>
+							</fx:define>
+							<columnConstraints>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="$widthNavigation" prefWidth="$widthNavigation" maxWidth="$widthNavigation"/>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="$widthInfo" prefWidth="$widthInfo"/>
+							</columnConstraints>
+							<rowConstraints>
+								<RowConstraints minHeight="$height" maxHeight="$height" prefHeight="$height" vgrow="SOMETIMES"/>
+								<RowConstraints minHeight="$heightActions" vgrow="SOMETIMES"/>
+							</rowConstraints>
+							<children>
+							</children>
+						</GridPane>
+					</content>
+				</ScrollPane>
+			</items>
+		</SplitPane>
+	</center>
+</BorderPane>
+
+

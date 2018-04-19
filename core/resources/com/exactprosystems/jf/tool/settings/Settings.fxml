@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+<GridPane prefHeight="630.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.SettingsPanelController">
+	<columnConstraints>
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="30.0" maxHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+	</rowConstraints>
+	<children>
+		<TabPane fx:id="tabPane">
+			<tabs>
+				<Tab closable="false" fx:id="mainTab" >
+					<text><R fx:constant="SETTINGS_MAIN"/></text>
+				</Tab>
+				<Tab closable="false" fx:id="shortCutsTab" >
+					<text><R fx:constant="SETTINGS_SHORTCUTS"/></text>
+				</Tab>
+				<Tab closable="false" fx:id="logTab" >
+					<text><R fx:constant="SETTINGS_LOG"/></text>
+				</Tab>
+				<Tab closable="false" fx:id="colorsTab" >
+					<text><R fx:constant="SETTINGS_COLORS"/></text>
+				</Tab>
+				<Tab closable="false" fx:id="gitTab" >
+					<text><R fx:constant="SETTINGS_GIT"/></text>
+				</Tab>
+				<Tab closable="false" fx:id="matrixTab">
+					<text><R fx:constant="SETTINGS_MATRIX"/></text>
+				</Tab>
+				<Tab closable="false" fx:id="wizardTab">
+					<text><R fx:constant="SETTINGS_WIZARD"/></text>
+				</Tab>
+			</tabs>
+		</TabPane>
+		<Separator GridPane.rowIndex="1" GridPane.columnSpan="2"/>
+		<Button onAction="#restoreAllToDefault" GridPane.rowIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+			<text><R fx:constant="SETTINGS_RESTORE_DEFAULT"/></text>
+		</Button>
+	</children>
+</GridPane>

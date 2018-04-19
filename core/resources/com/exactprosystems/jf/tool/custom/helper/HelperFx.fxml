@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+			prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+			fx:controller="com.exactprosystems.jf.tool.custom.helper.HelperControllerFx">
+	<top>
+		<BorderPane fx:id="mainPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<top>
+				<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+					<items>
+						<ToggleButton fx:id="btnVoid" mnemonicParsing="false" onAction="#voidVisible" >
+							<text>
+								<R fx:constant="HELPER_FX_VOID"/>
+							</text>
+						</ToggleButton>
+						<ToggleButton fx:id="btnStatic" mnemonicParsing="false" onAction="#staticVisible">
+							<text>
+								<R fx:constant="HELPER_FX_STATIC"/>
+							</text>
+						</ToggleButton>
+						<ToggleButton fx:id="btnSorting" mnemonicParsing="false" onAction="#sorting">
+							<text>
+								<R fx:constant="HELPER_FX_A_Z"/>
+							</text>
+						</ToggleButton>
+						<Button fx:id="btnAllVars" mnemonicParsing="false" onAction="#showAllVars">
+							<text>
+								<R fx:constant="HELPER_FX_VARS"/>
+							</text>
+						</Button>
+						<SplitMenuButton fx:id="smbClass" mnemonicParsing="false">
+							<text>
+								<R fx:constant="HELPER_FX_CLASS"/>
+							</text>
+						</SplitMenuButton>
+					</items>
+				</ToolBar>
+			</top>
+		</BorderPane>
+	</top>
+	<center>
+		<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+			<items>
+				<BorderPane prefHeight="200.0" prefWidth="200.0" fx:id="borderPane">
+					<top>
+						<WebView fx:id="viewClassName" prefHeight="39.0" prefWidth="295.0" BorderPane.alignment="CENTER"/>
+					</top>
+				</BorderPane>
+				<TextArea fx:id="taResult" editable="false" prefHeight="200.0" prefWidth="200.0"/>
+			</items>
+		</SplitPane>
+	</center>
+	<bottom>
+		<TextArea fx:id="taDescription" maxHeight="70" minHeight="70" editable="false"/>
+	</bottom>
+</BorderPane>

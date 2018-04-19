@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+<?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="296.0" prefWidth="338.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.newconfig.testing.TestingConnectionFxController">
+  <columnConstraints>
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <CustomFieldWithButton fx:id="tfServer" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="5.0" />
+         </GridPane.margin>
+      </CustomFieldWithButton>
+      <CustomFieldWithButton fx:id="tfDatabaseName" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets right="5.0" />
+         </GridPane.margin>
+      </CustomFieldWithButton>
+       <Label GridPane.rowIndex="1" >
+           <text><R fx:constant="TESTING_CONNECTION_FX_SQL_SERVER"/></text>
+       </Label>
+      <Label GridPane.rowIndex="2">
+          <text><R fx:constant="TESTING_CONNECTION_FX_SERVER"/></text>
+      </Label>
+      <Label GridPane.rowIndex="3" >
+          <text><R fx:constant="TESTING_CONNECTION_FX_DATABASE_NAME"/></text>
+      </Label>
+      <Label GridPane.rowIndex="4" >
+          <text><R fx:constant="TESTING_CONNECTION_FX_USER"/></text>
+      </Label>
+      <Label GridPane.rowIndex="5" >
+          <text><R fx:constant="TESTING_CONNECTION_FX_PASSWORD"/></text>
+      </Label>
+      <CustomFieldWithButton fx:id="tfUser" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets right="5.0" />
+         </GridPane.margin>
+      </CustomFieldWithButton>
+      <PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets right="5.0" />
+         </GridPane.margin>
+      </PasswordField>
+      <Label fx:id="lblTest" GridPane.rowIndex="6" />
+      <Button mnemonicParsing="false" onAction="#testConnection" GridPane.columnIndex="1" GridPane.rowIndex="6" >
+          <text><R fx:constant="TESTING_CONNECTION_FX_TEST"/></text>
+      </Button>
+      <Label fx:id="lblServer" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+   </children>
+</GridPane>

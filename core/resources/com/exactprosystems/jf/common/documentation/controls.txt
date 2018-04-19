@@ -1,0 +1,23 @@
+{{4
+{{`The tool can operate with all types of controls, which usually are used in applications. But every kind of application 
+has its own specific control set. For example in web applications there are not the such control as {{$ScrollBar$}}
+The such control is not allowed to use even in the related dictionary. If the such control is used for example 
+in dynamic locator the error with kind {{@CONTROL_NOT_SUPPORTED@}} will appear.`}}
+{{`Also not all operations can be applied to every control.   
+Due dynamic types of underlying expression language ({{$MVEL$}}) it is impossible to check operations before matrix starts.
+In case of using not permitted operation for a control the error with kind {{@OPERATION_NOT_ALLOWED@}}
+will be generated.`}} 
+{{`The list of all controls and operations allowed for them you can find in the tables below. Mark "+" means that operations
+from the column allowed for control in the row. If this one is the operation by default the color of this mark is red.`}}
+{{`Operations can be used in action {{$DialogFill$}}. It is the main action used for manipulating elements on screen.
+Extra parameters of this action are list of controls for pointed dialog. Values of these parameters converted into 
+chains of operations. Look at the example:
+{{#
+Do.click().delay(100).getValue()
+#}}
+This expression will be converted into 3 operations: left mouse click, delay 100 ms and getting value from the element.
+All this operations will be performed one by one and if noone from them is not failed the whole operation is not failed too.
+Result of the last operation getValue() can be accessed in matrix by {{$DialogFill$}} action reference.
+ `}}
+4}}
+

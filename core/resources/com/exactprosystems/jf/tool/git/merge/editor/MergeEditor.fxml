@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R ?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8"
+			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.merge.editor.MergeEditorController">
+	<top>
+		<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<items>
+				<Button mnemonicParsing="false" onAction="#acceptYours" >
+					<text>
+						<R fx:constant="MERGE_EDITOR_ACCEPT_YOURS"/>
+					</text>
+				</Button>
+				<Button mnemonicParsing="false" onAction="#acceptTheirs" >
+					<text>
+						<R fx:constant="MERGE_EDITOR_ACCEPT_THEIRS"/>
+					</text>
+				</Button>
+			</items>
+			<BorderPane.margin>
+				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+			</BorderPane.margin>
+		</ToolBar>
+	</top>
+	<bottom>
+		<HBox alignment="CENTER_RIGHT" prefHeight="46.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
+			<children>
+				<Button mnemonicParsing="false" onAction="#save" >
+					<text>
+						<R fx:constant="MERGE_EDITOR_SAVE"/>
+					</text>
+				</Button>
+				<Button mnemonicParsing="false" onAction="#close" >
+					<text>
+						<R fx:constant="MERGE_EDITOR_CLOSE"/>
+					</text>
+				</Button>
+			</children>
+			<BorderPane.margin>
+				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+			</BorderPane.margin>
+		</HBox>
+	</bottom>
+	<center>
+		<BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<center>
+				<ScrollPane fitToWidth="true" prefViewportHeight="454.70001220703125" prefViewportWidth="991.0">
+					<content>
+						<GridPane fx:id="gridPane" maxHeight="1.7976931348623157E308" BorderPane.alignment="CENTER">
+							<columnConstraints>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+								<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0"/>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+								<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0"/>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+							</columnConstraints>
+							<BorderPane.margin>
+								<Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+							</BorderPane.margin>
+						</GridPane>
+					</content>
+				</ScrollPane>
+			</center>
+			<top>
+				<GridPane BorderPane.alignment="CENTER">
+					<columnConstraints>
+						<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+						<ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0"/>
+						<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+						<ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0"/>
+						<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+					</rowConstraints>
+					<children>
+						<Label >
+							<text>
+								<R fx:constant="MERGE_EDITOR_YOUR_VERSION"/>
+							</text>
+						</Label>
+						<Label GridPane.columnIndex="2">
+							<text>
+								<R fx:constant="MERGE_EDITOR_RESULT"/>
+							</text>
+						</Label>
+						<Label GridPane.columnIndex="4">
+							<text>
+								<R fx:constant="MERGE_EDITOR_THEIR_VERSION"/>
+							</text>
+						</Label>
+					</children>
+				</GridPane>
+			</top>
+		</BorderPane>
+	</center>
+</BorderPane>

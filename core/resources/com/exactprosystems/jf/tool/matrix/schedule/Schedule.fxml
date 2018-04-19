@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+<?import com.exactprosystems.jf.tool.CssVariables?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.matrix.schedule.ScheduleController">
+	<fx:define>
+		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
+	</fx:define>
+	<center>
+		<TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<columns>
+				<TableColumn fx:id="columnCheckBox" prefWidth="75.0" />
+				<TableColumn fx:id="columnMatrixName" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_MATRIX_NAME"/>
+					</text>
+				</TableColumn>
+				<TableColumn fx:id="columnStartDate" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_START_DATE"/>
+					</text>
+				</TableColumn>
+				<TableColumn fx:id="columnState" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_STATE"/>
+					</text>
+				</TableColumn>
+				<TableColumn fx:id="columnDone" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_DONE"/>
+					</text>
+				</TableColumn>
+				<TableColumn fx:id="columnReport" prefWidth="75.0" >
+					<text>
+						<R fx:constant="SCHEDULE_REPORT"/>
+					</text>
+				</TableColumn>
+			</columns>
+         <BorderPane.margin>
+            <Insets bottom="-10.0" />
+         </BorderPane.margin>
+		</TableView>
+	</center>
+	<top>
+		<ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<items>
+				<Button id="scheduleBtnStart" fx:id="btnStart" mnemonicParsing="false" onAction="#startSelected" styleClass="$transparentBackground"/>
+				<Button id="scheduleBtnStop" fx:id="btnStop" mnemonicParsing="false" onAction="#stopSelected" styleClass="$transparentBackground"/>
+				<Button id="scheduleBtnDestroy" fx:id="btnDestroy" mnemonicParsing="false" onAction="#destroySelected" styleClass="$transparentBackground"/>
+				<Button id="scheduleBtnShowSelected" fx:id="btnShowSelected" mnemonicParsing="false" onAction="#showSelected" styleClass="$transparentBackground"/>
+				<Button id="scheduleBtnLoadSeveral" fx:id="btnLoadSeveral" mnemonicParsing="false" onAction="#loadSeveral" styleClass="$transparentBackground"/>
+			</items>
+		</ToolBar>
+	</top>
+</BorderPane>

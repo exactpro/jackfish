@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+<?import com.exactprosystems.jf.tool.CssVariables?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+<GridPane fx:id="rootGrid" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8"
+		  xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.main.MainController">
+	<fx:define>
+		<CssVariables fx:id="transparentBackground" fx:constant="TRANSPARENT_BACKGROUND"/>
+	</fx:define>
+	<columnConstraints>
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints maxHeight="120.0" minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+	</rowConstraints>
+	<children>
+		<BorderPane prefHeight="200.0" prefWidth="200.0">
+			<top>
+				<VBox minHeight="70.0" prefHeight="70.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+					<children>
+						<MenuBar minHeight="30.0" prefHeight="29.0" prefWidth="1276.0">
+							<menus>
+								<Menu fx:id="menuFile" mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_FILE"/></text>
+									<items>
+										<MenuItem mnemonicParsing="false" onAction="#openProject">
+											<text><R fx:constant="TOOL_OPEN_PROJECT"/></text>
+										</MenuItem>
+										<MenuItem mnemonicParsing="false" onAction="#createProject">
+											<text><R fx:constant="TOOL_CREATE_PROJECT"/></text>
+										</MenuItem>
+										<MenuItem mnemonicParsing="false" onAction="#projectFromGit">
+											<text><R fx:constant="TOOL_PROJECT_FROM_GIT"/></text>
+										</MenuItem>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<Menu fx:id="fileLoad" mnemonicParsing="false">
+											<text><R fx:constant="TOOL_MENU_LOAD"/></text>
+											<items>
+												<MenuItem mnemonicParsing="false" onAction="#loadMatrix">
+													<text><R fx:constant="TOOL_MATRIX"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#loadDictionary">
+													<text><R fx:constant="TOOL_DICTIONARY"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#loadSystemVars">
+													<text><R fx:constant="TOOL_SYSTEM_VARIABLES"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#loadPlainText">
+													<text><R fx:constant="TOOL_PLAIN_TEXT"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#loadCsv">
+													<text><R fx:constant="TOOL_CSV"/></text>
+												</MenuItem>
+											</items>
+										</Menu>
+										<Menu fx:id="fileNew" mnemonicParsing="false">
+											<text><R fx:constant="TOOL_MENU_NEW"/></text>
+											<items>
+												<MenuItem mnemonicParsing="false" onAction="#newMatrix">
+													<text><R fx:constant="TOOL_NEW_MATRIX"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newLibrary">
+													<text><R fx:constant="TOOL_NEW_LIBRARY"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newDictionary">
+													<text><R fx:constant="TOOL_NEW_DICTIONARY"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newSystemVars">
+													<text><R fx:constant="TOOL_NEW_SYSTEM_VARS"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newPlainText">
+													<text><R fx:constant="TOOL_NEW_PLAIN_TEXT"/></text>
+												</MenuItem>
+												<MenuItem mnemonicParsing="false" onAction="#newCsv">
+													<text><R fx:constant="TOOL_NEW_CSV"/></text>
+												</MenuItem>
+											</items>
+										</Menu>
+										<MenuItem fx:id="fileSave" mnemonicParsing="false" onAction="#saveDocument">
+											<text><R fx:constant="TOOL_SAVE"/></text>
+										</MenuItem>
+										<MenuItem fx:id="fileSaveAs" mnemonicParsing="false" onAction="#saveAsDocument">
+											<text><R fx:constant="TOOL_SAVE_AS"/></text>
+										</MenuItem>
+										<MenuItem fx:id="fileSaveAll" mnemonicParsing="false" onAction="#saveAll">
+											<text><R fx:constant="TOOL_SAVE_ALL"/></text>
+										</MenuItem>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<Menu fx:id="fileLastOpenMatrix" mnemonicParsing="false">
+											<text><R fx:constant="TOOL_LAST_OPENED_MATRIX"/></text>
+										</Menu>
+										<MenuItem fx:id="fileRunFromFile" mnemonicParsing="false" onAction="#runFromFile">
+											<text><R fx:constant="TOOL_RUN_FROM_FILE"/></text>
+										</MenuItem>
+										<MenuItem mnemonicParsing="false" onAction="#openReport">
+											<text><R fx:constant="TOOL_OPEN_REPORT"/></text>
+										</MenuItem>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<MenuItem mnemonicParsing="false" onAction="#closeApplication">
+											<text><R fx:constant="TOOL_EXIT"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+								<Menu fx:id="menuEdit" mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_EDIT"/></text>
+									<items>
+										<MenuItem id="editUndo" fx:id="editUndo" mnemonicParsing="false" onAction="#undo">
+											<text><R fx:constant="TOOL_UNDO"/></text>
+										</MenuItem>
+										<MenuItem id="editRedo" fx:id="editRedo" mnemonicParsing="false" onAction="#redo">
+											<text><R fx:constant="TOOL_REDO"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<MenuItem id="editSettings" fx:id="editSettings" mnemonicParsing="false" onAction="#showSettingsPanel">
+											<text><R fx:constant="TOOL_SETTINGS"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+								<Menu fx:id="menuView" mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_VIEW"/></text>
+									<items>
+										<MenuItem fx:id="viewSearch" mnemonicParsing="false" onAction="#search">
+											<text><R fx:constant="TOOL_SEARCH"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<MenuItem fx:id="viewLogs" mnemonicParsing="false" onAction="#openMainLog">
+											<text><R fx:constant="TOOL_LOGS"/></text>
+										</MenuItem>
+										<MenuItem fx:id="viewStore" mnemonicParsing="false" onAction="#showStore">
+											<text><R fx:constant="TOOL_STORE"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<MenuItem fx:id="viewShowTabs" mnemonicParsing="false" onAction="#showAllTabs">
+											<text><R fx:constant="TOOL_SHOW_TABS"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+								<Menu fx:id="menuMatrix" mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_MATRIX"/></text>
+									<items>
+										<MenuItem fx:id="matrixStart" mnemonicParsing="false" onAction="#startMatrix">
+											<text><R fx:constant="TOOL_MATRIX_START"/></text>
+										</MenuItem>
+										<MenuItem fx:id="matrixStop" mnemonicParsing="false" onAction="#stopMatrix">
+											<text><R fx:constant="TOOL_MATRIX_STOP"/></text>
+										</MenuItem>
+										<CheckMenuItem fx:id="matrixShowWait" mnemonicParsing="false" selected="true">
+											<text><R fx:constant="TOOL_SHOW_WAITS"/></text>
+										</CheckMenuItem>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<MenuItem fx:id="matrixSchedule" id="matrixSchedule" mnemonicParsing="false" onAction="#matrixSchedule">
+											<text><R fx:constant="TOOL_MATRIX_SCHEDULE"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+								<Menu fx:id="menuGit" mnemonicParsing="false">
+									<text><R fx:constant="TOOL_MENU_GIT"/></text>
+									<items>
+										<MenuItem fx:id="gitClone" mnemonicParsing="false" onAction="#gitClone">
+											<text><R fx:constant="TOOL_CLONE"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<Menu fx:id="gitPublishing">
+											<text><R fx:constant="TOOL_MENU_PUBLISHING"/></text>
+											<MenuItem fx:id="gitCommit" mnemonicParsing="false" onAction="#gitCommit">
+												<text><R fx:constant="TOOL_COMMIT"/></text>
+											</MenuItem>
+											<MenuItem fx:id="gitPush" mnemonicParsing="false" onAction="#gitPush">
+												<text><R fx:constant="TOOL_PUSH"/></text>
+											</MenuItem>
+										</Menu>
+										<MenuItem fx:id="gitPull" mnemonicParsing="false" onAction="#gitPull">
+											<text><R fx:constant="TOOL_PULL"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitReset" mnemonicParsing="false" onAction="#gitReset">
+											<text><R fx:constant="TOOL_RESET"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitStatus" mnemonicParsing="false" onAction="#gitStatus">
+											<text><R fx:constant="TOOL_STATUS"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitMerge" mnemonicParsing="false" onAction="#gitMerge">
+											<text><R fx:constant="TOOL_RESOLVE_CONFLICT"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitBranches" mnemonicParsing="false" onAction="#gitBranches">
+											<text><R fx:constant="TOOL_BRANCHES"/></text>
+										</MenuItem>
+										<MenuItem fx:id="gitTags" mnemonicParsing="false" onAction="#gitTags">
+											<text><R fx:constant="TOOL_TAGS"/></text>
+										</MenuItem>
+										<SeparatorMenuItem/>
+										<MenuItem fx:id="gitChangeCredential" mnemonicParsing="false" onAction="#gitChangeCredential">
+											<text><R fx:constant="TOOL_CHANGE_CREDENTIAL"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+								<Menu mnemonicParsing="false" fx:id="menuHelp">
+									<text><R fx:constant="TOOL_MENU_HELP"/></text>
+									<items>
+										<MenuItem fx:id="helpActionsHelp" id="helpActionsHelp" mnemonicParsing="false" onAction="#showActionsHelp">
+											<text><R fx:constant="TOOL_ACTIONS_HELP"/></text>
+										</MenuItem>
+										<SeparatorMenuItem mnemonicParsing="false"/>
+										<MenuItem fx:id="helpAboutProgram" id="helpAboutProgram" mnemonicParsing="false" onAction="#showAboutProgram">
+											<text><R fx:constant="TOOL_ABOUT_PROGRAM"/></text>
+										</MenuItem>
+									</items>
+								</Menu>
+							</menus>
+						</MenuBar>
+						<ToolBar fx:id="mainToolbar" minHeight="30.0" prefHeight="40.0" prefWidth="200.0">
+							<items>
+								<Button id="btnLoadMatrix" fx:id="btnOpenMatrix" mnemonicParsing="false" onAction="#loadMatrix" styleClass="$transparentBackground"/>
+								<Button id="btnNewMatrix" fx:id="btnNewMatrix" mnemonicParsing="false" onAction="#newMatrix" styleClass="$transparentBackground"/>
+								<Separator orientation="VERTICAL" prefHeight="200.0"/>
+								<Button id="btnSaveDocument" fx:id="btnSaveDocument" mnemonicParsing="false" onAction="#saveDocument" styleClass="$transparentBackground"/>
+								<Button id="btnSaveAsDocument" fx:id="btnSaveAsDocument" mnemonicParsing="false" onAction="#saveAsDocument" styleClass="$transparentBackground"/>
+								<Button id="btnOpenMainLog" fx:id="btnOpenMainLog" mnemonicParsing="false" onAction="#openMainLog" styleClass="$transparentBackground"/>
+								<Button id="btnShowCalculator" fx:id="btnShowCalculator" mnemonicParsing="false" onAction="#showCalculator" styleClass="$transparentBackground"/>
+								<Separator orientation="VERTICAL" prefHeight="200.0"/>
+								<Button id="btnUndo" fx:id="btnUndo" mnemonicParsing="false" onAction="#undo" styleClass="$transparentBackground"/>
+								<Button id="btnRedo" fx:id="btnRedo" mnemonicParsing="false" onAction="#redo" styleClass="$transparentBackground"/>
+							</items>
+						</ToolBar>
+					</children>
+				</VBox>
+			</top>
+			<center>
+				<SplitPane fx:id="splitPane" dividerPositions="0.0">
+					<items>
+						<GridPane fx:id="projectGridPane" minWidth="30.0">
+							<columnConstraints>
+								<ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"/>
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+							</columnConstraints>
+							<rowConstraints>
+								<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+							</rowConstraints>
+							<children>
+								<VBox prefHeight="421.0" prefWidth="30.0" spacing="8.0" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+									<children>
+										<Group>
+											<children>
+												<Label fx:id="projectLabel" rotate="-90.0">
+													<text><R fx:constant="TOOL_PROJECT"/></text>
+													<VBox.margin>
+														<Insets left="-10.0"/>
+													</VBox.margin>
+												</Label>
+											</children>
+										</Group>
+										<VBox>
+											<children>
+												<Button id="reloadConfiguration" styleClass="$transparentBackground" onAction="#reloadConfiguration">
+													<tooltip>
+														<Tooltip><text><R fx:constant="TOOL_RELOAD_CONFIGURATION"/></text></Tooltip>
+													</tooltip>
+												</Button>
+												<Button id="saveConfiguration" styleClass="$transparentBackground" onAction="#saveConfiguration">
+													<tooltip>
+														<Tooltip><text><R fx:constant="TOOL_SAVE_CONFIGURATION"/></text></Tooltip>
+													</tooltip>
+												</Button>
+											</children>
+										</VBox>
+									</children>
+									<GridPane.margin>
+										<Insets/>
+									</GridPane.margin>
+									<padding>
+										<Insets top="8.0"/>
+									</padding>
+								</VBox>
+								<BorderPane fx:id="projectPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1"/>
+							</children>
+						</GridPane>
+					</items>
+				</SplitPane>
+			</center>
+			<bottom>
+				<GridPane>
+					<columnConstraints>
+						<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+						<ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0"/>
+						<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0"/>
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints/>
+						<RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+					</rowConstraints>
+					<children>
+						<Label fx:id="lblMemory" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+						<Label fx:id="lblStartedMatrixCount" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+						<BorderPane prefHeight="0.0" prefWidth="555.0" GridPane.rowIndex="1">
+							<center>
+								<ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0" BorderPane.alignment="CENTER"/>
+							</center>
+							<left>
+								<Label fx:id="progressLabel" BorderPane.alignment="CENTER"/>
+							</left>
+						</BorderPane>
+					</children>
+				</GridPane>
+			</bottom>
+		</BorderPane>
+	</children>
+	<padding>
+		<Insets left="3.0" right="3.0"/>
+	</padding>
+</GridPane>

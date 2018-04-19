@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import com.exactprosystems.jf.tool.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R ?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+<GridPane fx:id="colorsPane" maxHeight="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.settings.tabs.ColorsTabController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
+
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+	</fx:define>
+	<columnConstraints>
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="31.0" prefWidth="100.0" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+	</rowConstraints>
+	<children>
+		<HBox GridPane.columnIndex="1">
+			<children>
+				<VBox HBox.hgrow="SOMETIMES">
+					<children>
+						<Label id="$verMid" />
+						<ColorPicker fx:id="colorPicker" maxWidth="150.0" />
+						<Label id="$verMin" />
+						<Button fx:id="btnDefault" maxWidth="150.0" mnemonicParsing="false" onAction="#defaultColor" >
+							<text><R fx:constant="COLORS_TAB_DEFAULT"/></text>
+						</Button>
+						<Label id="$verMax" />
+						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#expandAll" >
+							<text><R fx:constant="COLORS_TAB_EXPAND_ALL"/></text>
+						</Button>
+						<Label id="$verMin" />
+						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#collapseAll" >
+							<text><R fx:constant="COLORS_TAB_COLLAPSE_ALL"/></text>
+						</Button>
+						<Label id="$verMin" />
+						<Button maxWidth="150.0" mnemonicParsing="false" onAction="#clearAll" >
+							<text><R fx:constant="COLORS_TAB_CLEAR_ALL"/></text>
+						</Button>
+					</children>
+				</VBox>
+				<Label id="$horMax" />
+			</children>
+		</HBox>
+		<BorderPane fx:id="borderView" prefHeight="200.0" prefWidth="200.0" GridPane.rowSpan="2">
+			<top>
+				<Label id="$verMid" BorderPane.alignment="CENTER" />
+			</top>
+			<left>
+				<Label id="$horMax" BorderPane.alignment="CENTER" />
+			</left>
+			<right>
+				<Label id="$horMax" BorderPane.alignment="CENTER" />
+			</right>
+			<bottom>
+				<Label id="$verMax" BorderPane.alignment="CENTER" />
+			</bottom>
+		</BorderPane>
+		<Button onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+			<text><R fx:constant="COLORS_TAB_RESTORE_DEFAULT"/></text>
+		</Button>
+	</children>
+</GridPane>

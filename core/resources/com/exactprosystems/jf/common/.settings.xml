@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<settings>
+    <value ns="GLOBAL" dialog="Logs" key="ALL" time="2015-06-11T12:42:01.351+03:00">0x000000ff</value>
+    <value ns="GLOBAL" dialog="Logs" key="DEBUG" time="2015-06-11T12:42:01.351+03:00">0x334db3ff</value>
+    <value ns="GLOBAL" dialog="Logs" key="ERROR" time="2015-06-11T12:42:01.351+03:00">0xcc3333ff</value>
+    <value ns="GLOBAL" dialog="Logs" key="FATAL" time="2015-06-11T12:42:01.351+03:00">0xcc3333ff</value>
+    <value ns="GLOBAL" dialog="Logs" key="INFO" time="2015-06-11T12:42:01.351+03:00">0x336633ff</value>
+    <value ns="GLOBAL" dialog="Logs" key="TRACE" time="2015-06-11T12:42:01.351+03:00">0x8066ccff</value>
+    <value ns="GLOBAL" dialog="Logs" key="WARN" time="2015-06-11T12:42:01.351+03:00">0xe64d4dff</value>
+    <value ns="GLOBAL" dialog="Main" key="maxFilesNumber" time="2015-06-19T19:14:41.445+03:00">10</value>
+    <value ns="GLOBAL" dialog="Main" key="maxFilesCount" time="2015-07-02T11:21:26.720+03:00">10</value>
+    <value ns="GLOBAL" dialog="Main" key="useDefaultBrowser" time="2015-06-19T19:14:43.329+03:00">false</value>
+    <value ns="GLOBAL" dialog="Main" key="useFullScreen" time="2015-06-19T19:14:45.058+03:00">false</value>
+    <value ns="GLOBAL" dialog="Main" key="useCompactMode" time="2015-06-19T19:14:46.177+03:00">false</value>
+    <value ns="GLOBAL" dialog="Main" key="timeNotification" time="2015-06-19T19:23:44.593+03:00">5</value>
+    <value ns="GLOBAL" dialog="Main" key="theme" time="2015-06-19T19:14:34.758+03:00">WHITE</value>
+    <value ns="GLOBAL" dialog="Main" key="copyright" time="2015-09-08T12:32:13.522+03:00">//==============================================\n//  Copyright (c) 2009-2015, Exactpro Systems, LLC\n//  Quality Assurance &amp; Related Development for Innovative Trading Systems.\n//  All rights reserved.\n//  This is unpublished, licensed software, confidential and proprietary\n//  information which is the property of Exactpro Systems, LLC or its licensors.\n//==============================================</value>
+    <value ns="GLOBAL" dialog="Main" key="useFullScreenXpath" time="2015-09-08T19:07:23.689+03:00">false</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="FindOnMatrix" time="2015-06-19T17:49:09.285+03:00">Ctrl+F</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="ShowLog" time="2015-06-22T11:21:39.711+03:00">Ctrl+O</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="OpenMatrix" time="2015-06-22T17:12:59.052+03:00">Ctrl+Alt+M</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="ShowAllTabs" time="2015-06-29T18:12:41.375+03:00">Ctrl+E</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="SaveDocument" time="2015-07-01T13:32:58.209+03:00">Ctrl+S</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="SaveDocumentAs" time="2015-07-01T13:32:59.698+03:00">Shift+Ctrl+S</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="BreakPoint" time="2015-07-01T13:34:21.725+03:00">Ctrl+B</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="DeleteItem" time="2015-07-01T13:34:21.725+03:00">Delete</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="ExpandOne" time="2015-07-01T14:31:00.392+03:00">Ctrl+Equals</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="CollapseAll" time="2015-07-01T14:31:29.303+03:00">Shift+Ctrl+Minus</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="CollapseOne" time="2015-07-01T14:31:31.495+03:00">Ctrl+Minus</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="ExpandAll" time="2015-07-01T14:31:33.415+03:00">Shift+Ctrl+Equals</value>
+    <value ns="GLOBAL" dialog="Shortcuts" key="ShowAll" time="2015-07-03T18:03:59.315+03:00">Ctrl+Q</value>
+	<value ns="GLOBAL" dialog="Shortcuts" key="GoToLine" time="2015-09-30T16:31:36.782+03:00">Ctrl+G</value>
+	<value ns="GLOBAL" dialog="Shortcuts" key="Undo" time="2015-10-01T16:47:04.604+03:00">Ctrl+Z</value>
+	<value ns="GLOBAL" dialog="Shortcuts" key="Redo" time="2015-10-01T16:47:06.588+03:00">Shift+Ctrl+Z</value>
+	<value ns="GLOBAL" dialog="Main" key="Font" time="2015-10-22T19:03:29.278+03:00">System$13</value>
+</settings>

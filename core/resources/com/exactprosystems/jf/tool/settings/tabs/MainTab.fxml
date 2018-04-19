@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<GridPane fx:id="mainGrid" hgap="8.0" maxHeight="599.0" minHeight="500.0" prefHeight="599.0" prefWidth="570.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+		  fx:controller="com.exactprosystems.jf.tool.settings.tabs.MainTabController">
+	<columnConstraints>
+		<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0"/>
+		<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+		<RowConstraints minHeight="10.0" percentHeight="7.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+	</rowConstraints>
+	<children>
+		<GridPane fx:id="numberGrid" GridPane.columnSpan="2" GridPane.rowSpan="2">
+			<columnConstraints>
+				<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" prefWidth="100.0"/>
+				<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="133.0" minWidth="133.0" prefWidth="133.0"/>
+				<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+			</rowConstraints>
+			<children>
+				<Label GridPane.halignment="RIGHT">
+					<text><R fx:constant="MAIN_TAB_MAX_COUNT"/></text>
+					<GridPane.margin>
+						<Insets right="4.0"/>
+					</GridPane.margin>
+				</Label>
+				<Label GridPane.rowIndex="1">
+					<text><R fx:constant="MAIN_TAB_TIME_NOTIFICATION"/></text>
+					<GridPane.margin>
+						<Insets right="4.0"/>
+					</GridPane.margin>
+				</Label>
+				<Label GridPane.columnIndex="2" GridPane.rowIndex="1">
+					<text><R fx:constant="MAIN_TAB_SEC"/></text>
+					<GridPane.margin>
+						<Insets left="4.0"/>
+					</GridPane.margin>
+				</Label>
+			</children>
+		</GridPane>
+		<Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+
+		<Label  GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+			<text><R fx:constant="MAIN_TAB_THEME"/></text>
+		</Label>
+		<ComboBox fx:id="comboBoxTheme" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+		<Label  GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+			<text><R fx:constant="MAIN_TAB_FONT"/></text>
+		</Label>
+		<ComboBox fx:id="cbFontFamily" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+		<Label GridPane.rowIndex="5">
+			<text><R fx:constant="MAIN_TAB_FONT_SIZE"/></text>
+		</Label>
+		<ComboBox fx:id="cbFontSize" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+		<Label GridPane.rowIndex="6" visible="false">
+			<text><R fx:constant="MAIN_TAB_SELECT_LANGUAGE"/></text>
+		</Label>
+		<ComboBox fx:id="selectLanguage" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" visible="false"/>
+
+		<CheckBox fx:id="useFullScreen" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="7">
+			<text><R fx:constant="MAIN_TAB_FULLSCREEN_MODE"/></text>
+		</CheckBox>
+		<CheckBox fx:id="useExternalReportViewer" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="8">
+			<text><R fx:constant="MAIN_TAB_VIEWER"/></text>
+		</CheckBox>
+		<CheckBox fx:id="useFullScreenXpath" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="9">
+			<text><R fx:constant="MAIN_TAB_XPATH"/></text>
+		</CheckBox>
+
+		<Label GridPane.halignment="LEFT" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
+			<text><R fx:constant="MAIN_TAB_COPYRIGHT"/></text>
+			<GridPane.margin>
+				<Insets bottom="8.0"/>
+			</GridPane.margin>
+		</Label>
+		<TextArea fx:id="taCopyright" prefHeight="200.0" prefWidth="200.0"  GridPane.columnSpan="2" GridPane.rowIndex="11">
+			<promptText><R fx:constant="MAIN_TAB_COPYRIGHT"/></promptText>
+			<GridPane.margin>
+				<Insets right="5.0"/>
+			</GridPane.margin>
+		</TextArea>
+
+		<Button onAction="#restoreDefaults" GridPane.columnIndex="1" GridPane.rowIndex="12" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+			<text><R fx:constant="MAIN_TAB_RESTORE_DEFAULT"/></text>
+		</Button>
+	</children>
+	<padding>
+		<Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+	</padding>
+</GridPane>

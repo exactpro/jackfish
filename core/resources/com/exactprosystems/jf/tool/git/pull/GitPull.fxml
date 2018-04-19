@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.exactprosystems.jf.tool.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8"
+			xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.pull.GitPullController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
+
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+	</fx:define>
+	<bottom>
+		<HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
+			<children>
+				<Button fx:id="btnCancel" mnemonicParsing="false" onAction="#close" >
+					<text><R fx:constant="GIT_PULL_CANCEL"/></text>
+				</Button>
+			</children>
+		</HBox>
+	</bottom>
+	<center>
+		<BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<top>
+				<VBox fx:id="vbox" prefHeight="111.0" prefWidth="600.0" BorderPane.alignment="CENTER"/>
+			</top>
+			<center>
+				<TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+			</center>
+		</BorderPane>
+	</center>
+	<top>
+		<HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0">
+			<children>
+				<Label >
+					<text><R fx:constant="GIT_PULL_PULL_FROM"/></text>
+				</Label>
+				<Label id="$horMid"/>
+				<ComboBox fx:id="cbBranches" maxWidth="1.7976931348623157E308" prefWidth="150.0" HBox.hgrow="ALWAYS"/>
+				<Label id="$horMid"/>
+				<Button mnemonicParsing="false" onAction="#pull" >
+					<text><R fx:constant="GIT_PULL_PULL"/></text>
+				</Button>
+			</children>
+		</HBox>
+	</top>
+</BorderPane>

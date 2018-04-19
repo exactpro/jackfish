@@ -1,0 +1,1096 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2009-2018, Exactpro Systems LLC
+// www.exactpro.com
+// Build Software to Test Software
+//
+// All rights reserved.
+// This is unpublished, licensed software, confidential and proprietary
+// information which is the property of Exactpro Systems LLC or its licensors.
+////////////////////////////////////////////////////////////////////////////////
+.root {
+	-fx-base: #535353;
+	-fx-background: #535353;
+	-fx-control-inner-background:  #535353;
+	-fx-text-base-color : #eeeeee;
+	-fx-company-color-dark : #2687fb;
+	-fx-company-color-light : #2687fb;
+	-fx-hover-button-color : #474747;
+	-fx-selection-bar-non-focused : transparent;
+}
+
+/*Override classes*/
+.tab-close-button {
+	-fx-opacity : 0;
+	-fx-background-color : transparent;
+
+}
+.tab {
+	-fx-background-color: #424242;
+	-fx-border-width : 1px;
+	-fx-border-color : #383838;
+}
+.tab:selected {
+	-fx-background-color : #535353;
+
+}
+.tab:hover {
+	-fx-background-color : #535353;
+
+}
+.tab:selected .tabLabel {
+	-fx-fill : #f0f0f0;
+
+}
+.tab-header-area > .tab-header-background {
+	-fx-background-color : #424242;
+
+}
+.tabLabel {
+	-fx-fill : #a8a8a8;
+	-fx-font-weight: bold;
+
+}
+
+.list-view > .virtual-flow > .clipped-container > .sheet > .cell:selected {
+	-fx-background-color : -fx-company-color-dark;
+
+}
+.button {
+	-fx-text-fill : -fx-text-base-color;
+	-fx-background-color: transparent;
+	-fx-border-width : 1px;
+	-fx-border-color : derive(-fx-text-base-color, 10%);
+	-fx-border-radius : 4px;
+}
+.button:hover {
+	-fx-background-color: -fx-hover-button-color;
+
+}
+.menu-bar {
+	-fx-background-color: -fx-base;
+	-fx-border-width : 1px;
+
+}
+.tool-bar:horizontal {
+	-fx-background-color: -fx-base;
+	-fx-border-color : #383838;
+	-fx-border-width: 1px;
+
+}
+.split-pane:horizontal > * > .split-pane-divider {
+	-fx-border-color: transparent -fx-base transparent -fx-base;
+	-fx-background-color: transparent, derive(-fx-base,20%);
+	-fx-background-insets: 0, 0 1 0 1;
+}
+.table-view {
+	-fx-table-cell-border-color:derive(-fx-base,+10%);
+	-fx-table-header-border-color:derive(-fx-base,+20%);
+}
+.text-input {
+	-fx-prompt-text-fill: derive(-fx-text-base-color,-30%);
+	-fx-border-color : #636363;
+	-fx-background-color: #474747;
+	-fx-border-width : 1px;
+	-fx-border-radius : 2px;
+}
+
+.text-input:focused,
+.custom-text-field:text-field-has-focus {
+	-fx-border-color : #2687fb;
+
+}
+.separator:horizontal > .line {
+	-fx-border-width : 1 0 0 0;
+	-fx-border-color : #383838;
+	-fx-background-color : transparent;
+}
+.separator:vertical > .line {
+	-fx-border-width : 0 1 0 0;
+	-fx-border-color : #383838;
+	-fx-background-color : transparent;
+}
+.delayShutter {
+	-fx-border-color : derive(-fx-text-base-color, 10%);
+
+}
+.choice-box .context-menu {
+	-fx-border-color : derive(-fx-text-base-color, 10%);
+
+}
+.combo-box .list-view {
+	-fx-border-color : derive(-fx-text-base-color, 10%);
+
+}
+Text {
+	-fx-fill : -fx-text-base-color;
+
+}
+/*Custom classes*/
+
+.transparentBackground {
+	-fx-background-color : transparent;
+	-fx-border-width : 0px;
+	-fx-padding : 4px;
+}
+
+/*DateTimePicker*/
+.day-name-cell {
+	-fx-text-fill : -fx-company-color-light;
+
+}
+.month-year-pane .left-button > *, .right-button > * {
+	-fx-background-color : -fx-company-color-light;
+
+}
+.month-year-pane .left-button, .right-button {
+	-fx-border-color : -fx-company-color-dark;
+
+}
+.month-year-pane .left-button:hover, .right-button:hover {
+	-fx-border-color : -fx-company-color-light;
+
+}
+.previous-month , .next-month {
+	-fx-background-color : linear-gradient(to top, #666666, derive(#666666, 10%));
+	-fx-text-fill : gray;
+}
+.date-cell {
+	-fx-text-fill : -fx-text-base-color;
+
+}
+.selected {
+	-fx-background-color : -fx-company-color-dark;
+
+}
+.date-cell:hover {
+	-fx-border-color : -fx-company-color-light;
+	-fx-background-color : transparent;
+
+}
+
+.list-cell .even {
+	-fx-background-color : linear-gradient(to top, #666666, derive(#666666, 90%))
+
+}
+
+.toggle-button {
+	-fx-background-color: transparent;
+	-fx-border-width : 1px;
+	-fx-border-color : derive(-fx-text-base-color, 10%);
+}
+.toggle-button:hover {
+	-fx-background-color: -fx-hover-button-color;
+
+}
+.toggle-button:selected {
+	-fx-border-color : -fx-company-color-light;
+
+}
+.toggleButtonWithoutBorder {
+	-fx-border-width : 0px;
+	-fx-border-color : transparent;
+}
+
+.customTreeTableView .tree-table-row-cell:filled {
+	-fx-border-color : #454545;
+
+}
+.customTreeTableView .tree-table-row-cell:customSelectedState {
+	-fx-background-color: #6b6b6b;
+	-fx-border-color : #2687fb;
+}
+
+/*Matrix tree view*/
+.customTreeTableView {
+	-fx-table-cell-border-color : #454545;
+
+}
+.customTreeTableView .scroll-bar:vertical {
+	-fx-border-color : white;
+	-fx-border-width : 0 0 0 1;
+
+}
+.customTreeTableView .scroll-bar:vertical > .thumb,.increment-button, .decrement-button {
+	-fx-background-color : white;
+	-fx-opacity : 0.5;
+
+}
+.tree-table-row-cell:filled > .tree-table-cell:selected {
+	-fx-table-cell-border-color : -fx-company-color-light;
+
+}
+.customTreeTableView > .column-header-background {
+	visibility: hidden;
+	-fx-padding: -1em;
+
+}
+.tree-table-row-cell:selected {
+	-fx-background-color: -fx-company-color-dark;
+	-fx-text-fill: -fx-selection-bar-text;
+	-fx-table-cell-border-color : -fx-company-color-light;
+
+
+}
+.check-box > .box {
+	-fx-background-color: #4d4d4d;
+	-fx-border-color : #828282;
+	-fx-border-size : 1px;
+	-fx-border-radius : 2px;
+}
+.check-box:selected > .box {
+
+	-fx-background-color: #d4d4d4;
+	-fx-border-color : #d4d4d4;
+	-fx-border-size : 1px;
+	-fx-border-radius : 2px;
+}
+
+/*Custom Table*/
+.correctRow {
+
+
+}
+.incorrectRow {
+	-fx-background-color : rgb(255,0,0,0.15);
+
+}
+.textFieldVar {
+	-fx-background-color : -fx-company-color-dark;
+
+}
+
+.table-view:focused .table-row-cell:filled:selected
+{
+    -fx-background-color : -fx-company-color-dark;
+}
+
+.table-row-cell:filled:selected
+{
+    -fx-background-color : derive(-fx-base, 20%);
+}
+
+/*Correct / Incorrect fields*/
+.incorrectField {
+	-fx-text-fill : red;
+
+}
+.correctField {
+	-fx-text-fill : -fx-text-base-color;
+
+}
+
+/*XPath builder*/
+.xpathTreeView .tree-cell:selected {
+    -fx-background-color : darkslategrey;
+
+}
+.xpathFindTreeItem {
+	-fx-background-color : aquamarine;
+
+}
+.foundOneElement {
+	-fx-text-fill : rgb(12, 216, 39)
+
+}
+.xpathNode {
+	-fx-fill : #20b2aa;
+
+}
+.xpathAttrName {
+	-fx-fill : -fx-company-color-dark;
+
+}
+.xpathAttrValue {
+	-fx-fill : -fx-company-color-light;
+
+}
+.xpathText {
+	-fx-fill : -fx-text-base-color;
+
+}
+.xpathRectangle {
+	-fx-stroke : white;
+	-fx-effect : innershadow(gaussian, black, 1, 1, 0,0);
+
+}
+.xpathInspectRectangle {
+	-fx-stroke : black;
+	-fx-effect : innershadow(gaussian, white, 1, 1, 0,0);
+	-fx-stroke-dash-array : 12 6 4 6;
+	-fx-stroke-width: 5;
+}
+
+/*BorderWrapper*/
+.borderWrapperTitle {
+	-fx-text-fill : -fx-text-base-color;
+
+}
+
+/*MatrixFx tab*/
+.tab:hover.executingTab,
+.tab:selected.executingTab,
+.executingTab {
+	-fx-background-color : rgb(93, 83, 162);
+
+}
+.tab:hover.matrixFinishedOk,
+.tab:selected.matrixFinishedOk,
+.matrixFinishedOk {
+	-fx-background-color : rgb(74, 110, 58);
+
+}
+.tab:hover.matrixFinishedBad,
+.tab:selected.matrixFinishedBad,
+.matrixFinishedBad {
+	-fx-background-color : derived(rgb(205, 92, 92), 50%);
+
+}
+.itemPassed {
+	-fx-background-color : rgb(95, 255, 86, 0.2)
+
+}
+
+.itemPassed.simpleItem:customSelectedState {
+	-fx-background-color : rgb(3, 163, 3, 0.6)
+
+}
+
+.itemFailed {
+	-fx-background-color : rgb(163, 3, 3, 0.2)
+
+}
+
+.itemFailed.simpleItem:customSelectedState {
+	-fx-background-color : rgb(163, 3, 3, 0.6)
+
+}
+
+.itemExecuting {
+	-fx-background-color : rgb(3, 3, 163, 0.2)
+
+}
+
+.itemExecuting.simpleItem:customSelectedState {
+	-fx-background-color : rgb(3, 3, 163, 0.6)
+
+}
+
+.simpleItem {
+	-fx-border-color : lightgray;
+	-fx-border-width : 1 0 1 0;
+}
+.trueOffItem {
+	-fx-background-color : #8c8c8c;
+
+}
+
+.simpleItem.trueOffItem:customSelectedState {
+	-fx-background-color : #777777;
+
+}
+
+.boldLabel {
+	-fx-font-weight : bold;
+
+}
+.obliqueLabel {
+	-fx-font-style : oblique;
+
+}
+.borderLabel {
+	-fx-border-color : red;
+	-fx-border-size : 2px;
+
+}
+/*Matrix comment*/
+.unfocusedTextArea {
+	-fx-border-color : transparent;
+	-fx-background-color : transparent;
+	-fx-border-width : null;
+
+}
+
+/*Console Text*/
+.styled-text-area .paragraph-box .paragraph-text {
+    -fx-background-color : -fx-base;
+}
+
+.consoleDefaultText {
+	-fx-fill : -fx-text-base-color;
+}
+.consolePausedItem {
+	-fx-fill : -fx-company-color-light;
+    -fx-cursor: hand;
+}
+.consoleErrorItem {
+	-fx-fill : salmon;
+}
+
+/*Sql test*/
+.sqlConnectionValid {
+	-fx-text-fill : green
+
+}
+.sqlConnectionInvalid {
+	-fx-text-fill : red;
+
+}
+
+/*Helper*/
+.compileFailed {
+	-fx-text-fill : #FF6F6F;
+
+}
+.evaluateFailed {
+	-fx-text-fill : -fx-text-base-color;
+
+}
+.evaluateSuccess {
+	-fx-text-fill : #00D100;
+
+}
+.expectedClass {
+	-fx-background-color : lightgreen;
+
+}
+
+/*Store*/
+.notChangeableRow {
+	-fx-background-color : rgb(128, 128, 128, 0.3);
+
+}
+
+/*ParametersPane*/
+.customScrollPane {
+	-fx-background-color: transparent;
+	-fx-background-insets: 0,0,0,0;
+	-fx-padding: 0;
+
+}
+.customScrollPane .scroll-bar:horizontal .increment-button,
+.customScrollPane .scroll-bar:horizontal .decrement-button {
+	-fx-opacity : 0;
+	-fx-pref-width : 0px;
+
+}
+.customScrollPane .scroll-bar:horizontal .track {
+	-fx-opacity : 0;
+	-fx-pref-width : 20px;
+}
+.customScrollPane .scroll-bar:horizontal .thumb {
+	-fx-background-color : -fx-company-color-dark;
+
+}
+
+.focusedField {
+	-fx-border-color : black;
+	-fx-border-size  : 5px;
+	-fx-background-color : -fx-company-color-light;
+
+}
+.invisibleField {
+    -fx-background-color : transparent;
+    -fx-border-color : transparent;
+
+}
+.unfocusedGrid {
+	-fx-border-color : transparent;
+	-fx-background-color : transparent;
+
+}
+.focusedEmptyGrid {
+	-fx-background-color : gold;
+
+}
+.emptyGrid {
+	-fx-border-color : #7d7d7d;
+	-fx-background-color : #535353;
+
+}
+
+/*Alerts*/
+.alert.confirmation.dialog-pane,
+.text-input-dialog.dialog-pane,
+.choice-dialog.dialog-pane {
+	-fx-graphic: null;
+
+}
+
+/*Wizard*/
+.customTableRow:customSelectedState {
+	-fx-border-color : #2687fb;
+
+}
+.colorMark {
+	-fx-background-color : rgba(0, 255, 0, 0.1);
+
+}
+.colorQuestion {
+	-fx-background-color : rgba(255, 255, 0, 0.1);
+
+}
+.colorNotFound {
+	-fx-background-color : rgba(255, 0, 0, 0.1);
+
+}
+.colorNotFinding {
+	-fx-background-color : rgba(128, 128, 128, 0.1);
+
+}
+.colorAdd {
+	-fx-background-color : rgba(0, 0, 255, 0.1);
+
+}
+.colorUpdate {
+	-fx-background-color : rgba(0, 0, 255, 0.1);
+
+}
+
+
+/*Resizable region*/
+.resizableRegion {
+	-fx-border-width : 0 0 2 0;
+	-fx-border-color : -fx-company-color-dark;
+
+}
+.resizableRegionHover {
+	-fx-border-color : -fx-company-color-light;
+
+}
+
+/*Spread sheet*/
+.cell-spreadsheet .table-row-cell {
+	-fx-background-color: transparent;
+
+}
+.spreadsheet-cell:filled:selected,
+.spreadsheet-cell:filled:focused:selected,
+.spreadsheet-cell:filled:focused:selected:hover {
+	-fx-background-color: -fx-company-color-dark;
+	-fx-border-color: #a9a9a9;
+	-fx-border-width : 0.5px;
+	-fx-text-fill: -fx-text-base-color;
+}
+.spreadsheet-cell:hover,
+.spreadsheet-cell:filled:focused {
+	-fx-background-color: -fx-company-color-light;
+	-fx-text-fill: black;
+	-fx-background-insets: 0, 0 0 1 0;
+}
+.spreadsheet-cell{
+	-fx-padding: 0 0 0 0.2em;
+	-fx-border-color: white;
+	-fx-border-width : 0.3px;
+	-fx-background-color: #424242;
+	-fx-text-fill : -fx-text-base-color;
+}
+VerticalHeader > Label {
+	-fx-background-color: -fx-box-border, -fx-inner-border,  linear-gradient(to left, derive(-fx-color,-5%) ,derive(-fx-color,5%));
+	-fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
+	-fx-font-weight: bold;
+	-fx-size: 2em;
+	-fx-text-fill: -fx-selection-bar-text;
+	-fx-alignment: center;
+	-fx-font-style : normal;
+}
+VerticalHeader > Label.selected{
+	-fx-background-color: -fx-company-color-dark, -fx-company-color-dark,  linear-gradient(to right, derive(-fx-company-color-dark,-10%) ,derive(-fx-company-color-dark,10%));
+	-fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
+	-fx-font-weight: bold;
+	-fx-size: 2em;
+	-fx-text-fill: -fx-selection-bar-text;
+	-fx-alignment: center;
+	-fx-border-color : black;
+}
+HorizontalHeaderColumn > TableColumnHeader.column-header.table-column.selected{
+	-fx-background-color: -fx-company-color-dark, -fx-company-color-dark,  linear-gradient(to bottom, derive(-fx-company-color-dark,-10%) ,derive(-fx-company-color-dark,10%));
+	-fx-background-insets: 0, 0 1 1 0, 1 2 2 1;
+	-fx-font-weight: bold;
+	-fx-size: 2em;
+	-fx-text-fill: -fx-selection-bar-text;
+	-fx-alignment: center;
+	-fx-border-color : black;
+}
+.column-header-background.invisible { visibility: hidden; -fx-padding: -1em; }
+CellView > .text-input.text-field{
+	-fx-padding : 0 0 0 -0.2em;
+	-fx-background-color: transparent;
+}
+.selection-rectangle{
+	-fx-fill : transparent;
+	-fx-stroke : -fx-text-base-color;
+	-fx-stroke-width : 2;
+}
+
+/*Supported/Unsupported entries*/
+.supportedEntry {
+	-fx-text-fill : -fx-company-color-light;
+
+}
+.unsupportedEntry {
+	-fx-text-fill : red;
+
+}
+
+/*Custom Text Fields*/
+.custom-text-field {
+	-fx-text-fill: -fx-text-inner-color;
+	-fx-border-color : #636363;
+	-fx-background-color: #474747;
+	-fx-border-width : 1px;
+	-fx-border-radius : 2px;
+
+}
+.custom-text-field:right-node-visible {
+	-fx-padding: 0.333333em 0 0.333333em 0.583em;
+
+}
+.custom-text-field:right-node-visible .customFieldRightPane {
+	-fx-padding: 0 3 0 3;
+
+}
+.custom-text-field:focused,
+.custom-text-field:text-field-has-focus {
+	-fx-border-color : #2687fb;
+}
+
+.customFieldWithButton .customPane {
+	-fx-padding: 0 3 0 0;
+
+}
+.customFieldWithButton .customPane > .customButton {
+	-fx-text-fill : -fx-company-color-light;
+
+}
+.customFieldWithButton .customPane:hover > .customButton {
+	-fx-text-fill : -fx-company-color-dark;
+
+}
+
+/*Expression Editor*/
+.expressionEditor {
+	-fx-padding: 0 3 0 0;
+
+}
+.expressionEditor .firstPane > .expressionButton,
+.expressionEditor .secondPane > .expressionButton {
+	-fx-text-fill : -fx-company-color-light;
+
+}
+.expressionEditor .firstPane:hover > .expressionButton,
+.expressionEditor .secondPane:hover > .expressionButton {
+	-fx-text-fill : -fx-company-color-dark;
+
+}
+
+/*Layout builder*/
+.selfControl {
+	-fx-stroke : white;
+	-fx-effect : innershadow(gaussian, black, 1, 1, 0,0);
+
+}
+.otherControl {
+	-fx-stroke : black;
+	-fx-effect : innershadow(gaussian, white, 1, 1, 0,0);
+
+}
+.selfControlSelectedLine {
+	-fx-stroke : -fx-company-color-light;
+
+}
+.otherControlSelectedLine {
+	-fx-stroke : -fx-company-color-light;
+
+}
+.formulaToggleButton {
+	-fx-font : 13 arial;
+	-fx-text-alignment:left
+}
+
+/*FindPanel*/
+.findPanel {
+	-fx-background-color : #595B59;
+
+}
+.splitPaneHideDivider *.split-pane-divider {
+	-fx-padding: 0;
+	-fx-background-color: transparent;
+	-fx-background-insets: 0;
+	-fx-shape: " ";
+}
+
+.notEditableField {
+	-fx-opacity: 0.4
+
+}
+
+.browser {
+	-fx-padding : 2px;
+	-fx-border-width : 2 0 2 0;
+	-fx-border-color : -fx-text-base-color;
+}
+
+.auto-complete-popup > .list-view {
+	-fx-background-color:
+		linear-gradient(to bottom,
+			derive(-fx-color,-17%),
+			derive(-fx-color,-30%)
+		),
+		-fx-control-inner-background;
+	-fx-background-insets: -1 -2 -1 -1, 0 -1 0 0;
+	-fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
+}
+.auto-complete-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+	-fx-padding: 4 0 4 5;
+	/* No alternate highlighting */
+	-fx-background: -fx-control-inner-background;
+}
+.auto-complete-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
+	-fx-background:  -fx-selection-bar-non-focused;
+	-fx-background-color:  -fx-company-color-dark;
+}
+.auto-complete-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover,
+.auto-complete-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+	-fx-background: -fx-accent;
+	-fx-background-color: -fx-company-color-dark;
+}
+.auto-complete-popup > .list-view > .placeholder > .label {
+	-fx-text-fill: derive(-fx-control-inner-background,-30%);
+}
+
+/*Configuration*/
+.fullPathLabel {
+	-fx-opacity : 0.5;
+
+}
+.fullPathLabel:hover {
+	-fx-opacity : 1.0
+
+}
+
+.tempCustomTab {
+	-fx-border-width : 0px;
+
+}
+.tempCustomTabSimple {
+	-fx-background-color : #a8a8a8;
+
+}
+.tempCustomTabOver {
+	-fx-background-color : #f0f0f0;
+	-fx-border-color : -fx-company-color-light;
+}
+/*Code area*/
+.styled-text-area {
+	-fx-background-color : #535353;
+
+}
+/*General syntax*/
+.default {
+	-fx-fill : -fx-text-base-color;
+
+}
+.keyword {
+	-fx-fill: #CC7832;
+	-fx-font-weight: bold;
+}
+.semicolon {
+	-fx-fill : #c0c0c0;
+	-fx-font-weight: bold;
+}
+.paren {
+    -fx-fill: lightcoral;
+    -fx-font-weight: bold;
+}
+.bracket {
+    -fx-fill: lightgreen;
+    -fx-font-weight: bold;
+}
+.brace {
+    -fx-fill: turquoise;
+    -fx-font-weight: bold;
+}
+.string {
+	-fx-fill: lightgreen;
+
+}
+/*Matrix syntax*/
+.actions {
+	-fx-fill: lightskyblue;
+	-fx-font-weight: bold;
+}
+.comment {
+	-fx-fill: #d3d3d3;
+
+}
+.paragraph-box:has-caret {
+	-fx-background-color: #f2f9fc;
+
+}
+/*XmlSyntax*/
+.tagmark {
+	-fx-fill: gray;
+
+}
+.anytag {
+    -fx-fill: crimson;
+
+}
+.attribute {
+    -fx-fill: darkviolet;
+
+}
+.avalue {
+    -fx-fill: green;
+
+}
+/*Java syntax*/
+.symbols {
+	-fx-fill: coral;
+
+}
+
+/*  Images  */
+
+/*MainController*/
+/*Toolbar*/
+#btnLoadMatrix {
+	-fx-graphic : url("icons/loadMatrix.png")
+
+}
+#btnNewMatrix {
+	-fx-graphic : url("icons/matrixNew.png")
+
+}
+#btnSaveDocument {
+	-fx-graphic : url("icons/documentSave.png")
+
+}
+#btnSaveAsDocument {
+	-fx-graphic : url("icons/documentSaveAs.png")
+
+}
+#btnOpenMainLog {
+	-fx-graphic : url("icons/log.png")
+
+}
+#btnShowCalculator {
+	-fx-graphic : url("icons/calc.png")
+
+}
+#btnUndo  {
+	-fx-graphic : url("icons/undo_32.png");
+
+}
+#btnRedo {
+	-fx-graphic : url("icons/redo_32.png");
+
+}
+#btnSmallRedo{
+	-fx-graphic : url("icons/redo_16.png");
+
+}
+
+#btnSmallUndo{
+	-fx-graphic : url("icons/undo_16.png");
+
+}
+#splitMenuButtonToolbar {
+	-fx-graphic : url("icons/start.png")
+
+}
+
+/*ProjectPane*/
+#saveConfiguration {
+	-fx-graphic : url("icons/saveConfiguration.png");
+
+}
+#reloadConfiguration {
+	-fx-graphic : url("icons/refresh.png");
+
+}
+
+/*Scheduler*/
+#scheduleBtnStart {
+	-fx-graphic : url("icons/start.png")
+
+}
+#scheduleBtnStop {
+	-fx-graphic : url("icons/stop.png")
+
+}
+#scheduleBtnDestroy {
+	-fx-graphic : url("icons/destroy.png")
+
+}
+#scheduleBtnShowSelected {
+	-fx-graphic : url("icons/open.png")
+
+}
+#scheduleBtnLoadSeveral {
+	-fx-graphic : url("icons/folder.png")
+
+}
+
+#scheduleShowResultBtn {
+	-fx-graphic : url("icons/showResult_small.png")
+}
+
+/*Matrix tab*/
+#matrixBtnStartDefaultClient {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+#matrixBtnStopDefaultClient {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+
+#matrixBtnStartDefaultApplication {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+#matrixBtnConnectDefaultApplication {
+	-fx-graphic : url("icons/connect_small.png")
+
+}
+#matrixBtnStopDefaultApplication {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+
+#matrixBtnFind {
+	-fx-graphic : url("icons/find.png")
+
+}
+#matrixBtnWatch {
+	-fx-graphic : url("icons/watch.png")
+
+}
+
+#matrixBtnStartMatrix {
+	-fx-graphic : url("icons/start.png")
+
+}
+#matrixBtnStopMatrix {
+	-fx-graphic : url("icons/stop.png")
+
+}
+#matrixBtnPauseMatrix {
+	-fx-graphic : url("icons/pause.png")
+
+}
+
+#matrixBtnStepMatrix {
+	-fx-graphic : url("icons/step.png")
+
+}
+#matrixBtnShowResult {
+	-fx-graphic : url("icons/showResult.png")
+
+}
+#matrixToggleTracing {
+	-fx-graphic : url("icons/colorOff.png")
+
+}
+#matrixToggleTracing:selected {
+	-fx-graphic : url("icons/colorOn.png")
+
+}
+
+/*Dictionary tab*/
+#dictionaryBtnStartApplication {
+	-fx-graphic : url("icons/start_small.png")
+
+}
+#dictionaryBtnConnectApplication {
+	-fx-graphic : url("icons/connect_small.png")
+
+}
+#dictionaryBtnStopApplication {
+	-fx-graphic : url("icons/stop_small.png")
+
+}
+
+#dictionaryBtnNewDialog {
+	-fx-graphic : url("icons/new.png")
+
+}
+#dictionaryBtnDeleteDialog {
+	-fx-graphic : url("icons/delete_24.png")
+
+}
+#dictionaryBtnCopyDialog {
+	-fx-graphic : url("icons/copy_24.png")
+
+}
+#dictionaryBtnPasteDialog {
+	-fx-graphic : url("icons/paste_24.png")
+
+}
+#dictionaryBtnNewElement {
+	-fx-graphic : url("icons/new.png")
+
+}
+#dictionaryBtnDeleteElement {
+	-fx-graphic : url("icons/delete_24.png")
+
+}
+#dictionaryBtnCopyElement {
+	-fx-graphic : url("icons/copy_24.png")
+
+}
+#dictionaryBtnPasteElement {
+	-fx-graphic : url("icons/paste_24.png")
+
+}
+#dictionaryBtnTestSection {
+	-fx-graphic : url("icons/test.png")
+
+}
+
+/*Scale pane*/
+#scalePaneBtnZoomMinus {
+	-fx-graphic : url("icons/zoom_minus.png")
+
+}
+#scalePaneBtnZoomPlus {
+	-fx-graphic : url("icons/zoom_plus.png")
+
+}
+
+/*ImageViewWithScale*/
+#btnInspect {
+	-fx-graphic : url("icons/inspect.png")
+
+}
+
+/*Wizard*/
+#btnRelation {
+	-fx-graphic : url('icons/refresh.png')
+
+}
+#btnNextMark {
+	-fx-graphic : url('icons/next.png')
+
+}
+#btnPrevMark {
+	-fx-graphic : url('icons/previous.png')
+
+}
+#cbUpdate{
+	-fx-graphic : url('icons/refresh.png')
+
+}
+
+#btnOpenAsDocument {
+	-fx-graphic : url('icons/documentIcon.png');
+
+}
+#btnOpenAsPlainText {
+	-fx-graphic : url('icons/plainTextIcon.png');
+
+}
+#searchResultsTree:focused .tree-cell:filled:selected {
+    -fx-background-color: #424242;
+}

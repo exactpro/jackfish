@@ -1,0 +1,1341 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+
+<div id="BasicSyntax">
+	<h2>Basic Syntax</h2>
+		<p>MVEL is an expression language based on Java-syntax, with some
+			marked differences specific to MVEL.&nbsp; Unlike Java however, MVEL
+			is dynamically typed (with optional typing), meaning type
+			qualification is not required in the the source.&nbsp;</p>
+
+		<p>An MVEL expression can be as simple as a single identifier, or
+			as complicated as a full blown boolean expression with method calls
+			and inline collection creations.</p>
+
+		<div class="section_2">
+			<h2 id="BasicSyntax-SimplePropertyExpression">Simple Property
+				Expression</h2>
+
+			<p>
+				In this expression, we simply have a single identifier (<strong>user.name</strong>),
+				which by itself, is what we refer to in MVEL as a a <strong>property
+					expression</strong>, in that the only purpose of the expression is to
+				extract a property out of a variable or context object.&nbsp;
+				Property expressions are one of the most common uses, allowing MVEL
+				to be used as a very high performance, easy to use,
+				reflection-optimizer.&nbsp; <br class="atl-forced-newline"> <br>
+			</p>
+
+			<p>MVEL can even be used for evaluating a boolean expression:</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<pre>
+user.name == 'John Doe'
+</pre>
+				</div>
+			</div>
+			<p>
+				Like Java, MVEL supports the full gambit of operator precedence
+				rules, including the ability to use bracketing to control execution
+				order.<br class="atl-forced-newline"> <br>
+			</p>
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+(user.name == &#39;John Doe&#39;) &amp;&amp; ((x * 2) - 1) &gt; 20
+]]></script>
+					<pre>
+(user.name == 'John Doe') &amp;&amp; ((x * 2) - 1) &gt; 20
+</pre>
+				</div>
+			</div>
+			<p>
+				<br class="atl-forced-newline"> <br> <br
+					class="atl-forced-newline"> <br>
+			</p>
+
+		</div>
+	</div>
+<div id="MVELOperators">
+	<h2>MVEL 2.0 Operators</h2>
+		<p>The following chart is a complete list and description of all
+			operators present in MVEL.</p>
+
+		<div class="section_4">
+			<h4 id="MVEL2.0Operators-UnaryOperators">Unary Operators</h4>
+
+			<div class="table-wrap">
+				<table class="confluenceTable">
+					<tbody>
+						<tr>
+							<th class="confluenceTh"><p>Operator</p></th>
+							<th class="confluenceTh"><p>Description</p></th>
+							<th class="confluenceTh"><p>Example</p></th>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">new</span>
+								</p></td>
+							<td class="confluenceTd"><p>Object instantiation</p></td>
+							<td class="confluenceTd"><p>
+									<em>new String("foo")</em>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">with</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									<a href="/MVEL+2.0+Block+WITH+Operator">Block WITH Operator</a>.
+									Perform multiple operations on a single object instance
+								</p></td>
+							<td class="confluenceTd"><p>
+									<em>with (value) { name = 'Foo', age = 18, sex =
+										Sex.FEMALE }</em>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">assert</span>
+								</p></td>
+							<td class="confluenceTd"><p>Assert that a value is true
+									or fail with an AssertionError</p></td>
+							<td class="confluenceTd"><p>
+									<em>assert foo != null</em>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">isdef</span>
+								</p></td>
+							<td class="confluenceTd"><p>Tests whether or not a
+									variable is defined within the scope</p></td>
+							<td class="confluenceTd"><p>isdef variableName</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">!</span>
+								</p></td>
+							<td class="confluenceTd"><p>Boolean negation operator</p></td>
+							<td class="confluenceTd"><p>
+									<em>!true == false</em>
+								</p></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="section_4">
+			<h4 id="MVEL2.0Operators-ComparisonOperators">Comparison
+				Operators</h4>
+
+			<div class="table-wrap">
+				<table class="confluenceTable">
+					<tbody>
+						<tr>
+							<th class="confluenceTh"><p>Operator</p></th>
+							<th class="confluenceTh"><p>Description</p></th>
+							<th class="confluenceTh"><p>Example</p></th>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">==</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Equality Check.&nbsp; Checks to see if the <strong>values</strong>
+									on both sides of the operator are <strong>equal</strong>.&nbsp;
+									Unlike Java, this is not an identity check.&nbsp; <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									"foo" == "foo" <em>is true</em> <br class="atl-forced-newline">
+									<br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">!=</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Not Equals Check.&nbsp; Checks to see if the <strong>values</strong>
+									on both sides of the operator are <strong>not equal.</strong> <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									"foo" == "bar" <em>is false</em> <br class="atl-forced-newline">
+									<br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">&gt;</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Greater Than Check.&nbsp; Checks to see if the value on the
+									left side of the operator is greater than than value on the
+									right. <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									2 &gt; 1 <em>is true</em> <br class="atl-forced-newline">
+									<br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">&lt;</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Less Than Check.&nbsp; Checks to see if the value on the left
+									side of the operator is less than value on the right. <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									1 &lt; 2 <em>is true</em> <br class="atl-forced-newline">
+									<br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">&gt;=</span> <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Greater Than or Equal.&nbsp; Checks to see if the value on the
+									left hand side is greater than or equal to the value on the
+									right. <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									1 &gt;= 1 <em>is true</em> <br class="atl-forced-newline">
+									<br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">&lt;=</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Less Than or Equal.&nbsp; Checks to see if the value on the
+									left hand side is less than or equal to the value on the right.
+									<br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									2 &lt;= 2 <em>is true</em> <br class="atl-forced-newline">
+									<br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">contains</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Value Containment Check.&nbsp; Checks to see if the value on
+									the left contains the value on the right.&nbsp; For more
+									details on how this operator works, see <a class="unresolved"
+										href="#">Contains Operator</a> <br class="atl-forced-newline">
+									<br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									var contains "Foo" <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">is</span> <em>or</em> <span
+										style="color: blue;">instanceof</span> <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Type Checking Operator.&nbsp; Checks to see if the value on the
+									left is a member of the class on the right.&nbsp; <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									var instanceof Integer <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">strsim</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									String Similarity Check.&nbsp; Compares to strings and returns
+									a similarity between them as a percentage. See: <a
+										href="/String+Similarity+Check">String Similarity Check</a>. <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									"foobie" strsim "foobar" <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">soundslike</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Soundex Check.&nbsp; Performs a soundex comparison between two
+									strings. See: <a class="unresolved" href="#">Soundex</a>. <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									"foobar" soundslike "fubar" <br class="atl-forced-newline">
+									<br>
+								</p></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="section_4">
+			<h4 id="MVEL2.0Operators-LogicalOperators">Logical Operators</h4>
+
+			<div class="table-wrap">
+				<table class="confluenceTable">
+					<tbody>
+						<tr>
+							<th class="confluenceTh"><p>Operator</p></th>
+							<th class="confluenceTh"><p>
+									Description <br class="atl-forced-newline"> <br>
+								</p></th>
+							<th class="confluenceTh"><p>
+									Example <br class="atl-forced-newline"> <br>
+								</p></th>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">&amp;&amp;</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Logical AND.&nbsp; Checks to see that the values on both sides
+									of the operator are true. <br class="atl-forced-newline">
+									<br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									foo &amp;&amp; bar <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">||</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Logical OR.&nbsp; Checks to see if either the value on the left
+									or the right is true. <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									foo || bar <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">or</span> <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Chained OR.&nbsp; Checks a sequence of values for <a
+										href="/Value+Emptiness">emptiness </a>and returns the first
+									non-empty value. (This operator, or at least it's equivalent
+									functionality, is referred to as the "elvis operator" in other
+									languages) <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									foo or bar or barfoo or 'N/A' <br class="atl-forced-newline">
+									<br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">~=</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Regular Expression Match.&nbsp; Checks to see if the value on
+									the left matches the regular expression on the right. <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>foo ~= '[a-z].+'</p></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="section_4">
+			<h4 id="MVEL2.0Operators-BitwiseOperators">Bitwise Operators</h4>
+			<div class="table-wrap">
+				<table class="confluenceTable">
+					<tbody>
+						<tr>
+							<th class="confluenceTh"><p>Operator</p></th>
+							<th class="confluenceTh"><p>
+									Description <br class="atl-forced-newline"> <br>
+								</p></th>
+							<th class="confluenceTh"><p>
+									Example <br class="atl-forced-newline"> <br>
+								</p></th>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">&amp;</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Bitwise AND. <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>foo &amp; 5</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">|</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Bitwise OR. <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>foo | 5</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">^</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Bitwise XOR. <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>foo ^ 5</p></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="section_4">
+			<h4 id="MVEL2.0Operators-ArithmeticOperators">Arithmetic
+				Operators</h4>
+
+			<div class="table-wrap">
+				<table class="confluenceTable">
+					<tbody>
+						<tr>
+							<th class="confluenceTh"><p>Operator</p></th>
+							<th class="confluenceTh"><p>
+									Description <br class="atl-forced-newline"> <br>
+								</p></th>
+							<th class="confluenceTh"><p>
+									Example <br class="atl-forced-newline"> <br>
+								</p></th>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">+</span> <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Addition.&nbsp; Adds the value on the left to the value on the
+									right <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									1 + 2 <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">-</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Subtraction.&nbsp; Subtracts the value on the right from the
+									value on the left <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									2 - 1 <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">/</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Division.&nbsp; Divides the number on the left by the number on
+									the right <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									2 / 1 <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">*</span> <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Multiplication.&nbsp; Multiples the number on the left by the
+									number on the right <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									1 * 2 <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">%</span> <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Modulus.&nbsp; Divides the number on the left by the number on
+									the right and returns the remainder. <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									2 % 1 <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="section_4">
+			<h4 id="MVEL2.0Operators-OtherOperators">Other Operators</h4>
+
+			<div class="table-wrap">
+				<table class="confluenceTable">
+					<tbody>
+						<tr>
+							<th class="confluenceTh"><p>Operator</p></th>
+							<th class="confluenceTh"><p>
+									Description <br class="atl-forced-newline"> <br>
+								</p></th>
+							<th class="confluenceTh"><p>
+									Example <br class="atl-forced-newline"> <br>
+								</p></th>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">+</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									String Concatenation.&nbsp; Overloaded operator for
+									concatenating two strings together. <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									"foo" + ;bar" <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">#</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									<a href="/MVEL+2.0+Concatenation+Operator">Concatenation
+										Operator</a>.&nbsp; Concatenates two literals as strings. <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									1 # 2 <em>returns "12"</em> <br class="atl-forced-newline">
+									<br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">in</span>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Projection/Fold. Projects across a collection.&nbsp; See: <a
+										href="/MVEL+2.0+Projections+and+Folds">Projections and
+										Folds</a>. <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									(foo in list) <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+						<tr>
+							<td class="confluenceTd"><p>
+									<span style="color: blue;">=</span> <br
+										class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									Assignment.&nbsp; Assigns the value on the right to the
+									variable on the left. <br class="atl-forced-newline"> <br>
+								</p></td>
+							<td class="confluenceTd"><p>
+									var = "foobar" <br class="atl-forced-newline"> <br>
+								</p></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+<div id="InlineListMapsAndArrays">
+	<h2>Inline List, Maps and Arrays</h2>
+		<p>MVEL allows you to express Lists, Maps and Arrays using simple
+			elegant syntax. Consider the following example:</p>
+
+		<div class="code panel pdl" style="border-width: 1px;">
+			<div class="codeContent panelContent pdl">
+				<script type="syntaxhighlighter"
+					class="theme: Confluence; brush: java; gutter: false">
+				<![CDATA[
+
+[&#39;Bob&#39; : new Person(&#39;Bob&#39;), &#39;Michael&#39; : new Person(&#39;Michael&#39;)]
+
+]]></script>
+				<pre>
+
+['Bob' : new Person('Bob'), 'Michael' : new Person('Michael')]
+
+</pre>
+			</div>
+		</div>
+
+		<p>This is functionally equivalent to the following code:</p>
+
+		<div class="code panel pdl" style="border-width: 1px;">
+			<div class="codeContent panelContent pdl">
+				<script type="syntaxhighlighter"
+					class="theme: Confluence; brush: java; gutter: false">
+				<![CDATA[
+
+Map map = new HashMap();
+map.put(&quot;Bob&quot;, new Person(&quot;Bob&quot;));
+map.put(&quot;Michael&quot;, new Person(&quot;Michael&quot;));
+
+]]></script>
+				<pre>
+
+Map map = new HashMap();
+map.put("Bob", new Person("Bob"));
+map.put("Michael", new Person("Michael"));
+
+</pre>
+			</div>
+		</div>
+
+		<p>This can be a very powerful way to express data structures
+			inside of MVEL. You can use these constructs anywhere, even as a
+			parameter to a method:</p>
+
+		<div class="code panel pdl" style="border-width: 1px;">
+			<div class="codeContent panelContent pdl">
+				<script type="syntaxhighlighter"
+					class="theme: Confluence; brush: java; gutter: false">
+				<![CDATA[
+something.someMethod([&#39;foo&#39; : &#39;bar&#39;]);
+]]></script>
+				<pre>
+something.someMethod(['foo' : 'bar']);
+</pre>
+			</div>
+		</div>
+
+		<div class="section_2">
+			<h2 id="InlineList,MapsandArrays-Lists">Lists</h2>
+
+			<p>
+				Lists are expressed in the following format: <em>[item1, item2,
+					...]</em>
+			</p>
+
+			<p>For example:</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+[&quot;Jim&quot;, &quot;Bob&quot;, &quot;Smith&quot;]
+]]></script>
+					<pre>
+["Jim", "Bob", "Smith"]
+</pre>
+				</div>
+			</div>
+
+		</div>
+		<div class="section_2">
+			<h2 id="InlineList,MapsandArrays-Maps">Maps</h2>
+
+			<p>
+				Maps are expressed in the following format: <em>[key1 : value1,
+					key2: value2, ...]</em>
+			</p>
+
+			<p>For example:</p>
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+[&quot;Foo&quot; : &quot;Bar&quot;, &quot;Bar&quot; : &quot;Foo&quot;]
+]]></script>
+					<pre>
+["Foo" : "Bar", "Bar" : "Foo"]
+</pre>
+				</div>
+			</div>
+
+		</div>
+		<div class="section_2">
+			<h2 id="InlineList,MapsandArrays-Arrays">Arrays</h2>
+
+			<p>
+				Arrays are expressed in the following format: <em>{item1,
+					item2, ...}</em>
+			</p>
+
+			<p>For example:</p>
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+{&quot;Jim&quot;, &quot;Bob&quot;, &quot;Smith&quot;}
+]]></script>
+					<pre>
+{"Jim", "Bob", "Smith"}
+</pre>
+				</div>
+			</div>
+
+			<div class="section_3">
+				<h3 id="InlineList,MapsandArrays-ArrayCoercion">Array Coercion</h3>
+
+				<p>One important facet about inline arrays to understand is
+					their special ability to be coerced to other array types. When you
+					declare an inline array, it is untyped, but say for example you are
+					passing to a method that accepts int[]. You simply can write your
+					code as the following:</p>
+
+				<div class="code panel pdl" style="border-width: 1px;">
+					<div class="codeContent panelContent pdl">
+						<script type="syntaxhighlighter"
+							class="theme: Confluence; brush: java; gutter: false">
+						<![CDATA[
+foo.someMethod({1,2,3,4});
+]]></script>
+						<pre>
+foo.someMethod({1,2,3,4});
+</pre>
+					</div>
+				</div>
+
+				<p>
+					In this case, MVEL will see that the target method accepts an <strong>int[]</strong>
+					and automatically type the array as such.
+				</p>
+
+			</div>
+		</div>
+	</div>
+<div id="MVELPropertyNavigation">
+	<h2>MVEL 2.0 Property Navigation</h2>
+		<p>MVEL property navigation follows well-established conventions
+			found in other bean property expressions found in other languages
+			such as Groovy, OGNL, EL, etc.</p>
+
+		<p>Unlike some other languages which require qualification
+			depending on the underlying method of access, MVEL provides a single,
+			unified syntax for accessing properties, static fields, maps, etc.</p>
+
+		<div class="section_2">
+			<h2 id="MVEL2.0PropertyNavigation-BeanProperties">Bean
+				Properties</h2>
+
+			<p>Most java developers are familiar with and user the
+				getter/setter paradigm in their Java objects in order to encapsulate
+				property accessors.&nbsp;&nbsp; For example, you might access a
+				property from an object as such:</p>
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+user.getManager().getName();
+]]></script>
+					<pre>
+user.getManager().getName();
+</pre>
+				</div>
+			</div>
+			<p>In order to simplify this, you can access the same property
+				using the following expression:</p>
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+user.manager.name
+]]></script>
+					<pre>
+user.manager.name
+</pre>
+				</div>
+			</div>
+			<blockquote>
+				<p>
+					<em><strong>Note:</strong> In situations where the field in
+						the object is <strong>public</strong>, MVEL will still prefer to
+						access the property via it's getter method.</em>
+				</p>
+			</blockquote>
+
+		</div>
+		<div class="section_2">
+			<h2 id="MVEL2.0PropertyNavigation-Null-SafeBeanNavigation">Null-Safe
+				Bean Navigation</h2>
+
+			<p>Sometimes you have property expressions which may contain a
+				null element, requiring you to create a null-check. You can simplify
+				this by using the null-safe operator:</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+user.?manager.name
+]]></script>
+					<pre>
+user.?manager.name
+</pre>
+				</div>
+			</div>
+
+			<p>This is functionally equivalent to writing:</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+if (user.manager != null) { return user.manager.name; } else { return null; }
+]]></script>
+					<pre>
+if (user.manager != null) { return user.manager.name; } else { return null; }
+</pre>
+				</div>
+			</div>
+
+		</div>
+		<div class="section_2">
+			<h2 id="MVEL2.0PropertyNavigation-Collections">Collections</h2>
+
+			<p>Traversal of collections can also be achieved using
+				abbreviated syntax.</p>
+
+			<div class="section_3">
+				<h3 id="MVEL2.0PropertyNavigation-ListAccess">List Access</h3>
+
+				<p>Lists are accessed the same as array's. For example:</p>
+
+				<div class="code panel pdl" style="border-width: 1px;">
+					<div class="codeContent panelContent pdl">
+						<script type="syntaxhighlighter"
+							class="theme: Confluence; brush: java; gutter: false">
+						<![CDATA[
+ user[5]
+]]></script>
+						<pre>
+ user[5]
+</pre>
+					</div>
+				</div>
+				<p>is the equivelent of the Java code:</p>
+				<div class="code panel pdl" style="border-width: 1px;">
+					<div class="codeContent panelContent pdl">
+						<script type="syntaxhighlighter"
+							class="theme: Confluence; brush: java; gutter: false">
+						<![CDATA[
+user.get(5);
+]]></script>
+						<pre>
+user.get(5);
+</pre>
+					</div>
+				</div>
+
+			</div>
+			<div class="section_3">
+				<h3 id="MVEL2.0PropertyNavigation-MapAccess">Map Access</h3>
+
+				<p>Maps are accessed in the same way as array's except any
+					object can be passed as the index value. For example:</p>
+
+				<div class="code panel pdl" style="border-width: 1px;">
+					<div class="codeContent panelContent pdl">
+						<script type="syntaxhighlighter"
+							class="theme: Confluence; brush: java; gutter: false">
+						<![CDATA[
+user[&quot;foobar&quot;]
+]]></script>
+						<pre>
+user["foobar"]
+</pre>
+					</div>
+				</div>
+				<p>is the equivelent of the Java code:</p>
+				<div class="code panel pdl" style="border-width: 1px;">
+					<div class="codeContent panelContent pdl">
+						<script type="syntaxhighlighter"
+							class="theme: Confluence; brush: java; gutter: false">
+						<![CDATA[
+user.get(&quot;foobar&quot;);
+]]></script>
+						<pre>
+user.get("foobar");
+</pre>
+					</div>
+				</div>
+
+				<p>For Maps that use a String as a key, you may use another
+					special syntax:</p>
+				<div class="code panel pdl" style="border-width: 1px;">
+					<div class="codeContent panelContent pdl">
+						<script type="syntaxhighlighter"
+							class="theme: Confluence; brush: java; gutter: false">
+						<![CDATA[
+user.foobar
+]]></script>
+						<pre>
+user.foobar
+</pre>
+					</div>
+				</div>
+				<p>... Allowing you to treat the Map itself as a virtual object.</p>
+
+			</div>
+			<div class="section_3">
+				<h3 id="MVEL2.0PropertyNavigation-StringsasArrays">Strings as
+					Arrays</h3>
+
+				<p>For the purposes of using property indexes (as well as
+					iteration) all Strings are treated as arrays. In MVEL you may refer
+					to the first character in a String variable as such:</p>
+
+				<div class="code panel pdl" style="border-width: 1px;">
+					<div class="codeContent panelContent pdl">
+						<script type="syntaxhighlighter"
+							class="theme: Confluence; brush: java; gutter: false">
+						<![CDATA[
+foo = &quot;My String&quot;;
+foo[0]; // returns &#39;M&#39;
+]]></script>
+						<pre>
+foo = "My String";
+foo[0]; // returns 'M'
+</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<div id="MVELLiterals">
+	<h2>MVEL 2.0 Literals</h2>
+	<p>A literal is used to represent a fixed-value in the source of a
+			particular script.</p>
+
+		<div class="section_2">
+			<h2 id="MVEL2.0Literals-Stringliterals">String literals</h2>
+
+			<p>String literals may be denoted by single or double quotes.</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+&quot;This is a string literal&quot;
+&#39;This is also string literal&#39;
+]]></script>
+					<pre>
+"This is a string literal"
+'This is also string literal'
+</pre>
+				</div>
+			</div>
+
+			<div class="section_3">
+				<h3 id="MVEL2.0Literals-Stringescapesequences">String escape
+					sequences</h3>
+
+				<ul>
+					<li><code>\\</code> - Double escape allows rendering of single
+						backslash in string.</li>
+					<li><code>\n</code> - Newline</li>
+					<li><code>\r</code> - Return</li>
+					<li><code>\u####</code> - Unicode character (Example: <code>\uAE00</code>)</li>
+					<li><code>\###</code> - Octal character (Example: <code>\73</code>)</li>
+				</ul>
+
+
+
+			</div>
+		</div>
+		<div class="section_2">
+			<h2 id="MVEL2.0Literals-Numericliterals">Numeric literals</h2>
+
+			<p>Integers can be represented in decimal (base 10), octadecimal
+				(base 8), or hexadecimal (base 16).</p>
+
+			<p>A decimal integer can be expressed as any number that does not
+				start with zero.</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+125 // decimal
+]]></script>
+					<pre>
+125 // decimal
+</pre>
+				</div>
+			</div>
+
+			<p>An octadecimal representation of an integer is possible by
+				prefixing the number with a zero, followed by digits ranging from 0
+				to 7.</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+0353 // octal
+]]></script>
+					<pre>
+0353 // octal
+</pre>
+				</div>
+			</div>
+
+			<p>
+				Hexidecimal is represented by prefixing the integer with
+				<code>0x</code>
+				followed by numbers ranging from 0-9..A-F.
+			</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+0xAFF0 // hex
+]]></script>
+					<pre>
+0xAFF0 // hex
+</pre>
+				</div>
+			</div>
+
+		</div>
+		<div class="section_2">
+			<h2 id="MVEL2.0Literals-Floatingpointliterals">Floating point
+				literals</h2>
+
+			<p>A floating point number consists of a whole number and a
+				factional part denoted by the point/period character, with an
+				optional type suffix.</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+10.503 // a double
+94.92d // a double
+14.5f // a float
+]]></script>
+					<pre>
+10.503 // a double
+94.92d // a double
+14.5f // a float
+</pre>
+				</div>
+			</div>
+
+		</div>
+		<div class="section_2">
+			<h2 id="MVEL2.0Literals-BigIntegerandBigDecimalliterals">BigInteger
+				and BigDecimal literals</h2>
+
+			<p>
+				You can represent
+				<code>BigInteger</code>
+				and
+				<code>BigDecimal</code>
+				literals by using the suffixes <strong><code>B</code></strong> and <strong><code>I</code></strong>
+				(uppercase is mandatory).
+			</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+104.39484B // BigDecimal
+8.4I // BigInteger
+]]></script>
+					<pre>
+104.39484B // BigDecimal
+8.4I // BigInteger
+</pre>
+				</div>
+			</div>
+
+		</div>
+		<div class="section_2">
+			<h2 id="MVEL2.0Literals-Booleanliterals">Boolean literals</h2>
+
+			<p>
+				Boolean literals are represented by the reserved keywords <strong><code>true</code></strong>
+				and <strong><code>false</code></strong>.
+			</p>
+
+		</div>
+		<div class="section_2">
+			<h2 id="MVEL2.0Literals-Nullliteral">Null literal</h2>
+
+			<p>
+				The null literal is denoted by the reserved keywords <strong><code>null</code></strong>
+				or <strong><code>nil</code></strong>.
+			</p>
+		</div>
+	</div>
+<div id="MVELProjectionsAndFolds">
+	<h2>MVEL 2.0 Projections and Folds</h2>
+		<p>
+			Put simply, projections (also known as <em>list comprehensions</em>)
+			are a way of representing collections. Using a very simple syntax,
+			you can inspect very complex object models inside collections.
+		</p>
+
+		<p>
+			Imagine you have a collection of <strong>User</strong> objects. Each
+			of these objects has a <strong>Parent</strong>. Now say you want to
+			get a list of all names of the parents (assuming the Parent class has
+			a <strong>name</strong> field) in the hierarchy of users, you would
+			write something like this:
+		</p>
+
+		<div class="code panel pdl" style="border-width: 1px;">
+			<div class="codeContent panelContent pdl">
+				<script type="syntaxhighlighter"
+					class="theme: Confluence; brush: java; gutter: false">
+				<![CDATA[
+parentNames = (parent.name in users);
+]]></script>
+				<pre>
+parentNames = (parent.name in users);
+</pre>
+			</div>
+		</div>
+
+		<p>You can even perform nested operations. Imagine instead, that
+			the User object had a collection member called familyMembers, and we
+			wanted a list of all the family members names:</p>
+
+		<div class="code panel pdl" style="border-width: 1px;">
+			<div class="codeContent panelContent pdl">
+				<script type="syntaxhighlighter"
+					class="theme: Confluence; brush: java; gutter: false">
+				<![CDATA[
+familyMembers = (name in (familyMembers in users));
+]]></script>
+				<pre>
+familyMembers = (name in (familyMembers in users));
+</pre>
+			</div>
+		</div>
+		<div class="section_2">
+			<h2 id="MVEL2.0ProjectionsandFolds-Filters">Filters</h2>
+
+			<p>
+				You can also filter projections with a constraint with the <strong><code>if</code></strong>
+				operator:
+			</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+(doSomeMethod() in listOfThings if $.shouldBeRun())
+]]></script>
+					<pre>
+(doSomeMethod() in listOfThings if $.shouldBeRun())
+</pre>
+				</div>
+			</div>
+
+			<p>
+				<strong><code>$</code></strong> serves as the placeholder for the
+				element being filtered. It is actually a regular variable that
+				exists inside the context of the projection. You can also use it to
+				return the current element in the projection to the representative
+				list.
+			</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+($ in fooList if $.name contains &#39;foobie&#39;)
+]]></script>
+					<pre>
+($ in fooList if $.name contains 'foobie')
+</pre>
+				</div>
+			</div>
+
+		</div>
+		<div class="section_2">
+			<h2 id="MVEL2.0ProjectionsandFolds-OtherExamples">Other Examples</h2>
+
+			<p>Here are some more examples:</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+
+(toUpperCase() in [&quot;foo&quot;, &quot;bar&quot;]); // returns [&quot;FOO&quot;, &quot;BAR&quot;]
+(($ &lt; 10) in [2,4,8,16,32]);       // returns [true, true, true, false, false]
+($ in [2,4,8,16,32] if $ &lt; 10);     // returns [2,4,8]
+
+]]></script>
+					<pre>
+
+(toUpperCase() in ["foo", "bar"]); // returns ["FOO", "BAR"]
+(($ &lt; 10) in [2,4,8,16,32]);       // returns [true, true, true, false, false]
+($ in [2,4,8,16,32] if $ &lt; 10);     // returns [2,4,8]
+
+</pre>
+				</div>
+			</div>
+
+			<p>Here is a functional Quicksort algorithm implemented using
+				projections:</p>
+
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+/**
+ * Sample MVEL 2.0 Script
+ * &quot;Functional QuickSort&quot;
+ * by: Christopher Michael Brock, Inspired by: Dhanji Prasanna
+ */
+
+import java.util.*;
+
+// the main quicksort algorithm
+def quicksort(list) {
+    if (list.size() &lt;= 1) {
+         list;
+    }
+    else {
+         pivot = list[0];
+         concat(quicksort(($ in list if $ &lt; pivot)), pivot, quicksort(($ in list if $ &gt; pivot)));
+    }
+}
+
+// define method to concatenate lists.
+def concat(list1, pivot, list2) {
+    concatList = new ArrayList(list1);
+    concatList.add(pivot);
+    concatList.addAll(list2);
+    concatList;
+}
+
+
+// create a list to sort
+list = [5,2,4,1,18,10,15,1,0];
+
+// sort it!
+quicksort(list);
+]]></script>
+					<pre>
+/**
+ * Sample MVEL 2.0 Script
+ * "Functional QuickSort"
+ * by: Christopher Michael Brock, Inspired by: Dhanji Prasanna
+ */
+
+import java.util.*;
+
+// the main quicksort algorithm
+def quicksort(list) {
+    if (list.size() &lt;= 1) {
+         list;
+    }
+    else {
+         pivot = list[0];
+         concat(quicksort(($ in list if $ &lt; pivot)), pivot, quicksort(($ in list if $ &gt; pivot)));
+    }
+}
+
+// define method to concatenate lists.
+def concat(list1, pivot, list2) {
+    concatList = new ArrayList(list1);
+    concatList.add(pivot);
+    concatList.addAll(list2);
+    concatList;
+}
+
+
+// create a list to sort
+list = [5,2,4,1,18,10,15,1,0];
+
+// sort it!
+quicksort(list);
+</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+<div id="LambdaExpressions">
+	<h2>Lambda Expressions</h2>
+		<p>MVEL allows the definition of lambda functions.</p>
+
+		<div class="section_2">
+			<h2 id="LambdaExpressions-Example">Example</h2>
+			<p>
+				<em>A simple lambda expression</em>
+			</p>
+			<div class="code panel pdl" style="border-width: 1px;">
+				<div class="codeContent panelContent pdl">
+					<script type="syntaxhighlighter"
+						class="theme: Confluence; brush: java; gutter: false">
+					<![CDATA[
+threshold = def (x) { x &gt;= 10 ? x : 0 }; result = cost + threshold(lowerBound);
+]]></script>
+					<pre>
+threshold = def (x) { x &gt;= 10 ? x : 0 }; result = cost + threshold(lowerBound);
+</pre>
+				</div>
+			</div>
+
+			<p>The above example defines a lambda and assigns it to the
+				variable "threshold". Lambda's are essentially functions that are
+				assignable to variables. They are essentially closures and can be
+				used as such.</p>
+
+		</div>
+		<div class="section_2">
+			<h2 id="LambdaExpressions-SeeAlso">See Also</h2>
+
+			<ul>
+				<li><a href="/Function+Definition">Function Definition</a></li>
+			</ul>
+		</div>
+	</div>
+

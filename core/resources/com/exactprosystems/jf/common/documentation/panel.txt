@@ -1,0 +1,57 @@
+{{!Configuration panel!}}
+
+The configuration describes the resources that could be used in matrices during testing. It is stored as an xml file.  The configuration panel consists of a project tree, a selected element parameter table (hereinafter, the table) and two buttons - "refresh" and "save".
+Refresh - applies all the configuration settings by reloading them from the file system.  It consecutively implements the refresh function for all the tree elements (if the function is accessible).
+Save - save the configuration as a file.
+
+The project tree consists of several elements.
+
+{{*Evaluator*}} - this element describes all the imports that the tool knows about. It allows to write formulas for class names without the package specification. The imports can be changed, deleted and added. There is also a set of imports for frequently used classes that weren't clearly defined in the code.
+
+{{*Format*}} - this element converts data type into string type and vice versa.  The table defines the standard format for the conversion of date, time, date and time. It is used to output the data objects into a report. When the tool converts the string into the data it tries to apply the standard formats first. If none of them fits, then other formats are tried subsequently. These formats can be changed, added or deleted.
+
+{{*Matrix*}} - this element shows the list of folders which were marked as "Use as matrix src" (see the file system paragraph). Here you can add or delete matrices.  A double click opens a matrix for editing. You can also select "Add to toolbar" from the matrix context menu which will add this matrix shortcut button  to the main toolbar. You can launch the matrix with it, open the matrix in the editor or delete the button from the panel completely
+
+{{*Library*}} - the list of all SubCases libraries which are connected to this project. The libraries can be opened, deleted, refreshed (applying the library change). The connection is achieved by opening the folder context menu from the file system and selecting the "Use as library src" menu.
+
+{{*Vars*}} - Variable files element. You can delete, open for editing and refresh. You can add by opening the context menu in the file system for files with ini. extensions and selecting "Add as user variables'.
+
+{{*Report*}} {{*folder*}} - a folder with reports.  A double click opens a report in a built-in browser. You can clear the folder, open a report, delete a report and refresh.
+
+{{*Sql*}} {{*entries*}} - this element contains a list of all entities added for working with the database. Entities can be deleted, tested (check the accessibility without matrix execution) and added (you have to enter the entity name to continue and fill in the sqlJar and sqlConnection fields in the table). sqlJar - path to the JDBC driver. This is a  .jar file supplied for any type of a database. JackFish provides 4 types out of the box - MySql, MSSQL, PostgreSql and Oracle. All of them are stored in the ${JF}/sql folder. slqConnection - the string to connect to the database. It can contain 2 variables - ${SERVER} and ${BASE}, which are entered in the matrix  in the SQLConnect action or in the database connection test window.
+
+{{*Client*}} {{*entries*}} -  this element contains all entities added to work with clients. It also contains the list of folders marked as "Use as client dictionary". Entities can be added, refreshed and deleted. You can also open a dictionary dedicated to this entity (this is available upon a double click on the entity), view possible actions (Possibilities) and add available parameters for the entity. To add a new entity you need to open the context menu for the "Client Entries" element, choose "Add Client", enter the name. Then you need to select the created entity and fill in the necessary fields.
+
+clientDescription - clarification for this entity.
+clientJar - path to the  .jar file,where this client is implemented. Depending on a protocol a client is going to work with (fix, dts, etc) you need to select an appropriate plug-in. They are stored in  the ${JF}/clients folder. 
+clientDictionary - path to the client's dictionary
+clientLimit - the count that shows how many incoming messages will be stored in the client's list ( 0 -unlimited). When you exceed the limit, the older messages will be deleted. Some parameters are characteristic of the selected client type. For example, fix.jar requires UseHeartBeat и HeartBeatInterval parameters, but such parameters are absent for  dts.jar.
+
+{{*Service*}} {{*entries*}} - this element contains all entities added for working with services. It contains the list of entities. Entities can be deleted, added, launched and stopped (available after the service is launched). You can also add all the parameters suitable for the selected service . When creating it you need to enter the name and fill in the parameters in the table for the newly created service.
+serviceDescription - entity description
+serviceJar - path to the .jar file, where this service is implemented. Available service plug-ins are stored in the   ${JF}/service folder.
+
+{{*App*}} {{*entries*}} - this element has a list of all entities added for working with applications. Just like the Clients it has the list of entities and the list of  folders with inner structure as well as dictionaries. Entities can be deleted and added. The help can be displayed, depending on the path to the .jar file and it can differ just like the parameters the plug-in knows about. When adding a new entity you need to enter the name and fill in the parameters in the table. The parameters are the same for all plug-in types.
+
+appDesctription - entity description
+appJar - the path to the .jar file, in which this GUI plug-in is implemented. At the moment we have 3 types of plug-ins - web application testing (web.jar), java application written using swing technology ( swing.jar) and for testing windows based applications (win.jar). They are all stored in the ${JF}/apps folder.
+appDicPath - the path to the plug-in dictionary.
+
+appWorkDir - working catalog which is used to launch a plug-in in a separate process. ${JF}/apps is usually used.
+appStartPort - a number from which the plug-in connection starting port will be searched using RMI technology .
+jreExec - the path to the alternative JRE, which will be used to launch the plug-in.
+jreArgs - arguments for launching java in which the plug-in will be started
+LogLevel - logging level. Available values: ALL, DEBUG, INFO, WARN, ERROR, FATAL, OFF, TRACE.
+
+web.jar has the following parameters available:
+ChromeDriverPath - the path to the Chrome driver. It's necessary to specify it if the application under test is launched in Chrome.
+IEDriverPath  the path to the IE driver. It's necessary to specify it if the application under test is launched in IE.
+SafariDriverPath -  the path to the Safari driver. It's necessary to specify it if the application under test is launched in Safari.
+GeckoDriverPath - the path to the Firefox driver. It's necessary to specify it if the application under test is launched in Firefox.
+FirefoxProfileDirectory - the path to the directory where the Firefox user profile is stored.
+UsePrivateMode - can be either true or false (false is set as a default). This parameter is necessary if you want to simultaneously launch several IE browsers in different sessions.
+ChromeDriverBinary - it is necessary to specify the path to the running Chrome browser if it wasn't installed in the default directory or if testing is executed in different Chrome versions.
+You can additionally set the MaxTimeout parameter for win.jar - it's a number, showing a timeout in milliseconds after which the plug-in will try to locate the window of the Windows app it connects to.
+
+There is the file system of the current directory further on in the tree. Following context menu options are available for the top level folders: Use as matrix src (see paragraph Matrix), Use as library src (see paragraph library), Use as app dictionary (see paragraph App entries), Use as Client dictionary (see paragraph Client entries) and Set report dir (see paragraph Report folder). There is also a menu for working with Git as well as a possibility to copy the file name for all files and folders.
+

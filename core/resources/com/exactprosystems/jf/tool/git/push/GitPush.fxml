@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.exactprosystems.jf.tool.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import com.exactprosystems.jf.api.common.i18n.R?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2009-2018, Exactpro Systems LLC
+  ~ www.exactpro.com
+  ~ Build Software to Test Software
+  ~
+  ~ All rights reserved.
+  ~ This is unpublished, licensed software, confidential and proprietary
+  ~ information which is the property of Exactpro Systems LLC or its licensors.
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.git.push.GitPushController">
+	<fx:define>
+		<CssVariables fx:id="verMin" fx:constant="VERTICAL_MIN"/>
+		<CssVariables fx:id="verMid" fx:constant="VERTICAL_MID"/>
+		<CssVariables fx:id="verMax" fx:constant="VERTICAL_MAX"/>
+
+		<CssVariables fx:id="horMin" fx:constant="HORIZONTAL_MIN"/>
+		<CssVariables fx:id="horMid" fx:constant="HORIZONTAL_MID"/>
+		<CssVariables fx:id="horMax" fx:constant="HORIZONTAL_MAX"/>
+	</fx:define>
+	<children>
+		<Label id="$verMid"/>
+		<HBox VBox.vgrow="ALWAYS">
+			<children>
+				<Label id="$horMid"/>
+				<BorderPane prefHeight="500.0" prefWidth="800.0" HBox.hgrow="ALWAYS">
+					<bottom>
+						<HBox alignment="CENTER_RIGHT" prefHeight="41.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
+							<children>
+								<Button fx:id="btnPush" mnemonicParsing="false" onAction="#push" >
+									<text><R fx:constant="GIT_PUSH_PUSH"/></text>
+								</Button>
+								<Button fx:id="btnClose" mnemonicParsing="false" onAction="#close" >
+									<text><R fx:constant="GIT_PUSH_CLOSE"/></text>
+								</Button>
+							</children>
+						</HBox>
+					</bottom>
+					<center>
+						<SplitPane dividerPositions="0.7" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+							<items>
+								<BorderPane prefHeight="200.0" prefWidth="200.0">
+									<center>
+										<ListView fx:id="listViewCommits" BorderPane.alignment="CENTER"/>
+									</center>
+									<top>
+										<VBox>
+											<children>
+												<HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+													<children>
+														<Label fx:id="lblLocalBranch" HBox.hgrow="ALWAYS"/>
+														<Label id="$horMin"/>
+														<Label fx:id="lblPlus" text=" " prefWidth="15" maxWidth="15" minWidth="15"/>
+														<ComboBox fx:id="cbBranch" editable="true" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+													</children>
+												</HBox>
+												<Label/>
+											</children>
+										</VBox>
+									</top>
+								</BorderPane>
+								<ListView fx:id="listViewChanges" prefHeight="200.0" prefWidth="200.0"/>
+							</items>
+						</SplitPane>
+					</center>
+				</BorderPane>
+				<Label id="$horMid"/>
+			</children>
+		</HBox>
+		<Label id="$verMid"/>
+	</children>
+</VBox>
