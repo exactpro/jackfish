@@ -64,12 +64,6 @@ public class DialogClose extends AbstractAction
 	}
 
 	@Override
-	public void helpToAddParametersDerived(List<ReadableValue> list, Context context, Parameters parameters) throws Exception
-	{
-		Helper.extraParameters(list, super.owner.getMatrix(), this.connection, Str.asString(parameters.get(dialogName)), false);
-	}
-
-	@Override
 	protected void doRealAction(Context context, ReportBuilder report, Parameters parameters, AbstractEvaluator evaluator) throws Exception
 	{
 		IApplication app = Helper.getApplication(this.connection);
