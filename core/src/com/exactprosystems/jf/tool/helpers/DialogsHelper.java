@@ -792,7 +792,7 @@ public abstract class DialogsHelper
 			report.reportStarted(null, VersionInfo.getVersion());
 			help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
 			report.reportFinished(0, 0, null, null);
-			saveToHtml(report.getContent());
+			//htmlContent(report.getContent());
 			displayHelp(report.getContent());
 		}
 		catch (Exception e)
@@ -1003,25 +1003,15 @@ public abstract class DialogsHelper
 		return Paths.get("").toAbsolutePath().toString();
 	}
 
-	private static void saveToHtml(String s) throws IOException
+	private static void htmlContent(String content) throws IOException
 	{
 		File file = new File("Actions.html");
 		boolean result = Files.deleteIfExists(file.toPath());
-		BufferedWriter out = new BufferedWriter(new FileWriter(file));
-		try
-		{
-			out.write(s);
-		}
-		catch (IOException e)
-		{
-			System.out.println("Exception");
-		}
-		finally
-		{
+		try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
+			out.write(content);
 			out.close();
 		}
 	}
-
 
 	private static final Logger logger = Logger.getLogger(DialogsHelper.class);
 }

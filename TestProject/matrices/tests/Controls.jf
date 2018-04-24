@@ -125,10 +125,10 @@ INIT;Test case;;;
 #Id;#TestCase;#Kind;#Depends;#For
 EXECUTE;;;;
     #Assert;#Message
-    isdef parameter && parameter >= 0 && parameter <=3;'Parater for the matrix shoud be defind and has value from 0 to 4. Actual : ' + parameter
+    isdef parameter && parameter >= 0 && parameter <=3;'Parameter for the matrix should be defined and has value from 0 to 4. Actual : ' + parameter
 
     #Id;#Let
-    allPlugins;['InternetExplorer', 'Win', 'Swing', 'Chrome']
+    allPlugins;['Swing', 'InternetExplorer', 'Win', 'Chrome']
 
     #Id;#Let
     pluginName;allPlugins[parameter]
