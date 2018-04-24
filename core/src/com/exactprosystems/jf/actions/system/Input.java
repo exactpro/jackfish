@@ -32,7 +32,8 @@ import java.util.Map;
 		additionFieldsAllowed 	   = false,
         constantOutputDescription  = R.INPUT_OUTPUT_DESC,
 		suffix					   = "INP",
-        outputType                 = Object.class
+        outputType                 = Object.class,
+		constantExamples		   = R.INPUT_EXAMPLE
 		
 	)
 public class Input extends AbstractAction 

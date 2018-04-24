@@ -36,7 +36,8 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 		constantGeneralDescription = R.DIALOG_CHECK_LAYOUT_GENERAL_DESC,
 		additionFieldsAllowed 	   = true,
 		suffix 					   = "DLGCL",
-		outputType = Table.class
+		outputType = Table.class,
+		constantExamples = R.DIALOG_CHECK_LAYOUT_EXAMPLE
 	)
 public class DialogCheckLayout extends AbstractAction
 {

@@ -800,7 +800,7 @@ Application Resize;;;
         IMGGET1;ImageGet;CALL_1
 
         #Assert;#Message
-        IMGGET1.Out.getImage().getHeight() == height-125;'Height is wrong ' + IMGGET1.Out.getImage().getHeight()
+        IMGGET1.Out.getImage().getHeight() == height-130;'Height is wrong ' + IMGGET1.Out.getImage().getHeight()
 
         #Assert;#Message
         IMGGET1.Out.getImage().getWidth() == width-10;'Width is wrong ' + IMGGET1.Out.getImage().getWidth()

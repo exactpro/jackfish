@@ -75,9 +75,8 @@ import java.awt.Desktop;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -613,7 +612,7 @@ public abstract class DialogsHelper
         dialog.show();
     }
 
-	
+
 	public static String showHelperDialog(String title, AbstractEvaluator evaluator, String value, Matrix matrix)
 	{
 		try
@@ -657,8 +656,8 @@ public abstract class DialogsHelper
         }
         return res[0];
     }
-	
-	public static Object showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind, 
+
+	public static Object showUserInput(AbstractEvaluator evaluator, String title, Object defaultValue, HelpKind helpKind,
 	        List<ReadableValue> dataSource, int timeout)
 	{
 		Task<Object> task = new Task<Object>()
@@ -740,10 +739,10 @@ public abstract class DialogsHelper
 		String ls = System.lineSeparator();
 		group.getChildren().add(copyrightTxt);
 		Label developers = new Label("Developers : " + ls + ls
-				+ "Valery Florov"  + ls  
-				+ "Andrey Bystrov"  + ls 
-				+ "Andrey Smirnov"  + ls 
-				+ "Alexander Kruglov"  + ls 
+				+ "Valery Florov"  + ls
+				+ "Andrey Bystrov"  + ls
+				+ "Andrey Smirnov"  + ls
+				+ "Alexander Kruglov"  + ls
 				+ "Victor Krasnovid");
 		group.getChildren().add(developers);
 		developers.setOpacity(0.0);
@@ -793,6 +792,7 @@ public abstract class DialogsHelper
 			report.reportStarted(null, VersionInfo.getVersion());
 			help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
 			report.reportFinished(0, 0, null, null);
+			saveToHtml(report.getContent());
 			displayHelp(report.getContent());
 		}
 		catch (Exception e)
@@ -1001,6 +1001,25 @@ public abstract class DialogsHelper
 	private static String getCurrentDir()
 	{
 		return Paths.get("").toAbsolutePath().toString();
+	}
+
+	private static void saveToHtml(String s) throws IOException
+	{
+		File file = new File("Actions.html");
+		boolean result = Files.deleteIfExists(file.toPath());
+		BufferedWriter out = new BufferedWriter(new FileWriter(file));
+		try
+		{
+			out.write(s);
+		}
+		catch (IOException e)
+		{
+			System.out.println("Exception");
+		}
+		finally
+		{
+			out.close();
+		}
 	}
 
 
