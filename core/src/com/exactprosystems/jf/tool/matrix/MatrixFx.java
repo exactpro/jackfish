@@ -51,7 +51,6 @@ public class MatrixFx extends Matrix
 	public MatrixFx(String matrixName, DocumentFactory factory, IMatrixListener matrixListener, boolean isLibrary)
 	{
 		super(matrixName, factory, matrixListener, isLibrary);
-		super.saved();
 	}
 
 	//==============================================================================================================================
@@ -62,7 +61,6 @@ public class MatrixFx extends Matrix
 	{
 		super.display();
 		this.getRoot().fire();
-		getNameProperty().fire();
 
 		restoreSettings(getFactory().getSettings());
 	}

@@ -33,7 +33,7 @@ public abstract class AbstractDocument implements Document
 	{
 		this.factory = factory;
 		this.nameProperty = new MutableValue<>(fileName);
-		this.changedProperty = new MutableValue<>(false);
+		this.changedProperty = new MutableValue<>(true);
 	}
 	
 	@Override
@@ -107,6 +107,7 @@ public abstract class AbstractDocument implements Document
 	public void display() throws Exception
 	{
 		this.nameProperty.fire();
+		this.changedProperty.fire();
 	}
 
 	@Override
