@@ -1009,7 +1009,6 @@ public abstract class DialogsHelper
 		boolean result = Files.deleteIfExists(file.toPath());
 		try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
 			out.write(content);
-			out.close();
 		}
 	}
 

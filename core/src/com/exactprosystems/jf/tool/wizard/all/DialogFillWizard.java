@@ -195,7 +195,10 @@ public class DialogFillWizard extends AbstractWizard
         return () ->
         {
             CommandBuilder builder = CommandBuilder.start();
-            return builder.addMatrixItem(this.currentMatrix, isAbleHasChild ? this.currentItem : currentMatrix.getRoot(), createItem(resultListView.getItems()), 0).build();
+            return builder.addMatrixItem(this.currentMatrix,
+                    this.currentItem.getParent(),
+                    createItem(resultListView.getItems()),
+                    this.currentItem.getParent().index(this.currentItem)).build();
         };
     }
 

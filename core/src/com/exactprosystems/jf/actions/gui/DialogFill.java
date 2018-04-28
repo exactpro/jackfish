@@ -49,7 +49,7 @@ import static com.exactprosystems.jf.actions.gui.Helper.message;
 		additionFieldsAllowed 		  = true,
 		constantOutputDescription 	  = R.DIALOG_FILL_OUTPUT_DESC,
 		outputType 					  = Map.class,
-		constantAdditionalDescription = R.DIALOG_FILL_EXAMPLE
+	constantExamples				  =	R.DIALOG_FILL_EXAMPLE
 	)
 public class DialogFill extends AbstractAction
 {

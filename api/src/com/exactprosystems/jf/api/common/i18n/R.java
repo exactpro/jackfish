@@ -15,6 +15,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum R
 {
@@ -2858,35 +2860,26 @@ public enum R
 
 	private static void importFromCSV(String fileName) throws IOException
 	{
-		BufferedReader br = null;
-		String line = "";
+		String line;
 		String cvsSplitBy = "\\t";
 		File result = new File("new_bundle.properties");
 		boolean delete = Files.deleteIfExists(result.toPath());
 		OutputStream out = new FileOutputStream(result);
 		BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(out, "8859_1"));
+		List<String> currentNames = Stream.of(R.values()).map(Enum::name).collect(Collectors.toList());
 
 		System.out.println("Start import from CSV!");
-		try
+		try(BufferedReader br = new BufferedReader(new FileReader(fileName)))
 		{
-			br = new BufferedReader(new FileReader(fileName));
 			while ((line = br.readLine()) != null) {
 				String[] split = line.split(cvsSplitBy);
 				bf.write(split[0] + "=" + split[1]);
 				bf.newLine();
+				currentNames.remove(split[0]);
 			}
 			bf.flush();
-			bf.close();
 		}
-		finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		System.out.println("Lost " + currentNames.size() + ": " + String.join(", ", currentNames));
 		System.out.println("Finish import from CSV!");
 	}
 

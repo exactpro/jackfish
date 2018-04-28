@@ -12,6 +12,7 @@ package com.exactprosystems.jf.documents.matrix.parser.items.help;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionAttribute;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.error.ErrorKind;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -64,7 +65,10 @@ public class HelpActionItem extends MatrixItem
         {
             report.outLine(this, null, "{{`{{*" + R.HELP_ACTION_ITEM_ADDITIONAL_FIELDS_YES.get() + "*}}`}}", null);
 			String additionalDescription = attr.constantAdditionalDescription().get();
-			report.outLine(this, null, "{{`" + additionalDescription + "`}}", null);
+			if(!Str.IsNullOrEmpty(additionalDescription))
+			{
+                report.outLine(this, null, "{{`" + additionalDescription + "`}}", null);
+            }
         }
         else
         {

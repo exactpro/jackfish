@@ -41,20 +41,20 @@ sex = Sex.FEMALE }
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
-{{$==$}}`Equality Check.  Checks to see if the {{*values*}} on both sides of the operator are {{*equal*}}.  Unlike Java, this is not an identity check.`{{#"foo"=="foo"
+{{$==$}}`Equality Check.  Test if the {{*values*}} on both sides of the operator are {{*equal*}}.  Unlike Java, this is not an identity check.`{{#"foo"=="foo"
 #}} is true``
-{{$!=$}}`Not Equals Check.  Checks to see if the {{*values*}} on both sides of the operator are {{*not*}} {{*equal*}}.`{{#"foo"=="bar"
-#}} is false``
-{{$>$}}`Greater Than Check.  Checks to see if the value on the left side of the operator is greater than than value on the right.`{{#2 > 1
+{{$!=$}}`Not Equals Check.  Test if the {{*values*}} on both sides of the operator are {{*not*}} {{*equal*}}.`{{#"foo"!="bar"
 #}} is true``
-{{$<$}}`Less Than Check.  Checks to see if the value on the left side of the operator is less than value on the right.`{{#1 < 2
+{{$>$}}`Greater Than Check.  Test if the value on the left side of the operator is greater than than value on the right.`{{#2 > 1
 #}} is true``
-{{$>=$}}`Greater Than or Equal.  Checks to see if the value on the left hand side is greater than or equal to the value on the right.`{{#1 >= 1
+{{$<$}}`Less Than Check.  Test if the value on the left side of the operator is less than value on the right.`{{#1 < 2
 #}} is true``
-{{$<=$}}`Less Than or Equal.  Checks to see if the value on the left hand side is less than or equal to the value on the right.`{{#2 <= 2
+{{$>=$}}`Greater Than or Equal.  Test if the value on the left hand side is greater than or equal to the value on the right.`{{#1 >= 1
 #}} is true``
-{{$contains$}}`Value Containment Check.  Checks to see if the value on the left contains the value on the right.  For more details on how this operator works, see Contains Operator`{{$var contains "Foo"$}}``
-{{$is or instanceof$}}`Type Checking Operator.  Checks to see if the value on the left is a member of the class on the right.`{{$var instanceof Integer$}}``
+{{$<=$}}`Less Than or Equal.  Test if the value on the left hand side is less than or equal to the value on the right.`{{#2 <= 2
+#}} is true``
+{{$contains$}}`Value Containment Check.  Test if the value on the left contains the value on the right.  For more details on how this operator works, see Contains Operator`{{$var contains "Foo"$}}``
+{{$is or instanceof$}}`Type Checking Operator.  Test if the value on the left is a member of the class on the right.`{{$var instanceof Integer$}}``
 {{$strsim$}}`String Similarity Check.  Compares to strings and returns a similarity between them as a percentage. See: String Similarity Check.`{{$"foobie" strsim "foobar" $}}``
 {{$soundslike$}}`Soundex Check.  Performs a soundex comparison between two strings. See: Soundex.`{{$"foobar" soundslike "fubar"$}}
 =}}
@@ -63,8 +63,8 @@ sex = Sex.FEMALE }
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
-{{$&&$}}`Logical AND.  Checks to see that the values on both sides of the operator are true.` {{$foo && bar $}}``
-{{$||$}}`Logical OR.  Checks to see if either the value on the left or the right is true.`{{$foo || bar $}}``
+{{$&&$}}`Logical AND.  Test that the values on both sides of the operator are true.` {{$foo && bar $}}``
+{{$||$}}`Logical OR.  Test if either the value on the left or the right is true.`{{$foo || bar $}}``
 {{$or$}}`Chained OR.  Checks a sequence of values for emptiness and returns the first non-empty value. (This operator, or at least it's equivalent functionality, is referred to as the "elvis operator" in  other languages)`{{$foo or bar or barfoo or 'N/A' $}}``
 {{$~=$}}`Regular Expression Match.  Test if the value on the left matches the regular expression on the right.`{{$foo ~= '[a-z].+'$}}
 =}}
@@ -93,10 +93,10 @@ sex = Sex.FEMALE }
 
 {{=
 {{*Operator*}}|20`{{*Description*}}|40`{{*Example*}}|40``
-{{$+$}}`String Concatenation.  Overloaded operator for concatenating two strings together.`{{#
-"foo" + "bar"
+{{$+$}}`String Concatenation.  Overloaded operator for concatenating two strings together.`{{#"foo" + "bar"
 #}}``
-{{$#$}}`Concatenation Operator.  Concatenates two literals as strings.`{{$1 # 2 returns "12" $}}``
+{{$#$}}`Concatenation Operator.  Concatenates two literals as strings.`{{#1 # 2
+#}} returns "12" ``
 {{$in$}}`Projection/Fold. Projects across a collection.  See: Projections and Folds.`{{$(foo in list) $}}``
 {{$=$}}`Assignment.  Assigns the value on the right to the variable on the left.`{{$var = "foobar"$}}
 =}}
