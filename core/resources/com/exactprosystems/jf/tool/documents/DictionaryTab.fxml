@@ -26,7 +26,6 @@
 								<Double fx:id="widthNavigation" fx:value="767.0"/>
 								<Double fx:id="widthInfo" fx:value="600.0"/>
 								<Double fx:id="height" fx:value="375.0"/>
-								<Double fx:id="heightActions" fx:value="300.0"/>
 							</fx:define>
 							<columnConstraints>
 								<ColumnConstraints hgrow="SOMETIMES" minWidth="$widthNavigation" prefWidth="$widthNavigation" maxWidth="$widthNavigation"/>
@@ -34,7 +33,7 @@
 							</columnConstraints>
 							<rowConstraints>
 								<RowConstraints minHeight="$height" maxHeight="$height" prefHeight="$height" vgrow="SOMETIMES"/>
-								<RowConstraints minHeight="$heightActions" vgrow="SOMETIMES"/>
+								<RowConstraints minHeight="$height" prefHeight="$height" vgrow="SOMETIMES"/>
 							</rowConstraints>
 							<children>
 							</children>
