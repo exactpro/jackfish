@@ -159,7 +159,6 @@ public class DictionaryFx extends GuiDictionary
 	public void display() throws Exception
 	{
 		super.display();
-		getNameProperty().fire();
 
 		this.applicationConnector.setApplicationListener((status1, appConnection1, throwable) -> this.appStatus.accept(new ApplicationStatusBean(status1, appConnection1, throwable)));
 

@@ -893,17 +893,19 @@ public class Main extends Application
 
     private Document loadDocument(File file, DocumentKind kind) throws Exception
     {
+		if (!file.exists())
+		{
+			DialogsHelper.showError(String.format(R.MAIN_LOAD_DOC_NOT_FOUND.get(), file.getAbsoluteFile()));
+			throw new FileNotFoundException();
+		}
+
         Document doc = this.factory.createDocument(kind, file.getPath());
         
         if (doc == null)
         {
             return null;
         }
-        if (!file.exists())
-        {
-            DialogsHelper.showError(String.format(R.MAIN_LOAD_DOC_NOT_FOUND.get(), file.getAbsoluteFile()));
-            throw new FileNotFoundException();
-        }
+
         try
         {
             try (Reader reader = CommonHelper.readerFromFile(file))
@@ -933,6 +935,7 @@ public class Main extends Application
 				}
             }
             doc.saved();
+            doc.getNameProperty().fire();
             SettingsValue maxSettings = this.settings.getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.MAX_LAST_COUNT);
             int max = Integer.parseInt(maxSettings.getValue());
             this.settings.setValue(Settings.MAIN_NS, kind.toString(), new File(doc.getNameProperty().get()).getName(), max, doc.getNameProperty().get());
