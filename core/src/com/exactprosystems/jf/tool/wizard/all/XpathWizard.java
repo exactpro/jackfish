@@ -336,12 +336,9 @@ public class XpathWizard extends AbstractWizard
 	@Override
 	protected Supplier<List<WizardCommand>> getCommands()
 	{
-		//TODO remove unnecessary copy control
-		AbstractControl copy = this.currentControl;
+        stopService();
 		try
 		{
-			copy = AbstractControl.createCopy(this.currentControl);
-			copy.set(AbstractControl.xpathName, this.cfMainExpression.getText());
 			this.currentControl.set(AbstractControl.xpathName, this.cfMainExpression.getText());
 		}
 		catch (Exception e)
@@ -349,9 +346,7 @@ public class XpathWizard extends AbstractWizard
 			DialogsHelper.showError(e.getMessage());
 		}
 
-		AbstractControl replace = copy;
 		return () -> CommandBuilder.start()
-//				.replaceControl(this.currentSection, this.currentControl, replace)
 				.displayControl(this.currentDictionary, this.currentWindow, this.currentSection, this.currentControl)
 				.build();
 	}
@@ -360,6 +355,7 @@ public class XpathWizard extends AbstractWizard
 	protected void onRefused()
 	{
 		super.onRefused();
+		stopService();
 		Optional.ofNullable(this.wizardHelper).ifPresent(WizardLoader::stop);
 	}
 
@@ -441,6 +437,9 @@ public class XpathWizard extends AbstractWizard
 								return;
 							}
 
+                            oneLine.labelXpathCount.setText("0");
+                            oneLine.btnCopyToRelative.setGraphic(createIndicator());
+
 							ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
 							this.service = new Service<String>()
 							{
@@ -476,15 +475,10 @@ public class XpathWizard extends AbstractWizard
 									}
 									List<Node> evaluate = evaluate(rootNode, bestXpath);
 									oneLine.labelXpathCount.setText(evaluate == null ? "" : "" + evaluate.size());
-									oneLine.btnCopyToRelative.setGraphic(new ImageView(new Image(CssVariables.Icons.WIZARD_ICON)));
+									oneLine.btnCopyToRelative.setGraphic(createImageView());
 								}
 							});
-							service.setOnCancelled(event -> {
-								oneLine.btnCopyToRelative.setGraphic(new ImageView(new Image(CssVariables.Icons.WIZARD_ICON)));
-							});
-							service.setOnRunning(event -> {
-								oneLine.btnCopyToRelative.setGraphic(new ProgressIndicator());
-							});
+							service.setOnCancelled(event -> oneLine.btnCopyToRelative.setGraphic(createImageView()));
 							service.start();
 						});
 					}
@@ -692,5 +686,20 @@ public class XpathWizard extends AbstractWizard
 			this.service.cancel();
 		}
 	}
+
+	private ImageView createImageView()
+    {
+        ImageView imageView = new ImageView(new Image(CssVariables.Icons.WIZARD_ICON));
+        imageView.setFitHeight(20);
+        return imageView;
+    }
+
+    private ProgressIndicator createIndicator()
+    {
+        ProgressIndicator indicator = new ProgressIndicator();
+        indicator.setMinWidth(24);
+        indicator.setPrefWidth(24);
+        return indicator;
+    }
 	//endregion
 }
