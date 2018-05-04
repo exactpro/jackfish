@@ -259,6 +259,10 @@ public class HelpBuilder extends ReportBuilder {
 					.fwrite("<div id=\"%s\"></div>", tableTitle.replaceAll("\\s+", "").toLowerCase()).newline()
 					.fwrite("<h3>%s</h3>", tableTitle).newline();
 		}
+		if (!Str.IsNullOrEmpty(table.getTitle()))
+		{
+			writer.fwrite("<div id=\"%s\">", table.getTitle().replaceAll("\\s+", "").toLowerCase() + "doublescrolljs").newline();
+		}
 		writer.fwrite("<table class='table table-bordered table-condensed'>\n");
 		if (isColumnWidthSet)
 		{
@@ -301,6 +305,10 @@ public class HelpBuilder extends ReportBuilder {
 	protected void tableFooter(ReportWriter writer, ReportTable table) throws IOException
 	{
 		writer.fwrite("</table>").newline();
+		if (!Str.IsNullOrEmpty(table.getTitle()))
+		{
+			writer.fwrite("</div>").newline();
+		}
 	}
 
 	@Override

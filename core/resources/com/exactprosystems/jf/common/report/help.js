@@ -208,42 +208,22 @@ $(window).resize(function () {
 
 });
 
+$(document).ready(function() {
+    var tableWrapElm = document.getElementById("allcontrolsdoublescrolljs");
+    if(tableWrapElm){
 
-function DoubleScroll(element) {
+        //fix 1st column
+        var tableWrap = $(tableWrapElm);
+        var firstCells =  tableWrap.find("tr > td:first-child,th:first-child");
+        var maxWidth = 0;
+        firstCells.each(function(){
+            var el = $(this);
+            var width = el.outerWidth();
+            if(maxWidth < width) maxWidth = width;
+            el.css({"position": "absolute", "height": el.outerHeight(),"width": function(){ return maxWidth;}, "margin-left" : function(){ return -maxWidth;}});
+        });
+        tableWrap.css({"margin-left": maxWidth,"overflow-x": "scroll", "overflow-y": "hidden" });
 
-	var scrollbar = document.createElement('div');
+    }
 
-	scrollbar.appendChild(document.createElement('div'));
-
-	scrollbar.style.overflow = 'auto';
-
-	scrollbar.style.overflowY = 'hidden';
-
-	scrollbar.className += " dobscrollDiv";
-
-	scrollbar.firstChild.style.width = element.scrollWidth + 'px';
-
-	//scrollbar.firstChild.style.paddingTop= '1px';
-
-	scrollbar.firstChild.appendChild(document.createTextNode('\xA0'));
-
-	scrollbar.onscroll = function () {
-
-		element.scrollLeft = scrollbar.scrollLeft;
-
-	};
-
-	element.onscroll = function () {
-
-		scrollbar.scrollLeft = element.scrollLeft;
-
-	};
-
-	element.parentNode.insertBefore(scrollbar, element);
-
-}
-
-
-DoubleScroll(document.getElementById('doublescroll'));
-
-$('#co-1Table').height($('.dobscrollDiv').height());
+});
