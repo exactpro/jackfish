@@ -13,6 +13,7 @@ package com.exactprosystems.jf.tool.wizard.all;
 import com.exactprosystems.jf.actions.AbstractAction;
 import com.exactprosystems.jf.actions.ActionFieldAttribute;
 import com.exactprosystems.jf.actions.app.ApplicationResize;
+import com.exactprosystems.jf.actions.system.ResultTable;
 import com.exactprosystems.jf.api.app.Resize;
 import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
@@ -68,7 +69,8 @@ public class AutomateConvertWizard extends AbstractWizard
 
 	private final List<Converter> CONVERTER_LIST = Arrays.asList(
 			new ApplicationResizeConverter(),
-			new ActionRemoveEmptyNotMandatoryFields()
+			new ActionRemoveEmptyNotMandatoryFields(),
+			new ResultTableConverter()
 	);
 
 	@Override
@@ -334,6 +336,71 @@ public class AutomateConvertWizard extends AbstractWizard
 										.anyMatch(annotation -> annotation.name().equals(parameter.getName()) && annotation.shouldFilled()))
 								.map(parameter -> new int[]{parameters.getIndex(parameter)})
 								.forEach(indexArray -> list.add(new RefactorRemoveParameters(actionItem, indexArray)));
+					}
+				});
+			}, DocumentKind.MATRIX, DocumentKind.LIBRARY);
+
+			return list;
+		}
+	}
+
+	private class ResultTableConverter implements Converter
+	{
+		@Override
+		public String toString()
+		{
+			return this.getClass().getSimpleName();
+		}
+
+		@Override
+		public String shortDescription()
+		{
+			return R.WIZARD_RESULT_TABLE_DESCRIPTION.get();
+		}
+
+		@Override
+		public List<Refactor> scan(BooleanSupplier stopSupplier)
+		{
+			String oldDecorated = "Decoraded";
+			List<Refactor> list = new ArrayList<>();
+			configuration.forEach(document ->
+			{
+				if (stopSupplier.getAsBoolean())
+				{
+					return;
+				}
+				Matrix matrix = (Matrix) document;
+				MatrixItem root = matrix.getRoot();
+				root.bypass(item ->
+				{
+					if (stopSupplier.getAsBoolean())
+					{
+						return;
+					}
+					if (item instanceof ActionItem)
+					{
+						ActionItem actionItem = (ActionItem) item;
+						if (actionItem.getActionClass() == ResultTable.class)
+						{
+							Parameters parameters = actionItem.getParameters();
+							List<Integer> integerList = new ArrayList<>();
+							String expression = null;
+
+							if (parameters.containsKey(oldDecorated))
+							{
+								Parameter parameter = parameters.getByName(oldDecorated);
+								integerList.add(parameters.getIndex(parameter));
+								expression = parameter.getExpression();
+							}
+
+							if (!integerList.isEmpty())
+							{
+								list.add(new RefactorRemoveParameters(item, integerList.stream().mapToInt(i -> i).toArray()));
+								Parameter parameter = new Parameter(ResultTable.decoratedName, expression);
+								parameter.setType(TypeMandatory.Mandatory);
+								list.add(new RefactorAddParameter(item, parameter, -1));
+							}
+						}
 					}
 				});
 			}, DocumentKind.MATRIX, DocumentKind.LIBRARY);

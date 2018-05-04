@@ -45,7 +45,7 @@ import java.util.function.Function;
 )
 public class ResultTable extends AbstractAction
 {
-	public static final String decoratedName = "Decoraded";
+	public static final String decoratedName = "Decorated";
 	public static final String matrixName    = "Matrix";
 
 	@ActionFieldAttribute(name = decoratedName, mandatory = true, constantDescription = R.RESULT_TABLE_DECORATED)
