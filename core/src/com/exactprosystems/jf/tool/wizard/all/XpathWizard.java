@@ -39,9 +39,13 @@ import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.WizardMatcher;
 import com.exactprosystems.jf.tool.wizard.related.MarkerStyle;
 import com.exactprosystems.jf.tool.wizard.related.WizardLoader;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -50,6 +54,8 @@ import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -144,6 +150,7 @@ public class XpathWizard extends AbstractWizard
 	private CustomFieldWithButton       cfRelativeFrom;
 	private CustomFieldWithButton       cfMainExpression;
 	private Label                       lblFound;
+	private Service<String>				service;
 
 	public XpathWizard()
 	{
@@ -216,7 +223,12 @@ public class XpathWizard extends AbstractWizard
 		this.xmlTreeView.setMarkersVisible(false);
 
 		this.imageViewWithScale = new ImageViewWithScale();
-		this.imageViewWithScale.setOnRectangleClick(rectangle -> this.xmlTreeView.selectItem(rectangle));
+		this.imageViewWithScale.setOnRectangleClick(rectangle ->
+			{
+				this.xmlTreeView.selectItem(rectangle);
+				stopService();
+			}
+		);
 
 		gridPane.add(this.xmlTreeView, 0, 0);
 		splitPane.getItems().addAll(this.imageViewWithScale, gridPane);
@@ -423,23 +435,57 @@ public class XpathWizard extends AbstractWizard
 					if (oneLine instanceof OneMagicLine)
 					{
 						oneLine.btnCopyToRelative.setOnAction(e -> {
-							Node root = this.document;
-							if (this.ownerControl != null)
+
+							if(this.service != null && this.service.isRunning())
 							{
-								root = XpathUtils.getFirst(this.document, "/*");
+								return;
 							}
-							String bestXpath = this.findBestXpath(this.currentNode, root);
-							if (bestXpath != null)
+
+							ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
+							this.service = new Service<String>()
 							{
-								oneLine.btnXpath.setText(bestXpath);
-								Node rootNode = this.document;
-								if (this.ownerControl != null)
+								@Override
+								protected Task<String> createTask()
 								{
-									rootNode = getFirst(this.document, "/*");
+									return new Task<String>()
+									{
+										@Override
+										protected String call()
+										{
+											Node root = document;
+											if (ownerControl != null)
+											{
+												root = XpathUtils.getFirst(document, "/*");
+											}
+
+											return findBestXpath(currentNode, root);
+										}
+									};
 								}
-								List<Node> evaluate = evaluate(rootNode, bestXpath);
-								oneLine.labelXpathCount.setText(evaluate == null ? "" : "" + evaluate.size());
-							}
+							};
+							service.setExecutor(taskExecutor);
+							service.setOnSucceeded(event -> {
+								String bestXpath = this.service.getValue();
+								if (bestXpath != null)
+								{
+									oneLine.btnXpath.setText(bestXpath);
+									Node rootNode = this.document;
+									if (this.ownerControl != null)
+									{
+										rootNode = getFirst(this.document, "/*");
+									}
+									List<Node> evaluate = evaluate(rootNode, bestXpath);
+									oneLine.labelXpathCount.setText(evaluate == null ? "" : "" + evaluate.size());
+									oneLine.btnCopyToRelative.setGraphic(new ImageView(new Image(CssVariables.Icons.WIZARD_ICON)));
+								}
+							});
+							service.setOnCancelled(event -> {
+								oneLine.btnCopyToRelative.setGraphic(new ImageView(new Image(CssVariables.Icons.WIZARD_ICON)));
+							});
+							service.setOnRunning(event -> {
+								oneLine.btnCopyToRelative.setGraphic(new ProgressIndicator());
+							});
+							service.start();
 						});
 					}
 					oneLine.btnXpath.setOnAction(ev -> this.cfMainExpression.setText(((Button) ev.getSource()).getText()));
@@ -470,6 +516,7 @@ public class XpathWizard extends AbstractWizard
 				{
 					this.imageViewWithScale.showRectangle(newItem.getRectangle(), newMarker, newItem.getText(), true);
 				}
+				stopService();
 				updateNode(newItem.getNode());
 			}
 		});
@@ -636,6 +683,14 @@ public class XpathWizard extends AbstractWizard
 	private ControlKind composeKind(Node node)
 	{
 		return this.pluginInfo.controlKindByNode(node);
+	}
+
+	private void stopService()
+	{
+		if (this.service != null && this.service.isRunning())
+		{
+			this.service.cancel();
+		}
 	}
 	//endregion
 }
