@@ -25,7 +25,7 @@ LIB;Standart libraries
 
     #Id;#SubCase
     SUB_1;
-        #Id;#Action;$Decoraded
+        #Id;#Action;$Decorated
         RESTBL1;ResultTable;true
 
         #Action;$Table;$BeforeTestCase;$Numbers;$Title;TestCaseId;Result;Description;Expected Result;Error;Screenshot

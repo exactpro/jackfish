@@ -2509,7 +2509,7 @@ Check Step (SetHandler checked above);;;
         screenOnStart;'screenOnStart';OnStart;;
         #EndStep
 
-        #Id;#Action;$Decoraded
+        #Id;#Action;$Decorated
         resTbl;ResultTable;true
 
         #Id;#Action;$Table;StepIdentity
@@ -2535,7 +2535,7 @@ Check Step (SetHandler checked above);;;
         screenOnStartOrError;'screenOnStartOrError';OnStartOrError;;
         #EndStep
 
-        #Id;#Action;$Decoraded
+        #Id;#Action;$Decorated
         resTbl;ResultTable;true
 
         #Id;#Action;$Table;StepIdentity
@@ -2608,7 +2608,7 @@ Check Step (SetHandler checked above);;;
         'screenOnFinish';OnFinish;;
         #EndStep
 
-        #Id;#Action;$Decoraded
+        #Id;#Action;$Decorated
         resTbl;ResultTable;true
 
         #Id;#Action;$Table;StepIdentity
@@ -2634,7 +2634,7 @@ Check Step (SetHandler checked above);;;
         'screenOnFinishOrError';OnFinishOrError;;
         #EndStep
 
-        #Id;#Action;$Decoraded
+        #Id;#Action;$Decorated
         resTbl;ResultTable;true
 
         #Id;#Action;$Table;StepIdentity
@@ -2852,8 +2852,8 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 1;'Passed count not expected'
 
-        #Id;#Action;$Decoraded;$Matrix
-        resTbl;ResultTable;true;MXRN4.Out
+        #Id;#Action;$Matrix;$Decorated
+        resTbl;ResultTable;MXRN4.Out;true
 
         #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStart'
@@ -2894,8 +2894,8 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 1;'Passed count not expected'
 
-        #Id;#Action;$Decoraded;$Matrix
-        resTbl;ResultTable;true;MXRN4.Out
+        #Id;#Action;$Matrix;$Decorated
+        resTbl;ResultTable;MXRN4.Out;true
 
         #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnError'
@@ -2939,8 +2939,8 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 0;'Passed count not expected'
 
-        #Id;#Action;$Decoraded;$Matrix
-        resTbl;ResultTable;true;MXRN4.Out
+        #Id;#Action;$Matrix;$Decorated
+        resTbl;ResultTable;MXRN4.Out;true
 
         #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnErrorWithError'
@@ -2980,8 +2980,8 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 1;'Passed count not expected'
 
-        #Id;#Action;$Decoraded;$Matrix
-        resTbl;ResultTable;true;MXRN4.Out
+        #Id;#Action;$Matrix;$Decorated
+        resTbl;ResultTable;MXRN4.Out;true
 
         #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnFinish'
@@ -3021,8 +3021,8 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 1;'Passed count not expected'
 
-        #Id;#Action;$Decoraded;$Matrix
-        resTbl;ResultTable;true;MXRN4.Out
+        #Id;#Action;$Matrix;$Decorated
+        resTbl;ResultTable;MXRN4.Out;true
 
         #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnFinishOnError'
@@ -3066,8 +3066,8 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 0;'Passed count not expected'
 
-        #Id;#Action;$Decoraded;$Matrix
-        resTbl;ResultTable;true;MXRN4.Out
+        #Id;#Action;$Matrix;$Decorated
+        resTbl;ResultTable;MXRN4.Out;true
 
         #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnStartOnErrorWithFail'
@@ -3111,8 +3111,8 @@ Check TestCase (SetHandler checked above);;;
         #Assert;#Message
         MXRN4.Out.passed() == 0;'Passed count not expected'
 
-        #Id;#Action;$Decoraded;$Matrix
-        resTbl;ResultTable;true;MXRN4.Out
+        #Id;#Action;$Matrix;$Decorated
+        resTbl;ResultTable;MXRN4.Out;true
 
         #Id;#Action;$Table;TestCaseId
         TBLSLCT1;TableSelect;resTbl.Out;'screenTestCaseOnError'

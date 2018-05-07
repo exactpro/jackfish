@@ -49,7 +49,7 @@ INIT;;;;
     #Off;#Call;plugin
     1;RUN;'Win'
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL1;ResultTable;true
 
     #Action;$Table;$Title;$BeforeTestCase

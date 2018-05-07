@@ -136,7 +136,7 @@ EXECUTE;;;;
     #Id;#Call;plugin
     CALL_3;RUN;pluginName
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL1;ResultTable;true
 
     #Action;$Table;$Title;$BeforeTestCase

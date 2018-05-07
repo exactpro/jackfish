@@ -72,7 +72,7 @@ RF;RegressionFramework
         #Id;#Let
         begin;System.currentTimeMillis()
 
-        #Id;#Action;$Decoraded
+        #Id;#Action;$Decorated
         standartResult;ResultTable;false
 
         #Action;Before start all matrices
@@ -136,8 +136,8 @@ RF;RegressionFramework
                     #Action;$Connection;$Query;Passed;Failed;Report;ScenarioId
                     SQLexecute;SQL;'UPDATE scenarios SET passed = ?, failed = ?, report = ?, done = 1 WHERE id = ?';MXRN.Out.passed();MXRN.Out.failed();MXRN.Out.reportAsBlob();scenarioId
 
-                    #Id;#Action;$Decoraded;$Matrix
-                    resultTab;ResultTable;false;MXRN.Out
+                    #Id;#Action;$Matrix;$Decorated
+                    resultTab;ResultTable;MXRN.Out;false
 
                     #Action;Passed;Failed
                     Print;MXRN.Out.passed();MXRN.Out.failed()

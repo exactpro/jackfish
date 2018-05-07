@@ -153,7 +153,7 @@ stop;;;
     #Id;#Action;$AppConnection
     APPSTP1;ApplicationStop;appCon
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL1;ResultTable;true
 
     #Action;$Table;$Title;$BeforeTestCase

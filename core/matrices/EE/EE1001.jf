@@ -34,10 +34,10 @@ TestCase1;This matrix always passed;;;
 
 #Id;#TestCase;#Kind;#Depends;#For
 FINAL;Final;;;
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL1;ResultTable;true
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL2;ResultTable;false
 
     #Action;$Text;$Notifier

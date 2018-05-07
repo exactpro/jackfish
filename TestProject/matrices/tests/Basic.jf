@@ -284,7 +284,7 @@ RM42750;StepIdentity is incorrect in ResultTable if Step is in loop;Never;;
 
     #EndFor
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL1;ResultTable;true
 
     #Id;#Action;$Table;Step;TestCase

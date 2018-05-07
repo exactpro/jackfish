@@ -249,7 +249,7 @@ RESULT;ResultTable;Never;;
     #Id;#Let
     expectedColumns;[ 'Matrix', 'TestCaseId', 'TestCase', 'StepId', 'StepIdentity', 'Step', 'Time', 'Result', 'Error', 'Screenshot' ]
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL1;ResultTable;true
 
     #Assert;#Message
@@ -261,7 +261,7 @@ RESULT;ResultTable;Never;;
     #Assert;#Message
     RESTBL1.Out[0].keySet().containsAll(expectedColumns);'Wrong column set'
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL2;ResultTable;false
 
     #Assert;#Message
@@ -270,14 +270,14 @@ RESULT;ResultTable;Never;;
     #Assert;#Message
     RESTBL2.Out[0].keySet().containsAll(expectedColumns);'Wrong column set'
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL3;ResultTable;true
 
     #Step;#Kind;#For;#Depends
     ;;;
     #EndStep
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL4;ResultTable;true
 
     #Assert;#Message
@@ -305,8 +305,8 @@ RESULT;ResultTable;Never;;
     #Id;#Action;$Matrix
     MXWT1;MatrixWait;MXRN1.Out
 
-    #Id;#Action;$Decoraded;$Matrix
-    RESTBL5;ResultTable;false;MXRN1.Out
+    #Id;#Action;$Matrix;$Decorated
+    RESTBL5;ResultTable;MXRN1.Out;false
 
     #Id;#RawTable
     expectedTable;Table
@@ -321,12 +321,12 @@ RESULT;ResultTable;Never;;
 
     // =====================================================================
     // Negative tests
-    #Id;#Action;#Assert;$Decoraded
+    #Id;#Action;#Assert;$Decorated
     RESTBL6;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
     // 
-    #Id;#Action;#Assert;$Decoraded;$Matrix
-    RESTBL7;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;true;100
+    #Id;#Action;#Assert;$Matrix;$Decorated
+    RESTBL7;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS;100;true
 
 
 #Id;#TestCase;#Kind;#Depends;#For
@@ -338,7 +338,7 @@ RT_USERVAL;ResultTableUserValue;Never;;
     ;;;
     #EndStep
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL1;ResultTable;false
 
     #Assert;#Message
@@ -363,7 +363,7 @@ RT_USERVAL;ResultTableUserValue;Never;;
 
     #EndStep
 
-    #Id;#Action;$Decoraded
+    #Id;#Action;$Decorated
     RESTBL2;ResultTable;false
 
     #Action;$Table;$Title
@@ -403,8 +403,8 @@ RT_USERVAL;ResultTableUserValue;Never;;
     #Id;#Action;$Matrix
     MXWT1;MatrixWait;MXRN1.Out
 
-    #Id;#Action;$Decoraded;$Matrix
-    RESTBL3;ResultTable;false;MXRN1.Out
+    #Id;#Action;$Matrix;$Decorated
+    RESTBL3;ResultTable;MXRN1.Out;false
 
     #Action;$Table;$Title
     TableReport;RESTBL3.Out;''
