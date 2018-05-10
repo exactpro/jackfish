@@ -46,10 +46,15 @@ import java.util.function.Function;
 public class ResultTable extends AbstractAction
 {
 	public static final String decoratedName = "Decorated";
+	public static final String decoradedName = "Decoraded";
 	public static final String matrixName    = "Matrix";
 
-	@ActionFieldAttribute(name = decoratedName, mandatory = true, constantDescription = R.RESULT_TABLE_DECORATED)
+
+	@ActionFieldAttribute(name = decoratedName, mandatory = false, constantDescription = R.RESULT_TABLE_DECORATED)
 	protected Boolean decorated;
+
+	@ActionFieldAttribute(name = decoradedName, mandatory = false, constantDescription = R.RESULT_TABLE_DECORATED, deprecated = true)
+	protected Boolean decoraded;
 
 	@ActionFieldAttribute(name = matrixName, mandatory = false, def = DefaultValuePool.Null, constantDescription = R.RESULT_TABLE_MATRIX)
 	protected MatrixConnectionImpl matrix;
@@ -91,13 +96,19 @@ public class ResultTable extends AbstractAction
 			return;
 		}
 
+		if(this.decorated == null && this.decoraded == null)
+		{
+			super.setError("Please fill parameter \"Decorated\"", ErrorKind.EMPTY_PARAMETER);
+			return;
+		}
+
 		Table copy = new Table(result);
 		if (report.reportIsOn())
 		{        //TODO zzz
 			copy.setValue(copy.size() - 1, map);
 		}
 
-		if (this.decorated)
+		if (this.decorated || this.decoraded)
 		{
 			String passed = report.decorateStyle(Result.Passed.name(), Result.Passed.getStyle());
 			Set<String> knownColumns = new HashSet<>(Arrays.asList(Context.resultColumns));

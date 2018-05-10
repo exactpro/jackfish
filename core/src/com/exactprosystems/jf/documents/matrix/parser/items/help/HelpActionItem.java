@@ -99,7 +99,7 @@ public class HelpActionItem extends MatrixItem
         for (Field f : fields)
         {
             ActionFieldAttribute annotation = f.getAnnotation(ActionFieldAttribute.class);
-            if (annotation == null)
+            if (annotation == null || annotation.deprecated())
             {
                 continue;
             }

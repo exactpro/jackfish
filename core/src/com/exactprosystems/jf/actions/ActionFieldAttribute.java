@@ -49,4 +49,9 @@ public @interface ActionFieldAttribute
 	 * @see com.exactprosystems.jf.actions.DefaultValuePool
 	 */
 	DefaultValuePool def() default DefaultValuePool.Null;
+
+	/**
+	 * @return false, if the parameter is not deprecated. Otherwise true
+	 */
+	boolean deprecated() default false;
 }

@@ -361,7 +361,7 @@ public class AutomateConvertWizard extends AbstractWizard
 		@Override
 		public List<Refactor> scan(BooleanSupplier stopSupplier)
 		{
-			String oldDecorated = "Decoraded";
+			String oldDecorated = ResultTable.decoradedName;
 			List<Refactor> list = new ArrayList<>();
 			configuration.forEach(document ->
 			{
@@ -383,21 +383,13 @@ public class AutomateConvertWizard extends AbstractWizard
 						if (actionItem.getActionClass() == ResultTable.class)
 						{
 							Parameters parameters = actionItem.getParameters();
-							List<Integer> integerList = new ArrayList<>();
-							String expression = null;
 
 							if (parameters.containsKey(oldDecorated))
 							{
-								Parameter parameter = parameters.getByName(oldDecorated);
-								integerList.add(parameters.getIndex(parameter));
-								expression = parameter.getExpression();
-							}
-
-							if (!integerList.isEmpty())
-							{
-								list.add(new RefactorRemoveParameters(item, integerList.stream().mapToInt(i -> i).toArray()));
-								Parameter parameter = new Parameter(ResultTable.decoratedName, expression);
-								parameter.setType(TypeMandatory.Mandatory);
+								Parameter oldParameter = parameters.getByName(oldDecorated);
+								list.add(new RefactorRemoveParameters(item, new int[]{parameters.getIndex(oldParameter)}));
+								Parameter parameter = new Parameter(ResultTable.decoratedName, oldParameter.getExpression());
+								parameter.setType(oldParameter.getType());
 								list.add(new RefactorAddParameter(item, parameter, -1));
 							}
 						}

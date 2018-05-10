@@ -34,6 +34,7 @@ import java.lang.reflect.Field;
 import java.rmi.ServerException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class AbstractAction
@@ -309,7 +310,11 @@ public abstract class AbstractAction
 	public final Map<ReadableValue, TypeMandatory> helpToAddParameters(Context context, Parameters parameters) throws Exception
 	{
 		Map<ReadableValue, TypeMandatory> res = new LinkedHashMap<>();
-		Map<String, FieldAndAttributes> map = this.getFieldsAttributes();
+		Map<String, FieldAndAttributes> map = this.getFieldsAttributes().entrySet()
+				.stream()
+				.filter(node -> !node.getValue().attribute.deprecated())
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+
 		for (Entry<String, FieldAndAttributes> entry : map.entrySet())
 		{
 			res.put(new ReadableValue(entry.getKey()), entry.getValue().attribute.mandatory() ? TypeMandatory.Mandatory : TypeMandatory.NotMandatory);
