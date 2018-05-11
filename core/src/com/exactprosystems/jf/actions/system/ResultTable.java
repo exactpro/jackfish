@@ -108,7 +108,7 @@ public class ResultTable extends AbstractAction
 			copy.setValue(copy.size() - 1, map);
 		}
 
-		if (this.decorated || this.decoraded)
+		if ((this.decorated != null && this.decorated) || (this.decoraded != null && this.decoraded))
 		{
 			String passed = report.decorateStyle(Result.Passed.name(), Result.Passed.getStyle());
 			Set<String> knownColumns = new HashSet<>(Arrays.asList(Context.resultColumns));

@@ -1,0 +1,41 @@
+// //==============================================
+// //  Copyright (c) 2009-2018, Exactpro Systems LLC
+// //  www.exactpro.com
+// // Build Software to Test Software
+// //All rights reserved.
+// //  This is unpublished, licensed software, confidential and proprietary
+// //  information which is the property of Exactpro Systems, LLC or its licensors.
+// //==============================================
+#TestCase;#Kind;#Depends;#For
+Test case;Never;;
+    #Id;#Action;$Decorated
+    RESTBL1;ResultTable;true
+
+    #Id;#Action;$Decorated
+    RESTBL2;ResultTable;false
+
+    #Id;#Action;#Assert;$Decorated
+    RESTBL3;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #Id;#Action;$Decoraded
+    RESTBL4;ResultTable;true
+
+    #Id;#Action;$Decoraded
+    RESTBL5;ResultTable;false
+
+    #Id;#Action;#Assert;$Decoraded
+    RESTBL6;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
+
+    #Id;#Action;$Decoraded;$Decorated
+    RESTBL7;ResultTable;true;true
+
+    #Id;#Action;#Assert;$Decoraded;$Decorated
+    RESTBL8;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;
+
+    #Id;#Action;#Assert;$Decoraded;$Decorated
+    RESTBL9;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;true;
+
+    #Id;#Action;#Assert;$Decoraded;$Decorated
+    RESTBL10;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;true
+
+

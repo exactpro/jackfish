@@ -23,7 +23,7 @@ Cleanup;Cleanup;;;
     table;1;Table
     @;Step;Description;Expected Result
     0;Step 1;Navigate to Product Upload;The new file upload screen opens
-    1;Step 2;Open Windows Exploerer. Identify a valid Russell file that does not already exist in the datebase;Windows Explorer opens
+    1;Step 2;Open Windows Explorer. Identify a valid Russell file that does not already exist in the database;Windows Explorer opens
     #EndRawTable
 
     #Id;#Action;$Decorated
