@@ -26,8 +26,8 @@ Test case;Never;;
     #Id;#Action;#Assert;$Decoraded
     RESTBL6;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
-    #Id;#Action;$Decoraded;$Decorated
-    RESTBL7;ResultTable;true;true
+    #Id;#Action;#Assert;$Decoraded;$Decorated
+    RESTBL7;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;true;true
 
     #Id;#Action;#Assert;$Decoraded;$Decorated
     RESTBL8;ResultTable;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;

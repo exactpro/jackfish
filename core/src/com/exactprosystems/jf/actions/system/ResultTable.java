@@ -102,6 +102,12 @@ public class ResultTable extends AbstractAction
 			return;
 		}
 
+		if(this.decorated != null && this.decoraded != null)
+		{
+			super.setError("Both params (\"Decorated\" and \"Decoraded\") are filled. Please remove one of them.", ErrorKind.EXCEPTION);
+			return;
+		}
+
 		Table copy = new Table(result);
 		if (report.reportIsOn())
 		{        //TODO zzz
