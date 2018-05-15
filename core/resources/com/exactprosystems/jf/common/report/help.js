@@ -37,7 +37,76 @@ function doLoad(obj) {
 }
 
 
+var content =  $('#contentPart');
+
+var resizerMenu = $('.menu-resizer');
+
+function resizeDivs(){
+
+  var contWidth = content.outerWidth(false);
+
+  var width = mame.width() == 0? 0 : contWidth+Math.ceil(mame.width()-mame[0].clientWidth);
+
+  var mb = $('.menu-button');
+
+  if(contWidth < 30 || width == 0){
+       if(mb.hasClass('menu-hide'))
+           mb.removeClass('menu-hide').addClass('menu-show');
+  } else {
+       if(mb.hasClass('menu-show'))
+           mb.removeClass('menu-show').addClass('menu-hide');
+  }
+
+  mame.width(width);
+
+  resizerMenu.css("left", width);
+
+  var width2 = $('#contentTable').closest('.row').outerWidth(true);
+
+  width += resizerMenu.outerWidth(true);
+
+  $('.helpViewer').css("margin-left", width+10);
+
+  $('#helpViewerContainer').width(width2 - width);
+
+}
+
 $(document).ready(function () {
+
+    var defaultWidth = getComputedStyle(content[0]).width;
+
+   var body = $(document.body);
+
+   var minWidth = parseFloat(content.css("min-width"));
+
+   resizerMenu.mousedown(function(e){
+       var ps = e.clientX;
+       body.mousemove(function(e){
+           if(e.buttons == 0 || e.which == 0){
+               body.unbind("mousemove");
+               return;
+           }
+           if(mame.width() == 0){
+               mame.width(1);
+               content.width(1);
+           }
+           var deff = e.clientX-ps;
+           ps = e.clientX;
+           content.width(content.width()+deff);
+           resizeDivs();
+       });
+   });
+
+   $('.menu-button').click(function(){
+       body.unbind("mousemove");
+       if(mame.width() < 30){
+           content.width(defaultWidth);
+           mame.width(1);
+       } else
+           mame.width(0);
+       resizeDivs();
+   })
+
 
 	$.each($('.mParent'), function (i, val) {
 
@@ -51,9 +120,8 @@ $(document).ready(function () {
 
 	});
 
-	mame.width($('.menuCont').width());
-
-	mame.height($(window).height() - mame[0].getBoundingClientRect().top);
+    content.css("display","inline-block");
+    resizeDivs();
 
 	$.each($("a[href^='#']"),function(i,val) {
 
@@ -200,11 +268,7 @@ $("#btnPrev").click(function(e){goB();});
 
 $(window).resize(function () {
 
-	mame.width($('.menuCont').width());
-
-	$('.menuCont').height(mame.height());
-
-	mame.height($(window).height() - mame[0].getBoundingClientRect().top);
+    resizeDivs();
 
 });
 

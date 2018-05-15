@@ -11,36 +11,37 @@ body {
     display: block;
     margin-top: 16px;
 }
+
 #btnNext{
     margin-left: -5px;
 }
 
+#contentPart>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
 .activeBtn{
-	color:black;
+    color: black;
 }
 
 .nonActiveBtn{
-	color:grey;
+    color:grey;
 }
 
 #btnPrev{
-	margin-left: -1px;
+    margin-left: -1px;
     padding-left: 6px;
 }
 
 h0{
-	float: right;
-	padding-top: 4px;
+    float: right;
+    padding-top: 4px;
 }
 
 ul.nav > ul > li > a {
     padding-left: 30px;
-}
-
-#contentPart>li>a {
-	position: relative;
-    display: block;
-    padding: 10px 15px;
 }
 
 
@@ -58,15 +59,65 @@ ul.nav > ul > li > a {
 
 .activeChild {
     text-decoration: none;
-    background-color: #eee;
+    background-color: whitesmoke;
 }
 
 .mainMenu {
+    display: inline-block;
     position: fixed;
     width: 100%;
     overflow: auto;
     top: 35px;
     bottom: 0px;
+    background: #fff;
+    z-index: 1;
+}
+
+.menuCont {
+    margin-left: -15px;
+    margin-right: -30px;
+}
+
+.helpViewer {
+    width: inherit;
+}
+
+#contentPart {
+    width: 150px;
+}
+
+.menu-resizer {
+    display: inline-block;
+    position: fixed;
+    border-left: 7px solid whitesmoke;
+    cursor : col-resize;
+    height: 100%;
+    width: 8px;
+    z-index: 1;
+    top: 0px;
+}
+
+.menu-button {
+    position: absolute;
+    top: 40%;
+    width: 12px;
+    border-radius: 60px;
+    background-color: whitesmoke;
+    margin-left: -7px;
+    cursor: default;
+    color: #fff;
+}
+
+.menu-button:hover {
+    color: #aaa;
+}
+
+.menu-hide:after {
+    content: "\23F4\A\23F4\A\23F4";
+}
+
+.menu-show:after {
+    content: "\23F5\A\23F5\A\23F5";
 }
 
 .mActive > a {
@@ -105,47 +156,47 @@ ul.nav > ul > li > a {
 }
 
 .searchDiv {
-	position: fixed;
-	float: left;
-	z-index : 999;
-	background-color : whitesmoke;
-	padding:5px;
-	width: 100%;
-	top: 0px;
+    position: fixed;
+    float: left;
+    z-index : 999;
+    background-color : whitesmoke;
+    padding:5px;
+    width: 100%;
+    top: 0px;
 }
 
 .searchInput {
-	display:inline-block;
-	padding-left: 5px;
-	padding-bottom: 3px;
-	padding-top: 2px;
+    display:inline-block;
+    padding-left: 5px;
+    padding-bottom: 3px;
+    padding-top: 2px;
 
 }
 
 
 .searchLabel {
-	width:200px;
-	position : absolute;
-	padding-left: 10px;
+    width:200px;
+    position : absolute;
+    padding-left: 10px;
     padding-top: 3px;
     font-weight: normal !important;
 }
 
 .foundElement {
-	background-color : gold;
+    background-color : gold;
 }
 
 ins{
-	text-decoration: none;
-	background-color : gold;
+    text-decoration: none;
+    background-color : gold;
 }
 
 ins .active{
-	background-color : #ff9632;
+    background-color : #ff9632;
 }
 
 .currentFoundElement {
-	background-color : #ff9632;
+    background-color : #ff9632;
 }
 
 #doublescroll {
@@ -160,43 +211,43 @@ ins .active{
 }
 
 .BLACK {
-	color: black; 
+    color: black;
 }
 .BLUE {
-	color: blue;
+    color: blue;
 }
 .CYAN {
-	color: 	#00FFFF;
+    color:  #00FFFF;
 }
 .DARK_GRAY {
-	color: 	#A9A9A9;
+    color:  #A9A9A9;
 }
 .GRAY {
-	color: gray;
+    color: gray;
 }
 .GREEN {
-	color: green;
+    color: green;
 }
 .LIGHT_GRAY {
-	color: #D3D3D3;
+    color: #D3D3D3;
 }
 .MAGENTA {
-	color: 	#FF00FF;
+    color:  #FF00FF;
 }
 .ORANGE {
-	color: orange;
+    color: orange;
 }
 .PINK {
-	color: 	#FFC0CB;
+    color:  #FFC0CB;
 }
 .RED {
-	color: red;
+    color: red;
 }
 .WHITE {
-	color: white;
+    color: white;
 }
 .YELLOW {
-	color: yellow;
+    color: yellow;
 }
 
 .rotate {

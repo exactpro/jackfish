@@ -139,11 +139,11 @@ public class HTMLhelper
 			case "4" + CM: return "</h4>";
 
 			// style for identifiers
-			case OM + "$": return "<font color=\""+(theme?"#006400":"#ffe30f")+"\">";
+			case OM + "$": return "<font color=\""+(theme?"#006400":"#ff8c00")+"\">";
 			case "$" + CM: return "</font>";
 
 			// style for code
-			case OM + "#": return "<pre style='padding-left: 10px; color:" + (theme?"#006400":"#ffe30f") + "; margin: 10px; border-left: 1px solid #CCC;'><code>";
+			case OM + "#": return "<pre style='padding-left: 10px; color:" + (theme?"#006400":"#ff8c00") + "; margin: 10px; border-left: 1px solid #CCC;'><code>";
 			case "#" + CM: return "</code></pre>";
 
 			// style for references

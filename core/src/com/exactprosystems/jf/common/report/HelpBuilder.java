@@ -163,13 +163,16 @@ public class HelpBuilder extends ReportBuilder {
 				.fwrite("</div>").newline()
 				.fwrite("<div class='container-fluid'>").newline()
 				.fwrite("<div class='row'>").newline()
+				.fwrite("<table id=\"contentTable\"><tr><td>").newline()
 				.fwrite("<div class='col-sm-3 menuCont'>").newline()
 				.fwrite("<div class='mainMenu'>").newline()
 				.fwrite("<ul class='nav nav-pills nav-stacked'>").newline()
 				.fwrite("<div id='contentPart'></div>").newline()
 				.fwrite("</ul>").newline()
 				.fwrite("</div>").newline()
+				.fwrite("<div class='menu-resizer'><div class='menu-button menu-hide'></div></div>").newline()
 				.fwrite("</div>").newline()
+				.fwrite("</td><td><div id=\"helpViewerContainer\">").newline()
 				.fwrite("<div class='col-sm-9 helpViewer'>").newline();
 	}
 
@@ -221,6 +224,7 @@ public class HelpBuilder extends ReportBuilder {
 	@Override
 	protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content, String title) throws IOException
 	{
+		writer.fwrite("</div></td></tr></table>").newline();
 		String collect = content.stream()
 				.map(ContentItem::toString)
 				.collect(Collectors.joining());
