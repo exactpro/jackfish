@@ -175,7 +175,8 @@ public class NameSpaceWizard extends AbstractWizard {
                 Common.runLater(() -> pane1.setBottom(label));
                 List<Refactor> res = new LinkedList<>();
 
-                config.forEach(document -> listView.getItems().forEach(item ->
+
+                listView.getItems().forEach(item ->
                 {
                     if (item.isOn())
                     {
@@ -188,17 +189,19 @@ public class NameSpaceWizard extends AbstractWizard {
                         Optional<MatrixItem> namespace = newLib.getRoot().find(i -> i instanceof NameSpace && Objects.equals(i.get(Tokens.Id), newNamespace));
                         res.add(new RefactorAddItem(newLib, namespace.get(), item.getSub(), 0));
 
-                        List<Call> calls = findCalls((Matrix) document, oldSubName);
-                        calls.addAll(findCalls((currentMatrix), item.getName()));
 
-                        if (calls.size() > 0)
-                        {
-                            res.add(new RefactorSetField((Matrix) document, Tokens.Call, newSubName, calls.stream()
-                                    .map(c -> c.getNumber()).collect(Collectors.toList())));
-                        }
+                        config.forEach(document -> {
+                            List<Call> calls = findCalls((Matrix) document, oldSubName);
+                            calls.addAll(findCalls((currentMatrix), item.getName()));
+
+                            if (calls.size() > 0)
+                            {
+                                res.add(new RefactorSetField((Matrix) document, Tokens.Call, newSubName, calls.stream()
+                                        .map(c -> c.getNumber()).collect(Collectors.toList())));
+                            }}, DocumentKind.MATRIX, DocumentKind.LIBRARY);
                     }
+                });
 
-                }), DocumentKind.MATRIX, DocumentKind.LIBRARY);
                 return res;
             }
         };
