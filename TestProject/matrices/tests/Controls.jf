@@ -1,12 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2009-2018, Exactpro Systems LLC
 // www.exactpro.com
 // Build Software to Test Software
-//
+// 
 // All rights reserved.
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems LLC or its licensors.
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 #Id;#TestCase;#Kind;#Depends;#For
 INIT;Test case;;;
     #Id;#Global;#Let
@@ -125,10 +125,10 @@ INIT;Test case;;;
 #Id;#TestCase;#Kind;#Depends;#For
 EXECUTE;;;;
     #Assert;#Message
-    isdef parameter && parameter >= 0 && parameter <=3;'Parameter for the matrix should be defined and has value from 0 to 4. Actual : ' + parameter
+    isdef parameter && parameter >= 0 && parameter <=4;'Parameter for the matrix should be defined and has value from 0 to 4. Actual : ' + parameter
 
     #Id;#Let
-    allPlugins;['Swing', 'InternetExplorer', 'Win', 'Chrome']
+    allPlugins;['Swing', 'JavaFx', 'InternetExplorer', 'Win', 'Chrome']
 
     #Id;#Let
     pluginName;allPlugins[parameter]
@@ -452,7 +452,7 @@ SUBCASES;;;;
                     #If
                     plugin.equals('Win') && operation.Kind == OperationKind.SET && control.Name.equals('Spinner')
                         #Action;
-                        Print;'TODO: operation \'setValue\' for \'Spinner\' in \'Win\' pluggin was skipped'
+                        Print;'TODO: operation \'setValue\' for \'Spinner\' in \'Win\' plugin was skipped'
 
                         #Continue
 
