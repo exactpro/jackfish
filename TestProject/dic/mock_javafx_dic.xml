@@ -16,7 +16,7 @@
             <comboBox id="ComboBox" uid="ComboBox" owner="owner" class="" name="" action="" addition="Many"/>
             <comboBox id="EditableComboBox" owner="owner" addition="Many"/>
             <radioButton id="RadioButton" uid="RadioButton" owner="owner" class="" action="" text="" addition="Many"/>
-            <tree id="Tree" uid="TreeView" owner="owner" class="" addition="Many"/>
+            <tree id="Tree" uid="Tree" xpath="" owner="owner" class="" addition="Many"/>
             <tabPanel id="TabPanel" uid="TabPanel" owner="owner" addition="Many"/>
             <label id="centralLabel" uid="CentralLabel" owner="owner" text="" addition="Many"/>
             <toggleButton id="ToggleButton" uid="ToggleButton" owner="owner" addition="Many"/>
