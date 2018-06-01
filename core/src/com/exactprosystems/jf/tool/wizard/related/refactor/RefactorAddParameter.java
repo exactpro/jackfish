@@ -33,7 +33,6 @@ public class RefactorAddParameter extends Refactor
 		);
 		this.command = CommandBuilder.start()
 				.addParameter(item, parameter, index)
-				.saveDocument(item.getMatrix())
 				.build();
 	}
 

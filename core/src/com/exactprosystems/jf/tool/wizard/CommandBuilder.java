@@ -191,13 +191,9 @@ public class CommandBuilder
 	public CommandBuilder saveDocument(Document doc)
 	{
 		this.commands.add(context ->
-		{
-			Common.tryCatch(() ->
-			{
-			    doc.save(doc.getNameProperty().get());
-			    doc.close();
-			}, MessageFormat.format(R.WIZARD_ERROR_ON_CREATE_DOC_1.get(), doc.getNameProperty().get()));
-		});
+				Common.tryCatch(() ->
+						doc.save(doc.getNameProperty().get()),
+						MessageFormat.format(R.WIZARD_ERROR_ON_CREATE_DOC_1.get(), doc.getNameProperty().get())));
 		return this;
 	}
 

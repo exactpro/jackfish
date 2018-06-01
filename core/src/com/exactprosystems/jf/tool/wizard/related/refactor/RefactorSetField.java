@@ -10,14 +10,14 @@
 
 package com.exactprosystems.jf.tool.wizard.related.refactor;
 
-import java.util.List;
-
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.Tokens;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+
+import java.util.List;
 
 public class RefactorSetField  extends Refactor
 {
@@ -29,12 +29,7 @@ public class RefactorSetField  extends Refactor
         int size = itemIds.size();
         this.message = String.format(R.REFACTOR_SET_FIELD_MESSAGE.get(), token, value, Common.getRelativePath(matrix.getNameProperty().get()), size);
 	    CommandBuilder builder = CommandBuilder.start();
-        builder.loadDocument(matrix);
-	    itemIds.forEach(c -> 
-	    {
-	        builder.findAndHandleMatrixItem(matrix, c, i -> i.set(token, value));
-	    });
-	    builder.saveDocument(matrix);
+	    itemIds.forEach(c -> builder.findAndHandleMatrixItem(matrix, c, i -> i.set(token, value)));
 		this.command = builder.build();
 	}
 	

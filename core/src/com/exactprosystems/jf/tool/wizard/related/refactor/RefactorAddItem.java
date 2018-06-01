@@ -10,14 +10,14 @@
 
 package com.exactprosystems.jf.tool.wizard.related.refactor;
 
-import java.util.List;
-
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.api.wizard.WizardCommand;
 import com.exactprosystems.jf.documents.matrix.Matrix;
 import com.exactprosystems.jf.documents.matrix.parser.items.MatrixItem;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
+
+import java.util.List;
 
 public class RefactorAddItem extends Refactor
 {
@@ -27,10 +27,9 @@ public class RefactorAddItem extends Refactor
 	public RefactorAddItem(Matrix matrix, MatrixItem where, MatrixItem item, int index)
 	{
         this.message = String.format(R.REFACTOR_ADD_ITEM_MESSAGE.get(), item, item.getId(), Common.getRelativePath(matrix.getNameProperty().get()));
-        CommandBuilder builder = CommandBuilder.start();
-        builder.addMatrixItem(matrix, where, item, index);
-        builder.saveDocument(matrix);
-        this.command = builder.build();
+        this.command = CommandBuilder.start()
+				.addMatrixItem(matrix, where, item, index)
+				.build();
 	}
 	
 	public List<WizardCommand> getCommands()

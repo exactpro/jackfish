@@ -33,7 +33,6 @@ public class RefactorRemoveParameters extends Refactor
 		);
 		commands = CommandBuilder.start()
 				.removeParameters(item, parameterIndexes)
-				.saveDocument(item.getMatrix())
 				.build();
 	}
 

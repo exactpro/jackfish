@@ -558,7 +558,8 @@ public class MatrixFx extends Matrix
 			settings.setValue(Settings.MAIN_NS, DIALOG_BREAKPOINT, absolutePathMatrix, breakPoints.stream().map(Object::toString).collect(Collectors.joining(DELIMITER)));
 		}
 
-		if (Str.areEqual(this.defaultAppId, EMPTY_STRING) && Str.areEqual(this.defaultClientId, EMPTY_STRING))
+		if ((Str.areEqual(this.defaultAppId, EMPTY_STRING) || Str.IsNullOrEmpty(this.defaultAppId))
+				&& (Str.areEqual(this.defaultClientId, EMPTY_STRING) || Str.IsNullOrEmpty(this.defaultClientId)))
 		{
 			settings.remove(Settings.MAIN_NS, DIALOG_DEFAULTS, absolutePathMatrix);
 		}
