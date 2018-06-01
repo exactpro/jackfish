@@ -33,13 +33,12 @@ import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
 import com.exactprosystems.jf.tool.wizard.related.refactor.*;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -63,14 +62,19 @@ public class RefactorWizard extends AbstractWizard
     private SubCase               currentSubCase;
     private NameSpace             currentNameSpace;
 
-    private ListView<Refactor>    listView;
-    private TextField             prevSubcase;
-    private TextField             prevNamespace;
+    private ListView<Refactor> resultListView;
+    private TextField          prevSubcase;
+    private TextField          prevNamespace;
 
     private TextField             nextSubcase;
     private CustomFieldWithButton nextNamespace;
 
+	private ProgressIndicator progressIndicator;
+	private Label progressTitle;
+
     private boolean               success = false;
+
+	private Task<Void> task = null;
 
     @Override
     public boolean beforeRun()
@@ -92,10 +96,10 @@ public class RefactorWizard extends AbstractWizard
     {
         borderPane.setMinWidth(750);
         borderPane.setPrefWidth(750);
-        this.listView = new ListView<>();
-        this.listView.setEditable(false);
-        this.listView.setMinHeight(400);
-        this.listView.setMaxHeight(600);
+        this.resultListView = new ListView<>();
+        this.resultListView.setEditable(false);
+        this.resultListView.setMinHeight(400);
+        this.resultListView.setMaxHeight(600);
 
         String subcase = this.currentSubCase.getId();
         String namespace = this.currentNameSpace == null ? "" : this.currentNameSpace.getId();
@@ -129,7 +133,30 @@ public class RefactorWizard extends AbstractWizard
         pane.setHgap(4);
 
         Button refresh = new Button(R.REFACTOR_WIZARD_SCAN.get());
-        refresh.setOnAction(event -> scanChangeds() );
+        refresh.setOnAction(event -> {
+			if (this.task != null && this.task.isRunning())
+			{
+				this.task.cancel();
+				this.task = null;
+			}
+			this.task = new Task<Void>()
+			{
+				@Override
+				protected Void call() throws Exception
+				{
+					scanChanges(this);
+					return null;
+				}
+			};
+			this.resultListView.getItems().clear();
+			progressIndicator.setVisible(true);
+			progressTitle.setText(R.WIZARD_STATUS_LOADING.get());
+			this.task.setOnSucceeded(handler -> {
+				progressIndicator.setVisible(false);
+				progressTitle.setText(R.REFACTOR_WIZARD_AFFECTED_FILES.get());
+			});
+			new Thread(this.task).start();
+		});
 
         pane.add(new Label(R.REFACTOR_WIZARD_SUBCASE.get()), 0, 0);
         pane.add(new Label(R.REFACTOR_WIZARD_NAMESPACE.get()), 0, 1);
@@ -140,8 +167,16 @@ public class RefactorWizard extends AbstractWizard
         pane.add(this.nextSubcase, 3, 0);
         pane.add(this.nextNamespace, 3, 1);
         pane.add(refresh, 0, 3);
-        pane.add(new Label(R.REFACTOR_WIZARD_AFFECTED_FILES.get()), 1, 3, 2, 1);
-        pane.add(this.listView, 0, 4, 4, 1);
+
+		this.progressTitle = new Label("");
+		this.progressIndicator = new ProgressIndicator(ProgressIndicator.INDETERMINATE_PROGRESS);
+		this.progressIndicator.setVisible(false);
+		this.progressIndicator.setMaxSize(16, 16);
+		this.progressIndicator.setPrefSize(16, 16);
+		HBox titleBox = new HBox();
+		titleBox.getChildren().addAll(this.progressIndicator, progressTitle);
+		pane.add(titleBox, 1, 3, 2, 1);
+        pane.add(this.resultListView, 0, 4, 4, 1);
 
         borderPane.setCenter(pane);
         BorderPane.setAlignment(pane, Pos.CENTER);
@@ -153,7 +188,7 @@ public class RefactorWizard extends AbstractWizard
     	List<WizardCommand> list = new ArrayList<>();
     	if (this.success)
     	{
-	       this.listView.getItems().forEach(i -> list.addAll(i.getCommands()));
+	       this.resultListView.getItems().forEach(i -> list.addAll(i.getCommands()));
 	       list.addAll(CommandBuilder.start()
                    .refreshConfig(context.getConfiguration())
                    .build());
@@ -185,10 +220,10 @@ public class RefactorWizard extends AbstractWizard
                 .collect(Collectors.toList());
     }
     
-    private void scanChangeds()
+    private void scanChanges(Task<Void> task)
     {
         this.success = true;
-        ObservableList<Refactor> items = this.listView.getItems();
+        ObservableList<Refactor> items = this.resultListView.getItems();
         items.clear();
 
         String oldSubcase   = this.prevSubcase.getText();
@@ -246,6 +281,9 @@ public class RefactorWizard extends AbstractWizard
                 boolean onlyCheck = newNamespace.isEmpty();
                 config.forEach(d ->
                 {
+                	if (task.isCancelled()) {
+                		return;
+					}
                     Matrix matrix = (Matrix)d;
                     // try to find ...
                     List<Call> calls = findCalls(matrix, oldCallPoint);
@@ -253,16 +291,18 @@ public class RefactorWizard extends AbstractWizard
                     {
                         if (onlyCheck)
                         {
-                            items.add(new RefactorEmpty(MessageFormat.format(R.WIZARD_MATRIX_CONTAINS_REFERENCES_2.get(), matrix.getNameProperty().get(), calls.size())));
+							Platform.runLater(() -> items.add(new RefactorEmpty(MessageFormat.format(R.WIZARD_MATRIX_CONTAINS_REFERENCES_2.get(), matrix.getNameProperty().get(), calls.size()))));
                             this.success = false;
                         }
                         else
                         {
-                            items.add(new RefactorSetField(matrix, Tokens.Call, newCallPoint, calls
-									.stream()
-                                    .map(MatrixItem::getNumber)
-									.collect(Collectors.toList())));
-							items.add(new RefactorSaveDocument(matrix));
+                        	Platform.runLater(() -> {
+								items.add(new RefactorSetField(matrix, Tokens.Call, newCallPoint, calls
+										.stream()
+										.map(MatrixItem::getNumber)
+										.collect(Collectors.toList())));
+								items.add(new RefactorSaveDocument(matrix));
+							});
                         }
                     }
                 }, DocumentKind.LIBRARY, DocumentKind.MATRIX);
