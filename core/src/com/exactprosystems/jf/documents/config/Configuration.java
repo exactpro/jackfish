@@ -660,7 +660,8 @@ public class Configuration extends AbstractDocument
 	}
 
 	/**
-	 * For each registered document by passed {@link DocumentKind} array will apply {@link Consumer} applier
+	 * For each registered document by passed {@link DocumentKind} array will apply {@link Consumer} applier<br>
+	 * Each of documents already loaded, when consumer applied
 	 * @param applier {@link Consumer}
 	 * @param kinds array of document kinds, which need be get around
 	 */

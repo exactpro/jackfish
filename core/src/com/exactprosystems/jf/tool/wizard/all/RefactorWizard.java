@@ -258,7 +258,6 @@ public class RefactorWizard extends AbstractWizard
                         }
                         else
                         {
-							items.add(new RefactorLoadDocument(matrix));
                             items.add(new RefactorSetField(matrix, Tokens.Call, newCallPoint, calls
 									.stream()
                                     .map(MatrixItem::getNumber)

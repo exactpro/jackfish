@@ -31,10 +31,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.MatrixFx;
 import com.exactprosystems.jf.tool.wizard.AbstractWizard;
 import com.exactprosystems.jf.tool.wizard.CommandBuilder;
-import com.exactprosystems.jf.tool.wizard.related.refactor.Refactor;
-import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorAddItem;
-import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorRemoveItem;
-import com.exactprosystems.jf.tool.wizard.related.refactor.RefactorSetField;
+import com.exactprosystems.jf.tool.wizard.related.refactor.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
@@ -43,9 +40,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.*;
 
+import java.io.File;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @WizardAttribute(
         name = R.NAMESPACE_WIZARD_NAME,
@@ -59,24 +58,22 @@ import java.util.stream.Collectors;
 )
 public class NameSpaceWizard extends AbstractWizard {
 
-
     private MatrixFx currentMatrix;
     private NameSpace currentNameSpace;
 
-    private ListView<Item> listView = new ListView<>();
-    private ListView<Refactor> listView2 = new ListView<>();
+    private ListView<Item>        subcaseListView  = new ListView<>();
+    private ListView<Refactor>    refactorListView = new ListView<>();
     private CustomFieldWithButton nextNamespace;
-    private ProgressIndicator indicator = new ProgressIndicator();
-    private BorderPane pane1 = new BorderPane();
-
+    private ProgressIndicator     indicator        = new ProgressIndicator();
+    private BorderPane            borderPane       = new BorderPane();
 
     @Override
     public boolean beforeRun() {
 
-        for (int i = 0; i < currentNameSpace.count(); i++)
-        {
-            this.listView.getItems().add(new Item((SubCase) this.currentNameSpace.get(i), false));
-        }
+		IntStream.range(0, this.currentNameSpace.count())
+				.mapToObj(i -> (SubCase) this.currentNameSpace.get(i))
+				.map(subCase -> new Item(subCase, false))
+				.forEach(this.subcaseListView.getItems()::add);
 
         return true;
     }
@@ -88,11 +85,11 @@ public class NameSpaceWizard extends AbstractWizard {
         borderPane.setPrefWidth(600);
         borderPane.setPrefHeight(500);
 
-        this.listView.setEditable(false);
-        this.listView.setMinHeight(200);
-        this.listView.setMaxHeight(600);
-        this.listView2.setMaxHeight(300);
-        this.listView2.setMinHeight(200);
+        this.subcaseListView.setEditable(false);
+        this.subcaseListView.setMinHeight(200);
+        this.subcaseListView.setMaxHeight(600);
+        this.refactorListView.setMaxHeight(300);
+        this.refactorListView.setMinHeight(200);
 
         String namespace = this.currentNameSpace == null ? "" : this.currentNameSpace.getId();
 
@@ -108,9 +105,9 @@ public class NameSpaceWizard extends AbstractWizard {
             this.nextNamespace.setText(value.getValue());
         });
 
-        listView.setCellFactory(CheckBoxListCell.forListView(Item::onProperty));
+        subcaseListView.setCellFactory(CheckBoxListCell.forListView(Item::onProperty));
 
-        GridPane pane = new GridPane();
+        GridPane gridPane = new GridPane();
 
         Button refresh = new Button(R.NAMESPACE_WIZARD_SCAN.get());
         refresh.setOnAction(event -> createCommands());
@@ -125,154 +122,175 @@ public class NameSpaceWizard extends AbstractWizard {
         columnConstraints2.setHgrow(Priority.SOMETIMES);
         ColumnConstraints columnConstraints3 = new ColumnConstraints();
         columnConstraints3.setHgrow(Priority.SOMETIMES);
-        pane.getColumnConstraints().addAll(columnConstraints, columnConstraints1, columnConstraints2, columnConstraints3);
-        pane.setVgap(4);
-        pane.setHgap(4);
-        pane.add(listView, 0, 0, 7, 1);
-        pane.add(new Label(), 0, 1);
-        pane.add(new Label(R.WIZARD_WHERE_TO_MOVE.get()), 1, 1);
+        gridPane.getColumnConstraints().addAll(columnConstraints, columnConstraints1, columnConstraints2, columnConstraints3);
+        gridPane.setVgap(4);
+        gridPane.setHgap(4);
+        gridPane.add(subcaseListView, 0, 0, 7, 1);
+        gridPane.add(new Label(), 0, 1);
+        gridPane.add(new Label(R.WIZARD_WHERE_TO_MOVE.get()), 1, 1);
         GridPane.setFillWidth(nextNamespace, false);
-        pane.add(nextNamespace, 2, 1);
-        pane.add(new Label(), 4, 1);
-        pane.add(refresh, 5, 1);
-        pane.add(new Label(), 6, 1);
-        pane.add(pane1, 0, 2, 7, 1);
+        gridPane.add(nextNamespace, 2, 1);
+        gridPane.add(new Label(), 4, 1);
+        gridPane.add(refresh, 5, 1);
+        gridPane.add(new Label(), 6, 1);
+        gridPane.add(this.borderPane, 0, 2, 7, 1);
 
-        pane1.setCenter(listView2);
-        borderPane.setCenter(pane);
-        BorderPane.setAlignment(pane, Pos.CENTER);
+        this.borderPane.setCenter(refactorListView);
+        borderPane.setCenter(gridPane);
+        BorderPane.setAlignment(gridPane, Pos.CENTER);
     }
 
+	@Override
+	protected Supplier<List<WizardCommand>> getCommands() {
+		List<WizardCommand> res = new LinkedList<>();
+		this.refactorListView.getItems().stream()
+				.flatMap(refactor -> refactor.getCommands().stream())
+				.forEach(res::add);
 
-    @Override
-    protected Supplier<List<WizardCommand>> getCommands() {
-        List<WizardCommand> res = new LinkedList<>();
-        this.listView2.getItems().forEach(i -> res.addAll(i.getCommands()));
-        res.addAll(CommandBuilder.start()
-                .refreshConfig(context.getConfiguration())
-                .build()
-        );
-        return () -> res;
-    }
+		res.addAll(CommandBuilder.start()
+				.refreshConfig(context.getConfiguration())
+				.build()
+		);
+		return () -> res;
+	}
 
     private void createCommands() {
         Configuration config = super.context.getConfiguration();
         String newNamespace = this.nextNamespace.getText();
-        listView2.getItems().clear();
+        refactorListView.getItems().clear();
 
-        pane1.getChildren().remove(listView2);
-        double height = listView2.getHeight()*0.9;
+        borderPane.getChildren().remove(refactorListView);
+        double height = refactorListView.getHeight()*0.9;
         indicator.setPrefHeight(height);
         indicator.setMinHeight(height);
         indicator.setMaxHeight(height);
-        pane1.setCenter(indicator);
+        borderPane.setCenter(indicator);
 
         Label label = new Label(R.WIZARD_STATUS_LOADING.get());
-        BorderPane.setAlignment(label, Pos.CENTER);
-        Task<List<Refactor>> task = new Task<List<Refactor>>() {
-            @Override
-            protected List<Refactor> call() throws Exception {
-                Common.runLater(() -> pane1.setBottom(label));
-                List<Refactor> res = new LinkedList<>();
+		BorderPane.setAlignment(label, Pos.CENTER);
+		Task<List<Refactor>> task = new Task<List<Refactor>>() {
+			@Override
+			protected List<Refactor> call()
+			{
+				Common.runLater(() -> borderPane.setBottom(label));
+				List<Refactor> resultList = new LinkedList<>();
+
+				subcaseListView.getItems().forEach(item ->
+				{
+					if (item.isOn())
+					{
+						String oldPoint = currentNameSpace.getId() + "." + item.getName();
+						String newPoint = newNamespace + "." + item.getName();
+
+						resultList.add(new RefactorRemoveItem(currentMatrix, item.getSub()));
+
+						Matrix newLib = config.getLib(newNamespace);
+
+						boolean sameFile = Objects.equals(new File(newLib.getNameProperty().get()).getAbsolutePath(), new File(currentMatrix.getNameProperty().get()).getAbsolutePath());
+						if (sameFile)
+						{
+							//separate files
+							newLib = currentMatrix;
+						}
+
+						Matrix finalNewLib = newLib;
+						newLib.getRoot()
+								.find(i -> i instanceof NameSpace && Objects.equals(i.get(Tokens.Id), newNamespace))
+								.ifPresent(ns -> {
+									resultList.add(new RefactorAddItem(finalNewLib, ns, item.getSub(), 0));
+									resultList.add(new RefactorSaveDocument(finalNewLib));
+									if (!sameFile)
+									{
+										resultList.add(new RefactorSaveDocument(currentMatrix));
+									}
+								});
+
+						config.forEach(document -> {
+							List<Call> calls = findCalls((Matrix) document, oldPoint);
+
+							if (calls.size() > 0)
+							{
+								resultList.add(new RefactorSetField((Matrix) document, Tokens.Call, newPoint, calls
+										.stream()
+										.map(MatrixItem::getNumber)
+										.collect(Collectors.toList())));
+								resultList.add(new RefactorSaveDocument(document));
+							}}, DocumentKind.MATRIX, DocumentKind.LIBRARY);
+					}
+				});
+
+				return resultList;
+			}
+		};
+
+		task.setOnSucceeded(event -> {
+			List<Refactor> value = (List<Refactor>) event.getSource().getValue();
+			refactorListView.getItems().addAll(value);
+			borderPane.getChildren().remove(indicator);
+			borderPane.setCenter(refactorListView);
+			borderPane.getChildren().remove(label);
+		});
+		new Thread(task).start();
+	}
+
+	@Override
+	public void init(Context context, WizardManager wizardManager, Object... parameters) {
+		super.init(context, wizardManager, parameters);
+
+		this.currentMatrix = super.get(MatrixFx.class, parameters);
+		this.currentNameSpace = super.get(NameSpace.class, parameters);
+
+	}
+
+	private List<ReadableValue> getNamespaces() {
+		return super.context.getConfiguration()
+				.getLibs()
+				.keySet()
+				.stream()
+				.map(ReadableValue::new)
+				.collect(Collectors.toList());
+	}
 
 
-                listView.getItems().forEach(item ->
-                {
-                    if (item.isOn())
-                    {
-                        String oldSubName = currentNameSpace.getId() + "." + item.getName();
-                        String newSubName = newNamespace + "." + item.getName();
+	private List<Call> findCalls(Matrix matrix, String name) {
+		return matrix.getRoot()
+				.findAll(i -> i instanceof Call && i.get(Tokens.Call).equals(name))
+				.stream().map(i -> (Call) i)
+				.collect(Collectors.toList());
+	}
 
-                        res.add(new RefactorRemoveItem(currentMatrix, item.getSub()));
+	private static class Item {
+		private SubCase sub;
+		private final BooleanProperty on = new SimpleBooleanProperty();
 
-                        Matrix newLib = config.getLib(newNamespace);
-                        Optional<MatrixItem> namespace = newLib.getRoot().find(i -> i instanceof NameSpace && Objects.equals(i.get(Tokens.Id), newNamespace));
-                        res.add(new RefactorAddItem(newLib, namespace.get(), item.getSub(), 0));
+		public SubCase getSub() {
+			return sub;
+		}
 
+		private Item(SubCase sub, boolean on) {
+			this.sub = sub;
+			setOn(on);
+		}
 
-                        config.forEach(document -> {
-                            List<Call> calls = findCalls((Matrix) document, oldSubName);
-                            calls.addAll(findCalls((currentMatrix), item.getName()));
+		public final String getName() {
+			return this.sub.getId();
+		}
 
-                            if (calls.size() > 0)
-                            {
-                                res.add(new RefactorSetField((Matrix) document, Tokens.Call, newSubName, calls.stream()
-                                        .map(c -> c.getNumber()).collect(Collectors.toList())));
-                            }}, DocumentKind.MATRIX, DocumentKind.LIBRARY);
-                    }
-                });
+		public final BooleanProperty onProperty() {
+			return this.on;
+		}
 
-                return res;
-            }
-        };
+		public final boolean isOn() {
+			return this.onProperty().get();
+		}
 
-        task.setOnSucceeded(event -> {
-            List<Refactor> value = (List<Refactor>) event.getSource().getValue();
-            listView2.getItems().addAll(value);
-            pane1.getChildren().remove(indicator);
-            pane1.setCenter(listView2);
-            pane1.getChildren().remove(label);
+		public final void setOn(final boolean on) {
+			this.onProperty().set(on);
+		}
 
-        });
-        new Thread(task).start();
-    }
-
-    @Override
-    public void init(Context context, WizardManager wizardManager, Object... parameters) {
-        super.init(context, wizardManager, parameters);
-
-        this.currentMatrix = super.get(MatrixFx.class, parameters);
-        this.currentNameSpace = super.get(NameSpace.class, parameters);
-
-    }
-
-    private List<ReadableValue> getNamespaces() {
-        return super.context.getConfiguration()
-                .getLibs()
-                .keySet()
-                .stream()
-                .map(ReadableValue::new)
-                .collect(Collectors.toList());
-    }
-
-
-    private List<Call> findCalls(Matrix matrix, String name) {
-        return matrix.getRoot().findAll(i -> i instanceof Call && i.get(Tokens.Call).equals(name))
-                .stream().map(i -> (Call) i).collect(Collectors.toList());
-    }
-
-    public static class Item {
-        private SubCase sub;
-        private final BooleanProperty on = new SimpleBooleanProperty();
-
-        public SubCase getSub() {
-            return sub;
-        }
-
-        private Item(SubCase sub, boolean on) {
-            this.sub = sub;
-            setOn(on);
-        }
-
-        public final String getName() {
-            return this.sub.getId();
-        }
-
-        public final BooleanProperty onProperty() {
-            return this.on;
-        }
-
-        public final boolean isOn() {
-            return this.onProperty().get();
-        }
-
-        public final void setOn(final boolean on) {
-            this.onProperty().set(on);
-        }
-
-        @Override
-        public String toString() {
-            return getName();
-        }
-    }
+		@Override
+		public String toString() {
+			return getName();
+		}
+	}
 }
