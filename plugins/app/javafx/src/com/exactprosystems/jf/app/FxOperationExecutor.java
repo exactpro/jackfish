@@ -19,6 +19,7 @@ import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
 import com.exactprosystems.jf.api.error.app.TooManyElementsException;
 import com.exactprosystems.jf.api.error.app.WrongParameterException;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -44,6 +45,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -137,6 +139,18 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			if (component instanceof ScrollBar)
 			{
 				return String.valueOf(((ScrollBar) component).getValue());
+			}
+			if (component instanceof TreeView)
+			{
+				ObservableList treeItems = ((TreeView) component).getSelectionModel().getSelectedItems();
+				if(treeItems.size() > 0 && treeItems.get(0) != null)
+				{
+					return ((TreeItem)treeItems.get(0)).getValue().toString();
+				}
+				else
+				{
+					return "";
+				}
 			}
 			return MatcherFx.getText(component);
 		}, e->
@@ -413,7 +427,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			if (element instanceof TreeView)
 			{
 				TreeView tree = (TreeView) element;
-				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
+				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree, false), path);
 				if (nodes.getLength() != 0)
 				{
 					List <EventTarget> list = new ArrayList <>();
@@ -676,6 +690,19 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 						}
 						return true;
 					}
+					if (component instanceof TreeView)
+					{
+						TreeView treeView = (TreeView) component;
+						NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(treeView, true), selectedText);
+						for (int i = 0; i < nodes.getLength(); i++)
+						{
+							TreeItem item = (TreeItem) nodes.item(i).getUserData("item");
+							item.setExpanded(true);
+							treeView.getSelectionModel().select(item);
+						}
+						return true;
+					}
+
 					return false;
 				},
 				e->
@@ -735,7 +762,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 			if (component instanceof TreeView)
 			{
 				TreeView tree = (TreeView) component;
-				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree), path);
+				NodeList nodes = findNodesInTreeByXpath(convertTreeToXMLDoc(tree, true), path);
 				if (nodes.getLength() == 0)
 				{
 					throw new WrongParameterException(String.format(R.FX_OPERATION_EXECUTOR_EXPAND_EXCEPTION.get(), path));
@@ -891,7 +918,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		{
 			if(component instanceof TreeView)
 			{
-				return convertTreeToXMLDoc((TreeView) component);
+				return convertTreeToXMLDoc((TreeView) component, false);
 			}
 			else
 			{
@@ -1631,19 +1658,23 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 		return new Point(rectangle.x + x, rectangle.y + y);
 	}
 
-	private Document convertTreeToXMLDoc(TreeView tree) throws ParserConfigurationException
+	private Document convertTreeToXMLDoc(TreeView tree, boolean addItem) throws ParserConfigurationException
 	{
 		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		org.w3c.dom.Node root = doc.getDocumentElement();
-		createDom(doc, tree.getRoot(), root);
+		createDom(doc, tree.getRoot(), root, addItem);
 		return doc;
 	}
 
-	private void createDom(Document doc, TreeItem treeItem, org.w3c.dom.Node current)
+	private void createDom(Document doc, TreeItem treeItem, org.w3c.dom.Node current, boolean addItem)
 	{
 		Element node = doc.createElement("item");
 		node.setAttribute("name", treeItem.getValue().toString());
 		node.setUserData("node", treeItem.getGraphic(), null);
+		if(addItem)
+		{
+			node.setUserData("item", treeItem, null);
+		}
 
 		if(current != null)
 		{
@@ -1656,7 +1687,7 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 
 		for (Object o : treeItem.getChildren())
 		{
-			createDom(doc, (TreeItem) o, node);
+			createDom(doc, (TreeItem) o, node, addItem);
 		}
 	}
 

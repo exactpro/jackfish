@@ -16,24 +16,30 @@ import java.util.Arrays;
 class MockTree
 {
     private TreeItem<String> root;
+    private TreeItem<String> colors;
 
     MockTree()
     {
-        TreeItem <String> colors = new TreeItem <>("colors");
-        colors.setExpanded(true);
-        colors.getChildren().addAll(
+        this.colors = new TreeItem <>("colors");
+        this.colors.setExpanded(true);
+        this.colors.getChildren().addAll(
                 Arrays.asList(new TreeItem<>("red"), new TreeItem<>("Blue"))
         );
 
         this.root = new TreeItem<>("Green");
         this.root.setExpanded(true);
         this.root.getChildren().addAll(
-                Arrays.asList(new TreeItem <>("Yellow"),new TreeItem <>("Orange"),new TreeItem <>("Blue"),colors)
+                Arrays.asList(new TreeItem <>("Yellow"),new TreeItem <>("Orange"),new TreeItem <>("Blue"), this.colors)
         );
     }
 
     TreeItem<String> getRoot()
     {
         return this.root;
+    }
+
+    TreeItem<String> getColors()
+    {
+        return this.colors;
     }
 }

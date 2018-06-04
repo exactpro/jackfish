@@ -496,6 +496,11 @@ public class MatcherFx
 			ComboBox comboBox = (ComboBox) target;
 			return comboBox.isEditable() ? comboBox.getEditor().getText() : Str.asString(comboBox.getValue());
 		}
+		else if (target instanceof TreeItem)
+		{
+			TreeItem treeItem = (TreeItem) target;
+			return treeItem.getValue().toString();
+		}
 		else
 		{
 			return null;

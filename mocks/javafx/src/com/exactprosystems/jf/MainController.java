@@ -12,6 +12,7 @@ package com.exactprosystems.jf;
 import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -51,7 +52,7 @@ public class MainController implements Initializable
     @FXML private Label moveLabel;
     @FXML private Label checkedLabel;
     @FXML private Slider Slider;
-    @FXML private MenuBar menu;
+    @FXML private MenuBar Menu;
     @FXML private Button ProtocolClear;
     @FXML private TextArea Protocol;
     @FXML private TreeView<String> Tree;
@@ -61,7 +62,7 @@ public class MainController implements Initializable
     @FXML private RadioButton Orange;
     @FXML private RadioButton Blue;
     @FXML private ComboBox<String> ComboBox;
-    @FXML private Spinner Spinner;
+    @FXML private Spinner<Integer> Spinner;
     @FXML private SplitPane Splitter;
     @FXML private TabPane TabPanel;
     @FXML private ScrollBar ScrollBar;
@@ -111,7 +112,13 @@ public class MainController implements Initializable
         Table.getColumns().addAll(mainModel.getTable().getHeaders());
         Table.setItems(mainModel.getTable().getTableData());
         Tree.setRoot(mainModel.getTree().getRoot());
-        menu.getMenus().addAll(mainModel.getMenu().getMenus());
+        mainModel.getTree().getColors().addEventHandler(TreeItem.branchCollapsedEvent(), collapseHandler);
+		mainModel.getTree().getColors().addEventHandler(TreeItem.branchExpandedEvent(), expandHandler);
+        Menu.getMenus().addAll(mainModel.getMenu().getMenus());
+        Spinner.getValueFactory().valueProperty().addListener((obs, oldValue, newValue) ->
+				sliderLabel.setText("Slider_" + newValue));
+        Spinner.valueProperty().addListener((obs, oldValue, newValue) ->
+				sliderLabel.setText("Slider_" + newValue));
         Slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderLabel.setText("Slider_" + String.valueOf(newValue.intValue())));
         TextBox.textProperty().addListener((observable, oldValue, newValue) -> CentralLabel.setText("TextBox_" + newValue));
         CheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkedLabel.setText("CheckBox_" + (newValue ? "checked" : "unchecked")));
@@ -450,4 +457,18 @@ public class MainController implements Initializable
 
 		dialog.show();
 	}
+
+	private final EventHandler<TreeItem.TreeModificationEvent<String>> collapseHandler =
+			new EventHandler<TreeItem.TreeModificationEvent<String>>() {
+				public void handle(final TreeItem.TreeModificationEvent<String> keyEvent) {
+						selectLabel.setText("colors_collapse");
+					}
+				};
+
+	private final EventHandler<TreeItem.TreeModificationEvent<String>> expandHandler =
+			new EventHandler<TreeItem.TreeModificationEvent<String>>() {
+				public void handle(final TreeItem.TreeModificationEvent<String> keyEvent) {
+					selectLabel.setText("colors_expand");
+				}
+			};
 }

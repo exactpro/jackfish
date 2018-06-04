@@ -10,8 +10,10 @@
  ******************************************************************************/
 package com.exactprosystems.jf;
 
+import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +27,15 @@ class MockMenu
         menus = new ArrayList<>();
         Menu menuItem = new Menu("MenuItem");
         Menu menuItem2 = new Menu("MenuItem2");
+        MenuItem menuItem3 = new MenuItem("MenuItem3");
 
-        menuItem2.getItems().add(new MenuItem("MenuItem3"));
+        menuItem2.getItems().add(menuItem3);
         menuItem.getItems().add(menuItem2);
 
+        Menu menu = new Menu("Menu");
+        menu.getItems().add(menuItem);
+        menus.add(menu);
         menus.add(new Menu("Menu2"));
-        menus.add(menuItem);
     }
 
     Menu[] getMenus()

@@ -17,7 +17,7 @@
 
 <BorderPane fx:id="mainPanel" fx:controller="com.exactprosystems.jf.MainController" xmlns:fx="http://javafx.com/fxml" stylesheets="@Main.css">
     <top>
-        <MenuBar fx:id="menu"/>
+        <MenuBar fx:id="Menu"/>
     </top>
     <center>
         <VBox fx:id="vBox">
