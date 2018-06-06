@@ -499,7 +499,12 @@ public class MatcherFx
 		else if (target instanceof TreeItem)
 		{
 			TreeItem treeItem = (TreeItem) target;
-			return treeItem.getValue().toString();
+			Object value = treeItem.getValue();
+			if(value != null)
+			{
+				return treeItem.getValue().toString();
+			}
+			return "";
 		}
 		else
 		{

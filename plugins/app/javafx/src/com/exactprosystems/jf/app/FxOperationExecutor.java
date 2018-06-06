@@ -145,7 +145,12 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 				ObservableList treeItems = ((TreeView) component).getSelectionModel().getSelectedItems();
 				if(treeItems.size() > 0 && treeItems.get(0) != null)
 				{
-					return ((TreeItem)treeItems.get(0)).getValue().toString();
+					Object value = ((TreeItem)treeItems.get(0)).getValue();
+					if(value != null)
+					{
+						return value.toString();
+					}
+					return "";
 				}
 				else
 				{
@@ -697,8 +702,11 @@ public class FxOperationExecutor extends AbstractOperationExecutor<EventTarget>
 						for (int i = 0; i < nodes.getLength(); i++)
 						{
 							TreeItem item = (TreeItem) nodes.item(i).getUserData("item");
-							item.setExpanded(true);
-							treeView.getSelectionModel().select(item);
+							if(item != null)
+							{
+								item.setExpanded(true);
+								treeView.getSelectionModel().select(item);
+							}
 						}
 						return true;
 					}
