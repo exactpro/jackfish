@@ -1495,6 +1495,10 @@ namespace UIAdapter
             TreeWalker walkerContent = TreeWalker.ContentViewWalker;
             AutomationElement child = walkerContent.GetFirstChild(element);
             List<AutomationElement> listItems = new List<AutomationElement>();
+            if (child.Current.ControlType == ControlType.List)
+            {
+                child = walkerContent.GetFirstChild(child);
+            }
             while (child != null)
             {
                 var ct = child.Current.ControlType;
