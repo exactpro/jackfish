@@ -615,6 +615,7 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 		}
 		if (this.driver.getFrameworkId() != Framework.SILVER_LIGHT && tag.equalsIgnoreCase("table"))
 		{
+			current.appendChild(node);
 			return;
 		}
 
