@@ -72,8 +72,6 @@ public class RefactorWizard extends AbstractWizard
 	private ProgressIndicator progressIndicator;
 	private Label progressTitle;
 
-    private boolean               success = false;
-
 	private Task<Void> task = null;
 
     @Override
@@ -186,18 +184,10 @@ public class RefactorWizard extends AbstractWizard
     protected Supplier<List<WizardCommand>> getCommands()
     {
     	List<WizardCommand> list = new ArrayList<>();
-    	if (this.success)
-    	{
-	       this.resultListView.getItems().forEach(i -> list.addAll(i.getCommands()));
-	       list.addAll(CommandBuilder.start()
-                   .refreshConfig(context.getConfiguration())
-                   .build());
-        }
-    	else
-    	{
-    	    DialogsHelper.showError(R.REFACTOR_WIZARD_WRONG_PARAMETERS.get());
-    	}
-
+		this.resultListView.getItems().forEach(i -> list.addAll(i.getCommands()));
+		list.addAll(CommandBuilder.start()
+				.refreshConfig(context.getConfiguration())
+				.build());
     	return () -> list;
     }
 
@@ -222,7 +212,6 @@ public class RefactorWizard extends AbstractWizard
     
     private void scanChanges(Task<Void> task)
     {
-        this.success = true;
         ObservableList<Refactor> items = this.resultListView.getItems();
         items.clear();
 
@@ -292,7 +281,6 @@ public class RefactorWizard extends AbstractWizard
                         if (onlyCheck)
                         {
 							Platform.runLater(() -> items.add(new RefactorEmpty(MessageFormat.format(R.WIZARD_MATRIX_CONTAINS_REFERENCES_2.get(), matrix.getNameProperty().get(), calls.size()))));
-                            this.success = false;
                         }
                         else
                         {
@@ -312,7 +300,6 @@ public class RefactorWizard extends AbstractWizard
         if (items.size() == 0)
         {
             items.add(new RefactorEmpty(R.WIZARD_NO_CHANGES_NEEDED.get()));
-            this.success = false;
         }
     }
     
