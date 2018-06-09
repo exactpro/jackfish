@@ -175,6 +175,11 @@ public class NameSpaceWizard extends AbstractWizard {
 				Common.runLater(() -> borderPane.setBottom(label));
 				List<Refactor> resultList = new LinkedList<>();
 
+				if (Objects.equals(newNamespace, currentNameSpace.getId())) {
+					//TODO replace it via ResourceBundle
+					return Collections.singletonList(new RefactorEmpty("Source and destination namespace are equals"));
+				}
+
 				subcaseListView.getItems().forEach(item ->
 				{
 					if (item.isOn())
@@ -185,6 +190,9 @@ public class NameSpaceWizard extends AbstractWizard {
 						resultList.add(new RefactorRemoveItem(currentMatrix, item.getSub()));
 
 						Matrix newLib = config.getLib(newNamespace);
+						if (newLib == null) {
+							return;
+						}
 
 						boolean sameFile = Objects.equals(new File(newLib.getNameProperty().get()).getAbsolutePath(), new File(currentMatrix.getNameProperty().get()).getAbsolutePath());
 						if (sameFile)
@@ -229,6 +237,15 @@ public class NameSpaceWizard extends AbstractWizard {
 			borderPane.getChildren().remove(indicator);
 			borderPane.setCenter(refactorListView);
 			borderPane.getChildren().remove(label);
+		});
+		task.setOnFailed(event -> {
+			borderPane.getChildren().remove(indicator);
+			borderPane.setCenter(refactorListView);
+			borderPane.getChildren().remove(label);
+			refactorListView.getItems().clear();
+			//TODO replace it via ResourceBundle
+			refactorListView.getItems().add(new RefactorEmpty("Something wrong : " + event.getSource().getException().getMessage()));
+
 		});
 		new Thread(task).start();
 	}
