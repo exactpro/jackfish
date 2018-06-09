@@ -10,10 +10,14 @@
 
 package com.exactprosystems.jf.api.common.i18n;
 
+import com.exactprosystems.jf.api.common.Str;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -2841,66 +2845,6 @@ public enum R
 		return this.toString();
 	}
 
-
-	private static void exportToCSV(String fileName) throws IOException
-	{
-		File file = new File(fileName);
-		boolean result = Files.deleteIfExists(file.toPath());
-		PrintWriter pw = new PrintWriter(file);
-		StringBuilder sb = new StringBuilder();
-
-		System.out.println("Start export!");
-		for (R r : R.values())
-		{
-			sb.append(r.name()).append("\t");
-			sb.append(r.get().replaceAll("\\n", replaceSymbol)).append("\n");
-			pw.write(sb.toString());
-			sb.setLength(0);
-		}
-		pw.close();
-		System.out.println("Finish export!");
-	}
-
-	private static void importFromCSV(String fileName) throws IOException
-	{
-		String line;
-		String cvsSplitBy = "\\t";
-		File result = new File("new_bundle.properties");
-		boolean delete = Files.deleteIfExists(result.toPath());
-		OutputStream out = new FileOutputStream(result);
-		BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(out, "8859_1"));
-		List<String> currentNames = Stream.of(R.values()).map(Enum::name).collect(Collectors.toList());
-
-		System.out.println("Start import from CSV!");
-		try(BufferedReader br = new BufferedReader(new FileReader(fileName)))
-		{
-			while ((line = br.readLine()) != null) {
-				String[] split = line.split(cvsSplitBy);
-				bf.write(split[0] + "=" + split[1]);
-				bf.newLine();
-				currentNames.remove(split[0]);
-			}
-			bf.flush();
-		}
-		System.out.println("Lost " + currentNames.size() + ": " + String.join(", ", currentNames));
-		System.out.println("Finish import from CSV!");
-	}
-
-	public static void main(String[] str)
-	{
-		try
-		{
-			String fileName = "JF_export_R.csv";
-			exportToCSV(fileName);
-			importFromCSV(fileName);
-		}
-		catch (IOException ioe)
-		{
-			System.out.println(ioe.getMessage());
-		}
-	}
-
-
 	@Override
 	public String toString()
 	{
@@ -2950,4 +2894,106 @@ public enum R
 			return bundle;
 		}
 	}
+
+	//region export-import
+	private static void exportToCSV(String fileName) throws IOException
+	{
+		File file = new File(fileName);
+		Files.deleteIfExists(file.toPath());
+		PrintWriter pw = new PrintWriter(file);
+		StringBuilder sb = new StringBuilder();
+
+		System.out.println("Start export!");
+		for (R r : R.values())
+		{
+			sb.append(r.name()).append("\t");
+			sb.append(r.get().replaceAll("\\n", replaceSymbol)).append("\n");
+			pw.write(sb.toString());
+			sb.setLength(0);
+		}
+		pw.close();
+		System.out.println("Finish export!");
+	}
+
+	private static void importFromCSV(String from, String to) throws IOException
+	{
+		String line;
+		String csvSplitBy = "\\t";
+		File result = new File(to);
+		Files.deleteIfExists(result.toPath());
+
+		List<String> currentNames = Stream.of(R.values()).map(Enum::name).collect(Collectors.toList());
+
+		System.out.println("Start import from CSV!");
+		try(OutputStream out = new FileOutputStream(result);
+			BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(out, "8859_1"));
+			BufferedReader br = new BufferedReader(new FileReader(from)))
+		{
+			while ((line = br.readLine()) != null) {
+				String[] split = line.split(csvSplitBy);
+				if(split.length == 1)
+				{
+					bf.write(split[0] + "=");
+				}
+				else
+				{
+					bf.write(split[0] + "=" + split[1]);
+				}
+				bf.newLine();
+				currentNames.remove(split[0]);
+			}
+			bf.flush();
+		}
+		System.out.println("Lost " + currentNames.size() + ": " + String.join(", ", currentNames));
+		addMissed(currentNames, to);
+		System.out.println("Finish import from CSV!");
+	}
+
+	private static void addMissed(List<String> currentNames, String filename) throws IOException
+	{
+		StringBuilder sb = new StringBuilder();
+		for (String missed : currentNames)
+		{
+			sb.append(missed).append("=").append(R.valueOf(missed).get()).append("\n");
+		}
+		try(FileWriter fw = new FileWriter(filename, true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter out = new PrintWriter(bw))
+		{
+			out.println(sb.toString());
+		}
+	}
+
+	private static void checkValues()
+	{
+		for(R r : R.values())
+		{
+			try
+			{
+				r.get();
+			}
+			catch (Exception e)
+			{
+				System.out.println("Missed value for: " + r.name());
+			}
+		}
+	}
+
+	public static void main(String[] str)
+	{
+		try
+		{
+			String from = "JF translate - JF_export_R.tsv";
+			String to = "Bundle_new.properties";
+			//exportToCSV(from);
+			//importFromCSV(from, to);
+			checkValues();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Exception: " + e.getMessage());
+			Stream.of(e.getStackTrace()).forEach(s -> System.out.println(s));
+		}
+	}
+	//endregion
 }
