@@ -390,6 +390,7 @@ namespace UIAdapter
 
             if (!element.Current.FrameworkId.ToUpper().Equals("SILVERLIGHT") && simpleName.ToUpper().Equals("TABLE"))
             {
+                current.AppendChild(node);
                 return;
             }
             if (simpleName.ToUpper().Equals("COMBOBOX"))
