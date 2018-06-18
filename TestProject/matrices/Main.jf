@@ -12,7 +12,7 @@ INIT;;;;
     #Id;#RawTable
     table;Table
     @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority;Multi
-    0;;matrices/tests/Controls;;q;0;4;;1;
+    0;;matrices/tests/Controls;;q;0;3;;1;
     1;;matrices/tests/EventHandlers;;q;;;;1;
     2;;matrices/tests/Basic;;q;;;;1;
     3;;matrices/tests/GUI;;q;;;;1;
