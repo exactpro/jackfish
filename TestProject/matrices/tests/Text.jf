@@ -1,12 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2009-2018, Exactpro Systems LLC
 // www.exactpro.com
 // Build Software to Test Software
-//
+// 
 // All rights reserved.
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems LLC or its licensors.
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 #TestCase;#Kind;#Depends;#For
 TextCreate;Never;;
     #Id;#Let
@@ -45,7 +45,7 @@ TextAddNewLine;;;
     TextAddLine;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;;TXT3.Out
 
     #Action;#Assert;$Line;$Text
-    TextAddLine;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS && This.Reason == 'Parameter Text: Cannot convert 0 of type class java.lang.Integer to type class com.exactprosystems.jf.functions.Text';TestLine;new Integer(0)
+    TextAddLine;This.Result == Result.Failed && This.Kind == ErrorKind.WRONG_PARAMETERS && This.Reason == 'Parameter Text: Cannot convert 0 from type class java.lang.Integer to type class com.exactprosystems.jf.functions.Text';TestLine;new Integer(0)
 
 
 #TestCase;#Kind;#Depends;#For

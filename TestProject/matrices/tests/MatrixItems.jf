@@ -1,12 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2009-2018, Exactpro Systems LLC
 // www.exactpro.com
 // Build Software to Test Software
-//
+// 
 // All rights reserved.
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems LLC or its licensors.
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 #Id;#TestCase;#Kind;#Depends;#For
 VISIBILITY;Variable visibility;Never;;
     // ======================================================================
@@ -390,12 +390,10 @@ check Switch Case Default;;;
         ~;"        Print"
         ~;""
         ~;"    #EndSwitch"
-        ~;""
-        ~;""
         #EndRawText
 
         #Id;#Action;#Assert;$Text
-        MXRN2;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('Switch must contain only Case or Default item');TEXT2
+        MXRN2;MatrixRunFromText;This.Kind == ErrorKind.MATRIX_ERROR && This.Result == Result.Failed && This.Reason.contains('Switch must contain only Cases items or a Default item');TEXT2
 
     #EndStep
 
@@ -665,7 +663,7 @@ check If / Else;;;
 
         #OnError
             #Assert;#Message
-            err.Message == 'Result is not type of Boolean' && err.Kind == ErrorKind.EXCEPTION;'Assert is false'
+            err.Message == 'Result is not Boolean' && err.Kind == ErrorKind.EXCEPTION;'Assert is false'
 
 
     #EndStep
@@ -1138,7 +1136,7 @@ check While;;;
 
         #OnError
             #Assert;#Message
-            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Result is not type of Boolean';
+            err.Kind == ErrorKind.EXCEPTION && err.Message == 'Result is not Boolean';
 
 
     #EndStep
