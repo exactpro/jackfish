@@ -22,7 +22,7 @@ import java.io.*;
 @DocumentInfo(
         kind = DocumentKind.PLAIN_TEXT,
         newName = "Text", 
-        extension = "txt",
+        extension = "txt,sql,jf,ini,properties,xml,html,htm,rtf,xhtml,xht,java,js,inf,conf,config,cfg,xsd,bat,sh,tex",
         description = "Plain text"
 )
 public class PlainText extends AbstractDocument

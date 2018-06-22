@@ -83,6 +83,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.exactprosystems.jf.tool.Common.tryCatch;
 
@@ -508,8 +509,18 @@ public abstract class DialogsHelper
 		String pathToParentDir = getCurrentDir();
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setInitialDirectory(new File(pathToParentDir));
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(filter, extension);
-		fileChooser.getExtensionFilters().add(extFilter);
+		String[] extensions = extension.split(",");
+		if(extensions.length == 1)
+		{
+			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(filter, String.format("*.%s", extension));
+			fileChooser.getExtensionFilters().add(extFilter);
+		}
+		else
+		{
+			Stream.of(extensions).forEach(s ->
+				fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(String.format(R.MAIN_CHOOSE_FILE_FILTER.get(), s, s), String.format("*.%s", s)))
+			);
+		}
 		fileChooser.setTitle(title);
 		switch (mode)
 		{
