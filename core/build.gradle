@@ -19,6 +19,13 @@ repositories {
 //		url 'https://oss.sonatype.org/content/repositories/snapshots/'
 //	}
 	mavenCentral()
+	
+	/*
+	maven {
+	    name "Maven 4.8 artifactory"
+	    url "https://repo.maven.apache.org/maven2/"
+	}
+	*/
 }
 
 dependencies {

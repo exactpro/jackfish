@@ -54,8 +54,8 @@
     </globalHandler>
     <sqlEntry>
         <name>MySql</name>
-        <sqlJar>${JF}/sql/mysql-connector-java-5.1.26.jar</sqlJar>
-        <sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true</sqlConnection>
+        <sqlJar>${JF}/sql/mysql-connector-java-8.0.11.jar</sqlJar>
+        <sqlConnection>jdbc:mysql://${SERVER}/${BASE}?generateSimpleParameterMetadata=true&amp;useSSL=false&amp;serverTimezone=UTC</sqlConnection>
     </sqlEntry>
     <sqlEntry>
         <name>MsSql</name>
