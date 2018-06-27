@@ -512,7 +512,7 @@ public abstract class DialogsHelper
 		String[] extensions = extension.split(",");
 		if(extensions.length == 1)
 		{
-			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(filter, String.format("*.%s", extension));
+			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(filter, extension);
 			fileChooser.getExtensionFilters().add(extFilter);
 		}
 		else

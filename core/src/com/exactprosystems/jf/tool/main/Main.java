@@ -880,7 +880,8 @@ public class Main extends Application
 	
 			String title		= String.format(R.MAIN_CHOOSE_FILE_TITLE.get(), annotation.description());
 			String filter		= String.format(R.MAIN_CHOOSE_FILE_FILTER.get(), annotation.extension(), annotation.extension());
-			String extension	= annotation.extension();
+			boolean manyExtensions = annotation.extension().contains(",");
+			String extension	= manyExtensions ? annotation.extension() : String.format("*.%s", annotation.extension());
 	
 			file = DialogsHelper.showOpenSaveDialog(title, filter, extension, mode);
 		}
