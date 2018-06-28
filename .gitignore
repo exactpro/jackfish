@@ -27,6 +27,9 @@ core/sql
 
 logs
 .settings.xml
+/.log.xml
+/TestProject/.log.xml
+/csharp/UIAdapter/UIAdapter.errors.log
 
 version.properties
 #all from src don't ignore
