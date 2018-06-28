@@ -855,7 +855,7 @@ public abstract class DialogsHelper
 				dialog.setTitle(R.DIALOGS_HELPER_REPORT_TITLE.get());
 				if (matrName[0] == null)
 				{
-					Matcher matcher = Pattern.compile("\\d+_\\d+_(.+?)_(FAILED|PASSED|RUNNING)\\.html").matcher(file.getAbsolutePath());
+					Matcher matcher = Pattern.compile("\\d+_\\d+_(.+?)_(FAILED|PASSED|RUNNING).+?\\.html").matcher(file.getAbsolutePath());
 					if (matcher.find())
 					{
 						matrName[0] = matcher.group(1);
@@ -875,7 +875,7 @@ public abstract class DialogsHelper
 					{
                         Matrix matrix = (Matrix) factory.createDocument(DocumentKind.MATRIX, matrName[0]);
 						matrix.load(new StringReader(name));
-						matrix.display();
+						factory.showDocument(matrix);
 					}
 				}, R.DIALOGS_HELPER_ERROR_ON_OPEN.get()));
 			}, R.DIALOGS_HELPER_ERROR_ON_SHOW.get());
