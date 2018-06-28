@@ -157,6 +157,10 @@ public class WinRemoteApplicationJNA extends RemoteApplication
 			String exec = args.get(execName);
 			String workDir = args.get(workDirName);
 			String parameters = args.get(argsName);
+			if(Str.IsNullOrEmpty(parameters) || parameters.equalsIgnoreCase("null"))
+			{
+				parameters = "";
+			}
 
 			if (Str.IsNullOrEmpty(exec) || exec.equals("null"))
 			{
