@@ -212,7 +212,15 @@ public class CustomTable<T> extends TableView<T>
 
 	private void showColumn(CustomTableColumn c, int index)
 	{
-		this.getColumns().add(index, c);
+		int currentSize = this.getColumns().size();
+		if(currentSize == index)
+		{
+			this.getColumns().add(index, c);
+		}
+		else
+		{
+			this.getColumns().set(index, c);
+		}
 		this.getColumns().forEach(column -> {
 			if (column.prefWidthProperty().isBound())
 			{
