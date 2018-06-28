@@ -116,9 +116,9 @@ public final class SubCase extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, super.getComments());
-		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get());
+		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get(), null);
 		driver.showTitle(this, layout, 1, 1, Tokens.SubCase.get(), context.getFactory().getSettings());
-		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
+		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null, null);
 		driver.showParameters(this, layout, 1, 3, this.parameters, () -> "", true);
 
 		return layout;

@@ -144,9 +144,9 @@ public final class TestCase extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, super.getComments());
-		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get());
+		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get(), "id");
 		driver.showTitle(this, layout, 1, 1, Tokens.TestCase.get(), context.getFactory().getSettings());
-		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null);
+		driver.showTextBox(this, layout, 1, 2, this.name, this.name, null, "name");
 		driver.showLabel(this, layout, 2, 0, Tokens.Depends.get() + ":");
 		driver.showAutoCompleteBox(this, layout, 2, 1, () -> super.listOfTopIds(TestCase.class, Collections.singletonList(MatrixRoot.class)), this.depends, this.depends);
 		driver.showLabel(this, layout, 2, 2, "Screenshot:");

@@ -104,16 +104,16 @@ public interface DisplayDriver
 
 	/**
 	 * Display a simple textfield for the item on the current layout
-	 *
-	 * @param item the item, for which display the textfield
+	 *  @param item the item, for which display the textfield
 	 * @param layout the layout for display the textfield
 	 * @param row the number of row, where need display the textfield
 	 * @param column the number of columns, where need display the textfield
 	 * @param set the listener, which used for notify, that a text from the textfield is changed
 	 * @param get the listener, which used for get a text from item and set into the textfield
 	 * @param generator a formulaGenerator functional interface. Used for generate text via dragNdrop from the textfield to another place
+	 * @param placeholder the description which can help to fill textfield
 	 */
-	void showTextBox(MatrixItem item, Object layout, int row, int column, Consumer<String> set, Supplier<String> get, FormulaGenerator generator);
+	void showTextBox(MatrixItem item, Object layout, int row, int column, Consumer<String> set, Supplier<String> get, FormulaGenerator generator, String placeholder);
 
 	/**
 	 * Display a simple expression field for the item on the current layout.

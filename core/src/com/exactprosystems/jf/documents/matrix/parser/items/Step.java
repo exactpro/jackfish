@@ -175,7 +175,7 @@ public class Step extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, super.getComments());
-		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get());
+		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get(), "id");
 		driver.showTitle(this, layout, 1, 1, Tokens.Step.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 2, Tokens.Step.get(), this.identify, this.identify, null, null, null, null);
 

@@ -287,7 +287,7 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showTextBox(MatrixItem item, Object layout, int row, int column, Consumer<String> set, Supplier<String> getter, FormulaGenerator generator)
+	public void showTextBox(MatrixItem item, Object layout, int row, int column, Consumer<String> set, Supplier<String> getter, FormulaGenerator generator, String placeholder)
 	{
 		GridPane pane = (GridPane) layout;
 
@@ -295,6 +295,10 @@ public class DisplayDriverFx implements DisplayDriver
 		textBox.setContextMenu(this.rowContextMenu);
 		textBox.setStyle(Common.FONT_SIZE);
 		textBox.setText(getter.get());
+		if (placeholder != null)
+		{
+			textBox.setPromptText(placeholder);
+		}
 		Common.sizeTextField(textBox);
 		textBox.focusedProperty().addListener((observable, oldValue, newValue) ->
 		{

@@ -209,7 +209,7 @@ public final class ActionItem extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 4);
 		driver.showComment(this, layout, 0, 0, super.getComments());
-		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get() + ".Out");
+		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get() + ".Out", null);
 		driver.showTitle(this, layout, 1, 1, this.getActionName(), context.getFactory().getSettings());
 		driver.showParameters(this, layout, 1, 2, this.parameters, () -> this.id.get() + ".In.", false);
 		driver.showCheckBox(this, layout, 2, 0, "G", this.global, this.global);

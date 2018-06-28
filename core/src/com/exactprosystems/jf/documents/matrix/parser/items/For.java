@@ -98,7 +98,7 @@ public final class For extends MatrixItem
 		Object layout = driver.createLayout(this, 2);
 		driver.showComment(this, layout, 0, 0, super.getComments());
 		driver.showTitle(this, layout, 1, 0, Tokens.For.get(), context.getFactory().getSettings());
-		driver.showTextBox(this, layout, 1, 1, this.var, this.var, this.var::get);
+		driver.showTextBox(this, layout, 1, 1, this.var, this.var, this.var::get, null);
 		driver.showTitle(this, layout, 1, 2, Tokens.From.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 3, Tokens.From.get(), this.from, this.from, null, null, null, null);
 		driver.showTitle(this, layout, 1, 4, Tokens.To.get(), context.getFactory().getSettings());

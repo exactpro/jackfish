@@ -94,7 +94,7 @@ public final class Call extends MatrixItem
 	{
 		Object layout = driver.createLayout(this, 3);
 		driver.showComment(this, layout, 0, 0, super.getComments());
-		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get());
+		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get(), null);
 		driver.showTitle(this, layout, 1, 1, Tokens.Call.get(), context.getFactory().getSettings());
 		driver.showExpressionField(this, layout, 1, 2, Tokens.Call.get(), this.name, this.name,
 			str ->
