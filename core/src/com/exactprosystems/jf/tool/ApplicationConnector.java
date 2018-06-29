@@ -14,6 +14,7 @@ import com.exactprosystems.jf.api.app.AppConnection;
 import com.exactprosystems.jf.api.app.IApplicationFactory;
 import com.exactprosystems.jf.api.app.IApplicationPool;
 import com.exactprosystems.jf.api.common.ParametersKind;
+import com.exactprosystems.jf.api.common.Str;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.common.Settings;
 import com.exactprosystems.jf.common.evaluator.AbstractEvaluator;
@@ -160,14 +161,17 @@ public class ApplicationConnector
 			Map.Entry<String, String> entry = iterator.next();
 			String name = entry.getKey();
 			String expression = entry.getValue();
-			try
+			if(!Str.IsNullOrEmpty(expression))
 			{
-				Object value = evaluator.evaluate(expression);
-				entry.setValue(String.valueOf(value));
-			}
-			catch (Exception e)
-			{
-				throw new Exception (R.COMMON_ERROR_IN.get() + " " + name + " = " + expression + " :" + e.getMessage(), e);
+				try
+				{
+					Object value = evaluator.evaluate(expression);
+					entry.setValue(String.valueOf(value));
+				}
+				catch (Exception e)
+				{
+					throw new Exception (R.COMMON_ERROR_IN.get() + " " + name + " = " + expression + " :" + e.getMessage(), e);
+				}
 			}
 		}
 		this.task = new Task<Void>()
