@@ -847,6 +847,7 @@ public abstract class DialogsHelper
 					dialog.getDialogPane().getButtonTypes().add(new ButtonType(R.COMMON_OPEN.get(), ButtonBar.ButtonData.OTHER));
 				}
 				dialog.getDialogPane().getButtonTypes().add(new ButtonType(R.COMMON_CLOSE.get(), ButtonBar.ButtonData.CANCEL_CLOSE));
+				((ButtonBar) dialog.getDialogPane().lookup(".button-bar")).setButtonOrder(ButtonBar.BUTTON_ORDER_NONE);
 				dialog.setResizable(true);
 				dialog.getDialogPane().setPrefWidth(1024);
 				dialog.getDialogPane().setPrefHeight(768);
