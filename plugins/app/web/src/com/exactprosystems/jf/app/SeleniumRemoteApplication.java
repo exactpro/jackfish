@@ -270,7 +270,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 				logger.info(WebAppFactory.firefoxProfileDir + " = " + firefoxProfileDirectory);
 			}
 
-			boolean usePrivateMode = args.get(WebAppFactory.usePrivateMode) != null;
+			boolean usePrivateMode = Boolean.valueOf(args.get(WebAppFactory.usePrivateMode));
 			if (usePrivateMode)
 			{
 				logger.info("Use private mode for browser");
