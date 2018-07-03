@@ -40,6 +40,7 @@ public class GlobalHandlerNode extends TreeNode
 
 	private final Text view;
 	private final SerializablePair<R, String> CHANGE_HANDLER	= new SerializablePair<>(R.GLOBAL_HANDLER_NODE_CHANGE_HANDLER, null);
+	private final SerializablePair<R, String> REMOVE_HANDLER	= new SerializablePair<>(R.GLOBAL_HANDLER_NODE_REMOVE_HANDLER, null);
 
 	public GlobalHandlerNode(ConfigurationFx model, TreeItem<TreeNode> globalHandlerTreeItem)
 	{
@@ -127,7 +128,8 @@ public class GlobalHandlerNode extends TreeNode
 
 			menu.getItems().addAll(
 					changeEnable,
-					ConfigurationTreeView.createItem(CHANGE_HANDLER, this::changeHandler, R.GLOBAL_HANDLER_NODE_ERROR_CHANGE.get())
+					ConfigurationTreeView.createItem(CHANGE_HANDLER, this::changeHandler, R.GLOBAL_HANDLER_NODE_ERROR_CHANGE.get()),
+					ConfigurationTreeView.createItem(REMOVE_HANDLER, this::removeHandler, R.GLOBAL_HANDLER_NODE_ERROR_REMOVE.get())
 			);
 
 			return Optional.of(menu);
@@ -147,6 +149,11 @@ public class GlobalHandlerNode extends TreeNode
 			dialog.setTitle(String.format(R.GLOBAL_HANDLER_NODE_CHOOSE_SUBCASE.get(), this.kind.name()));
 			Optional<Object> value = dialog.showAndWait();
 			value.ifPresent(v -> Common.tryCatch(() -> model.updateHandlerValue(this.kind, Str.asString(v)), R.GLOBAL_HANDLER_NODE_ERROR_UPDATE.get()));
+		}
+
+		private void removeHandler()
+		{
+			Common.tryCatch(() -> model.updateHandlerValue(this.kind, ""), R.GLOBAL_HANDLER_NODE_ERROR_REMOVE.get());
 		}
 
 		@Override
