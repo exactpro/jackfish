@@ -36,31 +36,49 @@ repositories {
 		name "ArtifactoryLocal" //used for local builds
 		url "${project.rootDir}/artifactory"
 	}
-
+/*
 	maven {
 		name "ExactproArtifactory"
 		url "http://arti.exactpro.com/libs-release/"
 	}
+*/
+	mavenCentral()
+	/*
+	maven {
+	    name "Maven 4.8 artifactory"
+	    url "https://repo.maven.apache.org/maven2/"
+	}
+	*/
 }
 
 dependencies {
 	sqlData(group:	'mysql',									name: 'mysql-connector-java',  version: '5.1.26')
-	sqlData(group:	'com.oracle',								name: 'ojdbc7',				version: '12.1.0.1')
-	sqlData(group:	'org.postgresql',							name: 'postgresql',			version: '9.0-801.jdbc4')
+	//sqlData(group:	'com.oracle',								name: 'ojdbc7',				version: '12.1.0.1')
+	sqlData(group:	'org.postgresql',							name: 'postgresql',			version: '9.4.1212.jre7')
 	sqlData(group:	'com.microsoft.sqlserver',					name: 'mssql-jdbc',			version: '6.1.0.jre8', transitive : false)
 
-	unixDriver(group: 'com.googleapis.storage.chromedriver',	name: 'chromedriver-linux',	version: '2.37',	classifier: 'x64', ext: 'elf')
-	unixDriver(group: 'org.mozilla.geckodriver',				name: 'geckodriver-linux',	version: '0.19.1',	classifier: 'x86', ext: 'elf')
-	unixDriver(group: 'org.mozilla.geckodriver',				name: 'geckodriver-linux',	version: '0.19.1',	classifier: 'x64', ext: 'elf')
+// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-firefox-driver
 
-	winDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-win',	version: '2.37',	classifier: 'x86', ext: 'exe')
-	winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',	version: '0.19.1',	classifier: 'x86', ext: 'exe')
-	winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',	version: '0.19.1',	classifier: 'x64', ext: 'exe')
-	winDriver(group: 'org.seleniumhq.iedriverserver',			name: 'iedriverserver',		version: '3.8.0',	classifier: 'x86', ext: 'exe')
-	winDriver(group: 'org.seleniumhq.iedriverserver',			name: 'iedriverserver',		version: '3.8.0',	classifier: 'x64', ext: 'exe')
+	//unixDriver(group: 'com.googleapis.storage.chromedriver',	name: 'chromedriver-linux',	version: '2.37',	classifier: 'x64', ext: 'elf')
+	//unixDriver(group: 'org.mozilla.geckodriver',				name: 'geckodriver-linux',	version: '0.19.1',	classifier: 'x86', ext: 'elf')
+	//unixDriver(group: 'org.mozilla.geckodriver',				name: 'geckodriver-linux',	version: '0.19.1',	classifier: 'x64', ext: 'elf')
 
-	macDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-mac',	version: '2.37',	classifier: 'x64', ext: 'bin')
-	macDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-mac',	version: '0.19.1',	classifier: 'x64', ext: 'bin')
+	unixDriver(group: 'org.seleniumhq.selenium',                name: 'selenium-chrome-driver',  version: '3.12.0')
+	unixDriver(group: 'org.seleniumhq.selenium',				name: 'selenium-firefox-driver', version: '3.12.0')
+	
+	//winDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-win',	version: '2.37',	classifier: 'x86', ext: 'exe')
+	winDriver(group: 'org.seleniumhq.selenium',                name: 'selenium-chrome-driver', version: '3.12.0')
+	//winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',	version: '0.19.1',	classifier: 'x86', ext: 'exe')
+	//winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',	version: '0.19.1',	classifier: 'x64', ext: 'exe')
+	winDriver(group: 'org.seleniumhq.selenium',				name: 'selenium-firefox-driver', version: '3.12.0')
+	//winDriver(group: 'org.seleniumhq.iedriverserver',			name: 'iedriverserver',		version: '3.8.0',	classifier: 'x86', ext: 'exe')
+	//winDriver(group: 'org.seleniumhq.iedriverserver',			name: 'iedriverserver',		version: '3.8.0',	classifier: 'x64', ext: 'exe')
+	winDriver(group: 'org.seleniumhq.selenium',			name: 'selenium-ie-driver',		version: '3.12.0')
+
+	//macDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-mac',	version: '2.37',	classifier: 'x64', ext: 'bin')
+	//macDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-mac',	version: '0.19.1',	classifier: 'x64', ext: 'bin')
+	macDriver(group: 'org.seleniumhq.selenium',                name: 'selenium-chrome-driver', version: '3.12.0')
+	macDriver(group: 'org.seleniumhq.selenium',				name: 'selenium-firefox-driver', version: '3.12.0')
 }
 
 rootProject.ext {
@@ -167,16 +185,26 @@ subprojects {
 	def buildDir = dir('/build');
 
 	repositories {
+		/*
 		maven {
 			name "ExactproArtifactory"
 			url "http://arti.exactpro.com/libs-release/"
 		}
+		*/
 		maven {
 			name "ArtifactoryLocal" //used for local builds
 			url "${project.rootDir}/artifactory"
 		}
+		/*
 		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
+		*/
 		mavenCentral()
+		/*
+		maven {
+	    	name "Maven 4.8 artifactory"
+		    url "https://repo.maven.apache.org/maven2/"
+		}
+		*/
 	}
 	
 	buildscript { // artifacrory plugin
@@ -301,6 +329,7 @@ task createTool(type: Zip) {
 	destinationDir new File('.')
 	archiveName = 'build_' + rootProject.ext.version + '.zip'
 
+//    exclude('build_' + rootProject.ext.version + '.zip');
 	from (jfSourceDir) {
 		exclude("build*")
 		exclude(".*")

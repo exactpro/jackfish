@@ -31,10 +31,10 @@ include	'core',
 							//UIAdapter
 		'csharp:UIAdapter',
 							//clients
-		'plugins:client:dts',
-		'plugins:client:fix',
-		'plugins:client:sfclient',
+		//'plugins:client:dts',
+		//'plugins:client:fix',
+		//'plugins:client:sfclient',
 							//services
-		'plugins:service:matrix',
-		'plugins:service:sailfish'
+		'plugins:service:matrix'//,
+		//'plugins:service:sailfish'
 
