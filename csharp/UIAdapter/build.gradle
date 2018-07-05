@@ -36,7 +36,6 @@ String osName = System.getProperty("os.name").toLowerCase()
 if (osName.contains("windows")) {
     distribute.dependsOn.add(buildUIAdapter)
 }
-else
-{
+else {
     println "task 'buildUIAdapter' doesn't run because your actual OS is '" + osName + "' but expected 'Windows'"
 }
