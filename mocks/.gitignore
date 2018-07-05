@@ -1,4 +1,4 @@
-# Created by .ignore support plugin (hsz.mobi)
 /swing/mock_swing.jar
 /javafx/mock_javafx.jar
 /silverlight/SilverLightMock.Web/ClientBin/SilverLightMock.xap
+/win/mock_win/run
