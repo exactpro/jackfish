@@ -7,7 +7,7 @@
  * This is unpublished, licensed software, confidential and proprietary
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
-using RGiesecke.DllExport;
+using net.r_eg.DllExport;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

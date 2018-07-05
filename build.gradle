@@ -10,9 +10,10 @@
 plugins {
 	id 'java'
 	id 'maven'
-	id "com.jfrog.artifactory" version "2.2.5"
-	id "us.kirchmeier.capsule" version "1.0.2"
-	id 'com.ullink.msbuild' version '2.16'
+	id 'com.jfrog.artifactory' version '2.2.5'
+	id 'us.kirchmeier.capsule' version '1.0.2'
+	id 'com.ullink.msbuild' version '2.19' apply false // more recent versions may require .NET 4.6
+	id 'com.ullink.nuget' version '2.15' apply false
 }
 
 artifactoryPublish.skip = true
@@ -36,19 +37,8 @@ repositories {
 		name "ArtifactoryLocal" //used for local builds
 		url "${project.rootDir}/artifactory"
 	}
-/*
-	maven {
-		name "ExactproArtifactory"
-		url "http://arti.exactpro.com/libs-release/"
-	}
-*/
+
 	mavenCentral()
-	/*
-	maven {
-	    name "Maven 4.8 artifactory"
-	    url "https://repo.maven.apache.org/maven2/"
-	}
-	*/
 }
 
 dependencies {
@@ -127,7 +117,8 @@ rootProject.ext {
 				copyFolder(srcFile,destFile);
 			}
 
-		}else{
+		}
+		else {
 			//if file, then copy it
 			//Use bytes stream to support all file types
 			InputStream inS = new FileInputStream(src);
@@ -169,7 +160,7 @@ subprojects {
 	apply plugin: 'idea'
 	apply plugin: 'eclipse'
 	apply plugin: 'artifactory'
-	apply plugin: "us.kirchmeier.capsule"
+	apply plugin: 'us.kirchmeier.capsule'
 
 	group = 'com.exactprosystems.jf'
 	version = rootProject.ext.jfVersion + '-SNAPSHOT'
@@ -185,26 +176,12 @@ subprojects {
 	def buildDir = dir('/build');
 
 	repositories {
-		/*
-		maven {
-			name "ExactproArtifactory"
-			url "http://arti.exactpro.com/libs-release/"
-		}
-		*/
 		maven {
 			name "ArtifactoryLocal" //used for local builds
 			url "${project.rootDir}/artifactory"
 		}
-		/*
-		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
-		*/
+		
 		mavenCentral()
-		/*
-		maven {
-	    	name "Maven 4.8 artifactory"
-		    url "https://repo.maven.apache.org/maven2/"
-		}
-		*/
 	}
 	
 	buildscript { // artifacrory plugin
@@ -326,7 +303,7 @@ task copyData(type: Copy) {
 task createTool(type: Zip) {
 	dependsOn copyData
 
-	destinationDir new File('.')
+	destinationDir = file('.')
 	archiveName = 'build_' + rootProject.ext.version + '.zip'
 
 //    exclude('build_' + rootProject.ext.version + '.zip');

@@ -9,20 +9,34 @@
  ******************************************************************************/
 import com.ullink.Msbuild
 
+apply plugin: 'com.ullink.msbuild'
+apply plugin: 'com.ullink.nuget'
+
 description = "UIAdapter"
 
-task buildUIAdapter(type: Msbuild){
-    projectFile = 'UIAdapter/UIAdapter.csproj'
+def dllExportVersion = '1.6.0' // TODO get version from packages.config
+
+task copyDllExportBat(type: Copy) {
+    from "packages/DllExport.${dllExportVersion}/DllExport.bat"
+    into '.'
+}
+copyDllExportBat.dependsOn nugetRestore
+
+task buildUIAdapter(type: Msbuild) {
+    projectFile = "UIAdapter/UIAdapter.csproj"
 	platform = "x64"
 	configuration = "Debug"
-    verbosity = 'detailed'
+    verbosity = "detailed"
+    parameters.SolutionDir = project.projectDir.path + java.io.File.separator
     ext["flp1"] = "LogFile=" + file("${project.name}.errors.log").path + ";ErrorsOnly;Verbosity=diag"
 }
+buildUIAdapter.dependsOn copyDllExportBat
 
 String osName = System.getProperty("os.name").toLowerCase()
 if (osName.contains("windows")) {
     distribute.dependsOn.add(buildUIAdapter)
-} else
+}
+else
 {
     println "task 'buildUIAdapter' doesn't run because your actual OS is '" + osName + "' but expected 'Windows'"
 }

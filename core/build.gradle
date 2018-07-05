@@ -15,9 +15,6 @@ archivesBaseName = 'jackfish-core'
 compileJava.options.encoding = 'UTF-8'
 
 repositories {
-//	maven {
-//		url 'https://oss.sonatype.org/content/repositories/snapshots/'
-//	}
 	mavenCentral()
 	
 	/*
