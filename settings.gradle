@@ -7,31 +7,32 @@
  * This is unpublished, licensed software, confidential and proprietary
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
-pluginRepositories {
-	maven {
-		url 'shared'
+pluginManagement {
+    repositories {
+        maven {
+		    url 'shared'
+	    }
+	    gradlePluginPortal()
 	}
-	gradlePluginPortal()
 }
 
 include	'core',
-		'api',				//api
-							//app plugins
+		'api',
+		//app plugins
 		'plugins:app:javafx',
 		'plugins:app:web',
 		'plugins:app:swing',
 		'plugins:app:win',
-							//app mocks
+		//app mocks
 		'mocks:swing',
 		'mocks:win',
 		'mocks:javafx',
-							//UIAdapter
+		//UIAdapter
 		'csharp:UIAdapter',
-							//clients
+		//clients
 		//'plugins:client:dts',
 		//'plugins:client:fix',
 		//'plugins:client:sfclient',
-							//services
+		//services
 		'plugins:service:matrix'//,
 		//'plugins:service:sailfish'
-

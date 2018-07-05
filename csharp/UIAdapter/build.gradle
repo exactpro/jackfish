@@ -32,8 +32,8 @@ task buildUIAdapter(type: Msbuild) {
 }
 buildUIAdapter.dependsOn copyDllExportBat
 
-String osName = System.getProperty("os.name").toLowerCase()
-if (osName.contains("windows")) {
+String osName = System.getProperty('os.name').toLowerCase()
+if (osName.contains('windows')) {
     distribute.dependsOn.add(buildUIAdapter)
 }
 else {
