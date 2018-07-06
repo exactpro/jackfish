@@ -216,13 +216,6 @@ public class TexReportBuilder extends ReportBuilder
 	{
 	    writer.include(getClass().getResourceAsStream("tex1.txt"));
 
-	    try (InputStream isFooter = getClass().getResourceAsStream("Footer.png"))
-	    {
-		    File footer = new File(this.getReportDir() + File.separator + "footer.png");
-			Files.deleteIfExists(footer.toPath());
-			Files.copy(isFooter, footer.toPath());
-	    }
-
 		try (InputStream isHeader = getClass().getResourceAsStream("Header.png"))
 		{
 			File header = new File(this.getReportDir() + File.separator + "header.png");
@@ -232,7 +225,7 @@ public class TexReportBuilder extends ReportBuilder
 
 		try (InputStream recIS = getClass().getResourceAsStream("Square.png"))
 		{
-			File rec = new File(this.getReportDir() + File.separator + "rectangle.png");
+			File rec = new File(this.getReportDir() + File.separator + "Square.png");
 			Files.deleteIfExists(rec.toPath());
 			Files.copy(recIS, rec.toPath());
 		}
