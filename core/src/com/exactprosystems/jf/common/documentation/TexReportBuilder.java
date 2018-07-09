@@ -129,7 +129,7 @@ public class TexReportBuilder extends ReportBuilder
         switch (marker)
         {
 			// header 1
-			case OM + "1": return "\\\\crule[ExactColor]{\\\\textwidth}{3pt} \\\\newline \\\\section{ ";
+			case OM + "1": return "\\\\section{ ";
 			case "1" + CM: return "}";
 
 			// header 2
@@ -292,7 +292,7 @@ public class TexReportBuilder extends ReportBuilder
     protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
             String title) throws IOException
     {
-        writer.fwrite("\\crule[ExactColor]{\\textwidth}{3pt} \\newline {{\\hypersetup{linkcolor=black}\\tableofcontents}}").newline();
+        writer.fwrite("{{\\hypersetup{linkcolor=black}\\tableofcontents}}").newline();
     }
 	
 	@Override

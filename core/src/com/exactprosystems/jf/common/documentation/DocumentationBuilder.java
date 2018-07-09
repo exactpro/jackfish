@@ -69,27 +69,75 @@ public class DocumentationBuilder
         addContent(help, "", content);
         return help;
     }
-    
+
+    public static MatrixItem createGeneralManual (ReportBuilder report, Context context) throws Exception
+    {
+        String newPage = "{{&&}}";
+        String newString = "{{``}}";
+        AbstractEvaluator evaluator = context.getEvaluator();
+        MatrixItem help = new HelpTextLine(newString);
+
+
+        //change some params
+        addText(help, DocumentationBuilder.class.getResourceAsStream("params_general_tex.txt"));
+        //first page
+        addTextLine(help, "\\JackFishHuge");
+        addTextLine(help, newString);
+        addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
+        addTextLine(help, "{{5General Information5}}");
+        for (int i = 0; i < 7; i++){
+            addTextLine(help, newString);
+        }
+        String[][] table1 = new String[][]
+                {
+                        { "Version", "1.0" },
+                        { "Release date", DateTime.current().str("dd MMM yyyy") },
+                        { "Pages", ""}
+                };
+        addTable(help, "",    true,  table1, new int[] { 25, 75 },  evaluator);
+        addTextLine(help, newPage);
+
+        //content
+        addContent(help, "{{*Table of contents*}}", new Content());
+        addTextLine(help, newPage);
+
+        //document info
+        addTextLine(help, "{{1Document Information1}}");
+        addTextLine(help, newString);
+        addTextLine(help, "{{2Abbreviations2}}");
+        addTextLine(help, newString);
+        String[][] table2 = new String[][]
+                {
+                        { "\\cellcolor{darkgrey!25}{{*Abbreviation*}}", "\\cellcolor{darkgrey!25}{{*Meaning*}}" },
+                        { "JF", "JackFish" }
+                };
+        addTable(help, "",    true,  table2, new int[] { 25, 75 },  evaluator);
+        addTextLine(help, newPage);
+
+        //body
+        addTextLine(help, "{{1General information1}}");
+        addText(help, DocumentationBuilder.class.getResourceAsStream("general_intro1.txt"));
+        addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
+        addText(help, DocumentationBuilder.class.getResourceAsStream("general_intro2.txt"));
+
+        return help;
+    }
+
     public static MatrixItem createUserManual (ReportBuilder report, Context context) throws Exception
     {
         String newPage = "{{&&}}";
+        String newLine = "{{``}}";
         AbstractEvaluator evaluator = context.getEvaluator();
         Content content = new Content();
-        MatrixItem help = new HelpTextLine("{{``}}");
+        MatrixItem help = new HelpTextLine(newLine);
 
         String[][] table1 = new String[][]
                 {
                         { "Version",  VersionInfo.getVersion() },
                         { "Release date", DateTime.current().str("dd MMM yyyy")}
                 };
-
-        String[][] table2 = new String[][]
-                {
-                    { "{{*Date*}}", "{{*Version*}}", "{{*By*}}", "{{*Comments*}}" },
-                    { DateTime.current().str("dd MMM yyyy"), VersionInfo.getVersion(), "Valery Florov", "Initial Draft" }
-                };
                 
-        String[][] table3 = new String[][]
+        String[][] table2 = new String[][]
                 {
                     { "{{*Abbreviation*}}", "{{*Meaning*}}" },
                     { "JF", "JackFish" }
@@ -98,22 +146,24 @@ public class DocumentationBuilder
         List<OperationKind> operations = Arrays.stream(OperationKind.values()).collect(Collectors.toList());
         int size = operations.size();
 
+        //first page
         addTextLine(help, "\\JackFishHuge");
-        addTextLine(help, "{{``}}");
+        addTextLine(help, newLine);
         addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
         addTable(help, "\\UserGuide",              false,  table1, new int[] { 50, 50 },  evaluator);
-        for (int i = 0; i < 5; i++){
-            addTextLine(help, "{{` `}}");
+        for (int i = 0; i < 12; i++){
+            addTextLine(help, newLine);
         }
 
         addPicture(help, "", 100, DocumentationBuilder.class.getResourceAsStream("BurntOrangeLine.png"));
-        addTable(help, "\\DocInfo",    false,  table2, new int[] { 25, 23, 23, 25 },  evaluator);
-        addTable(help, "\\Abbreviations",           false,  table3, new int[] { 50, 50 },  evaluator);
+        addTable(help, "\\Abbreviations",           false,  table2, new int[] { 50, 50 },  evaluator);
         addTextLine(help, newPage);
-        
+
+        //content
         addContent(help, "{{*Table of contents*}}", new Content());
         addTextLine(help, newPage);
 
+        //body
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro1.txt"));
         addPicture(help, "Architecture", 80, DocumentationBuilder.class.getResourceAsStream("Intro.png"));
         addText(help, DocumentationBuilder.class.getResourceAsStream("intro2.txt"));
