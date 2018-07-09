@@ -12,36 +12,36 @@ INIT;;;;
     #Id;#RawTable
     table;Table
     @;Off;Scenario;Name;TestSet;Start;Finish;Performer;Priority;Multi
-    0;;matrices/tests/Controls;;q;0;3;;1;
-    1;;matrices/tests/EventHandlers;;q;;;;1;
-    2;;matrices/tests/Basic;;q;;;;1;
-    3;;matrices/tests/GUI;;q;;;;1;
-    4;;matrices/tests/System;;q;;;;1;
-    5;;matrices/tests/Report;;q;;;;1;
-    6;;matrices/tests/App;;q;;;;1;
-    7;;matrices/tests/Messages;;q;;;;1;
-    8;;matrices/tests/Clients;;q;;;;1;
-    9;;matrices/tests/Services;;q;;;;1;
-    10;;matrices/tests/Tables;;q;;;;1;
-    11;;matrices/tests/Text;;q;;;;1;
-    12;;matrices/tests/XML;;q;;;;1;
-    13;;matrices/tests/SQL;;q;;;;1;
-    14;;matrices/tests/Matrix;;q;;;;1;
-    15;;matrices/tests/MatrixItems;;q;;;;1;
-    16;;matrices/tests/Keys/KeysChrome;;q;;;;1;
-    17;;matrices/tests/Keys/KeysInternetExplorer;;q;;;;1;
+    0;;matrices/tests/Controls;;q;0;0;;1;
+    1;x;matrices/tests/EventHandlers;;q;;;;1;
+    2;x;matrices/tests/Basic;;q;;;;1;
+    3;x;matrices/tests/GUI;;q;;;;1;
+    4;x;matrices/tests/System;;q;;;;1;
+    5;x;matrices/tests/Report;;q;;;;1;
+    6;x;matrices/tests/App;;q;;;;1;
+    7;x;matrices/tests/Messages;;q;;;;1;
+    8;x;matrices/tests/Clients;;q;;;;1;
+    9;x;matrices/tests/Services;;q;;;;1;
+    10;x;matrices/tests/Tables;;q;;;;1;
+    11;x;matrices/tests/Text;;q;;;;1;
+    12;x;matrices/tests/XML;;q;;;;1;
+    13;x;matrices/tests/SQL;;q;;;;1;
+    14;x;matrices/tests/Matrix;;q;;;;1;
+    15;x;matrices/tests/MatrixItems;;q;;;;1;
+    16;x;matrices/tests/Keys/KeysChrome;;q;;;;1;
+    17;x;matrices/tests/Keys/KeysInternetExplorer;;q;;;;1;
     18;x;matrices/tests/Keys/KeysFirefox;;q;;;;1;
-    19;;matrices/tests/Keys/KeysSwing;;q;;;;1;
-    20;;matrices/tests/Keys/KeysWin;;q;;;;1;
-    21;;matrices/tests/Matchers;;q;;;;1;
-    22;;matrices/tests/PluginIndepends;;q;;;;1;
-    23;;matrices/tests/WebPlugin;;q;;;;1;
-    24;;matrices/tests/SwingPlugin;;q;;;;1;
-    25;;matrices/tests/WinPlugin;;q;;;;1;
-    26;;matrices/tests/JavaFxPlugin;;q;;;;1;
-    27;;matrices/tests/Zip;;q;;;;1;
-    28;;matrices/tests/CheckLayout;;q;;;;1;
-    29;;matrices/tests/TestRFnew;;q;;;;1;
+    19;x;matrices/tests/Keys/KeysSwing;;q;;;;1;
+    20;x;matrices/tests/Keys/KeysWin;;q;;;;1;
+    21;x;matrices/tests/Matchers;;q;;;;1;
+    22;x;matrices/tests/PluginIndepends;;q;;;;1;
+    23;x;matrices/tests/WebPlugin;;q;;;;1;
+    24;x;matrices/tests/SwingPlugin;;q;;;;1;
+    25;x;matrices/tests/WinPlugin;;q;;;;1;
+    26;x;matrices/tests/JavaFxPlugin;;q;;;;1;
+    27;x;matrices/tests/Zip;;q;;;;1;
+    28;x;matrices/tests/CheckLayout;;q;;;;1;
+    29;x;matrices/tests/TestRFnew;;q;;;;1;
     #EndRawTable
 
     #Id;#RawTable
