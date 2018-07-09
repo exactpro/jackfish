@@ -92,7 +92,7 @@ public class DocumentationBuilder
                 {
                         { "Version", "1.0" },
                         { "Release date", DateTime.current().str("dd MMM yyyy") },
-                        { "Pages", ""}
+                        { "Pages", "{\\hypersetup{linkcolor=black}\\pageref{LastPage}}"}
                 };
         addTable(help, "",    true,  table1, new int[] { 25, 75 },  evaluator);
         addTextLine(help, newPage);

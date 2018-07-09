@@ -48,6 +48,8 @@ at least 1 GB RAM for comfortable work
 
 The JF software development team is working on new features to make work of our users more
 comfortable. In particular, the following is going to be implemented:
-    1. Support of responsiveness testing (the same functionality as Galen framework);
-    2. Support of GUI testing for Windows applications with UI Automation technology.
+{{``}}
+1. Support of responsiveness testing (the same functionality as Galen framework);
+{{``}}
+2. Support of GUI testing for Windows applications with UI Automation technology.
 
