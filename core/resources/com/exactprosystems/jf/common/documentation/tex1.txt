@@ -30,9 +30,10 @@
 \definecolor{urlcolor}{HTML}{799B03}
 
 \fancypagestyle{allpages}{
+    \renewcommand{\headrulewidth}{2pt}
     \fancyhf{}
     \rhead{\includegraphics[width=5.5cm, height=2cm]{header.png}}
-    \lhead{\hspace*{-3cm}\includegraphics[width=3cm, height=0.5cm]{rectangle.png} \newline \newline \textbf{CONFIDENTIAL}}
+    \lhead{\hspace*{-3cm}\includegraphics[width=3cm, height=0.5cm]{Square.png} \newline \newline \textbf{CONFIDENTIAL}}
     \lfoot{JackFish. User Guide}
     \rfoot{\thepage\ of {\hypersetup{linkcolor=black}\pageref{LastPage}}}
 }
@@ -41,7 +42,7 @@
 {
    \fancyhf{}
    \rhead{\includegraphics[width=5.5cm, height=2cm]{header.png}}
-   \lhead{\hspace*{-3cm}\includegraphics[width=3cm, height=0.5cm]{rectangle.png} \newline \newline \textbf{CONFIDENTIAL}}
+   \lhead{\hspace*{-3cm}\includegraphics[width=3cm, height=0.5cm]{Square.png} \newline \newline \textbf{CONFIDENTIAL}}
 }
 
 %%do you want colored rectangle? use it!

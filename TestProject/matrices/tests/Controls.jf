@@ -173,7 +173,7 @@ SUBCASES;;;;
     #EndSubCase
 
     #Id;#SubCase;controlName;operationName;operationKind;expected;actual;pluginName;result
-    PRINT;Print_result;control.Name;operation.Name;operation.Kind;expected;actual;plugin;'Passed'
+    PRINT;Print_result;control.Name;operation.Name;operation.Kind;'Exception';'Exception';plugin;'Failed'
         #Off;#Action;
         1;Print;pluginName + ' - ' + controlName + ' - ' + result + ' - ' + operationName
 
@@ -274,7 +274,7 @@ SUBCASES;;;;
             #EndIf
 
             #Step;#Kind;#For;#Depends
-            plugin + ' - '+ control.Name;;;
+            plugin + ' - '+ control.Name;OnError;appCon;
                 #Id;#Global;#Let
                 failedList;1;''
 

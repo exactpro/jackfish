@@ -151,6 +151,12 @@ public class MainRunner
 					.withDescription("Save the documentation in specified folder.")
 					.create("docs");
 
+			Option generalDocs = OptionBuilder
+					.withArgName("dir")
+					.hasArg()
+					.withDescription("Save the general documentation in specified folder.")
+					.create("generalDocs");
+
 			Option saveSchema 	= new Option("schema", 	"Save the config schema." );
 			Option help 		= new Option("help", 	"Print this message." );
 			Option versionOut 	= new Option("version", "Print version only.");
@@ -170,6 +176,7 @@ public class MainRunner
 			options.addOption(username);
 			options.addOption(versionOut);
 			options.addOption(saveDocs);
+			options.addOption(generalDocs);
             options.addOption(saveSchema);
 			options.addOption(help);
 			options.addOption(shortPaths);
@@ -214,6 +221,14 @@ public class MainRunner
 			{
 				String dir = line.getOptionValue(saveDocs.getOpt());
 				saveDocs(dir);
+
+				System.exit(0);
+			}
+
+			if (line.hasOption(generalDocs.getOpt()))
+			{
+				String dir = line.getOptionValue(generalDocs.getOpt());
+				saveGeneralDocs(dir);
 
 				System.exit(0);
 			}
@@ -598,6 +613,25 @@ public class MainRunner
 		help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
 		report.reportFinished(0, 0, null, null);
 		System.out.println("Documentation has been created.");
+	}
+
+	private static void saveGeneralDocs(String dir) throws Exception
+	{
+		DocumentFactory factory = new ConsoleDocumentFactory(VerboseLevel.Errors);
+		Configuration configuration = (Configuration) factory.createDocument(DocumentKind.CONFIGURATION, null);
+		factory.setConfiguration(configuration);
+		Context context = factory.createContext();
+		ReportFactory reportFactory = new TexReportFactory();
+		if (!Paths.get(dir).toFile().exists())
+		{
+			Files.createDirectories(Paths.get(dir));
+		}
+		ReportBuilder report = reportFactory.createReportBuilder(dir, "Exactpro_JackFish-Testing-Tool_General-Information.tex", new Date());
+		MatrixItem help = DocumentationBuilder.createGeneralManual(report, context);
+		report.reportStarted(null, VersionInfo.getVersion());
+		help.execute(context, context.getMatrixListener(), context.getEvaluator(), report);
+		report.reportFinished(0, 0, null, null);
+		System.out.println("General documentation has been created.");
 	}
 
 	private static void saveSchema(Class<?> clazz, final String fileName)

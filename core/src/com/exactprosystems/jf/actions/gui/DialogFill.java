@@ -201,7 +201,9 @@ public class DialogFill extends AbstractAction
 			}
 			else
 			{
+				logger.error(String.format("try to find control by id %s and value %s", name, obj));
 				control = sectionRun.getControlByIdAndValue(name, obj);
+				logger.error("Found control : " + control);
 			}
 			if (control == null)
 			{
@@ -209,6 +211,10 @@ public class DialogFill extends AbstractAction
 				errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
 				super.setErrors(errorsValue);
 				super.setError(message, ErrorKind.LOCATOR_NOT_FOUND);
+
+				logger.error("Error on found control");
+				this.printExternalInformation(message, dictionary, sectionRun);
+
 				return;
 			}
 
@@ -240,6 +246,8 @@ public class DialogFill extends AbstractAction
 				else
 				{
 					String message = message(id, window, run, control, res.getLocator(), "" + res.getValue());
+					logger.error("Error on operate");
+					printExternalInformation(message, dictionary, sectionRun);
 					errorsValue.put(name, new MatrixError(message, ErrorKind.LOCATOR_NOT_FOUND, this.owner));
 					if (this.stopOnFail)
 					{
@@ -350,6 +358,16 @@ public class DialogFill extends AbstractAction
 	private boolean checkControl(Set<ControlKind> supportedControls, IControl control)
 	{
 		return !supportedControls.contains(control.getBindedClass());
+	}
+
+	private void printExternalInformation(String message, IGuiDictionary dictionary, ISection section) {
+		logger.error("Print external information");
+		logger.error("Message : " + message);
+		logger.error("Dictionary : " + dictionary);
+		logger.error("Section : " + section);
+		for (String controlName : section.getControlsNames()) {
+			logger.error("control from section : " + controlName);
+		}
 	}
 
 }

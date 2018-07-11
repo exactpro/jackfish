@@ -129,7 +129,7 @@ public class TexReportBuilder extends ReportBuilder
         switch (marker)
         {
 			// header 1
-			case OM + "1": return "\\\\crule[ExactColor]{\\\\textwidth}{3pt} \\\\newline \\\\section{ ";
+			case OM + "1": return "\\\\section{ ";
 			case "1" + CM: return "}";
 
 			// header 2
@@ -216,13 +216,6 @@ public class TexReportBuilder extends ReportBuilder
 	{
 	    writer.include(getClass().getResourceAsStream("tex1.txt"));
 
-	    try (InputStream isFooter = getClass().getResourceAsStream("Footer.png"))
-	    {
-		    File footer = new File(this.getReportDir() + File.separator + "footer.png");
-			Files.deleteIfExists(footer.toPath());
-			Files.copy(isFooter, footer.toPath());
-	    }
-
 		try (InputStream isHeader = getClass().getResourceAsStream("Header.png"))
 		{
 			File header = new File(this.getReportDir() + File.separator + "header.png");
@@ -232,7 +225,7 @@ public class TexReportBuilder extends ReportBuilder
 
 		try (InputStream recIS = getClass().getResourceAsStream("Square.png"))
 		{
-			File rec = new File(this.getReportDir() + File.separator + "rectangle.png");
+			File rec = new File(this.getReportDir() + File.separator + "Square.png");
 			Files.deleteIfExists(rec.toPath());
 			Files.copy(recIS, rec.toPath());
 		}
@@ -299,7 +292,7 @@ public class TexReportBuilder extends ReportBuilder
     protected void reportContent(ReportWriter writer, MatrixItem item, String beforeTestcase, Content content,
             String title) throws IOException
     {
-        writer.fwrite("\\crule[ExactColor]{\\textwidth}{3pt} \\newline {{\\hypersetup{linkcolor=black}\\tableofcontents}}").newline();
+        writer.fwrite("{{\\hypersetup{linkcolor=black}\\tableofcontents}}").newline();
     }
 	
 	@Override

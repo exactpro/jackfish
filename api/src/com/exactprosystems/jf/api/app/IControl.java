@@ -68,16 +68,10 @@ public interface IControl extends Mutable
 			Object value = locator.get(kind);
 			if (value != null && !Str.IsNullOrEmpty(String.valueOf(value)))
 			{
-				String stringValue = String.valueOf(value);
-				try
-				{
-					stringValue = templateEvaluator.templateEvaluate(stringValue);
+				String evaluatedString = templateEvaluator.tryEvaluateTemplate(String.valueOf(value));
+				if (evaluatedString != null) {
+					locator.set(kind, evaluatedString);
 				}
-				catch (Exception ignored)
-				{
-					//nothing
-				}
-				locator.set(kind, stringValue);
 			}
 		}
 		return locator;
