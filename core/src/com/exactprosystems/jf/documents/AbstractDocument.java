@@ -33,7 +33,7 @@ public abstract class AbstractDocument implements Document
 	{
 		this.factory = factory;
 		this.nameProperty = new MutableValue<>(fileName);
-		this.changedProperty = new MutableValue<>(true);
+		this.changedProperty = new MutableValue<>(false);
 	}
 	
 	@Override
@@ -63,7 +63,7 @@ public abstract class AbstractDocument implements Document
 
 	//region interface Document
 	/**
-	 * Create a new document. The base method change only the name for the document
+	 * Create a new document. The base method change the name for the document and set {@link AbstractDocument#changedProperty} to true
 	 */
 	@Override
 	public void create()
@@ -73,6 +73,7 @@ public abstract class AbstractDocument implements Document
 		{
 			this.nameProperty.accept(annotation.newName());
 		}
+		this.changedProperty.accept(true);
 	}
 	
 	@Override
