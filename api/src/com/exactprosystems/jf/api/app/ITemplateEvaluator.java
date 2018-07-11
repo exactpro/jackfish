@@ -11,5 +11,5 @@ package com.exactprosystems.jf.api.app;
 
 public interface ITemplateEvaluator
 {
-	String templateEvaluate(String value) throws Exception;
+	String tryEvaluateTemplate(String value);
 }

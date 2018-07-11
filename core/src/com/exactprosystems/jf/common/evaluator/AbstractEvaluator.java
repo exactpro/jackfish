@@ -101,6 +101,23 @@ public abstract class AbstractEvaluator implements ITemplateEvaluator
 	{
 		return template == null ? null : this.rawTemplateEvaluate(template);
 	}
+
+	/**
+	 * Try to replace all templates from the passed template to string representation of a object
+	 * @param template which need be evaluated
+	 * @return evaluated text or @{null} value, if replacing was failed
+	 */
+	public final String tryEvaluateTemplate(String template) {
+		try
+		{
+			return this.templateEvaluate(template);
+		}
+		catch (Exception e)
+		{
+			;//nothing do
+		}
+		return null;
+	}
 	//endregion
 
 	//region public abstract methods

@@ -87,6 +87,10 @@ public class Part implements Serializable
 
 			this.locator = IControl.evaluateTemplate(control, templateEvaluator);
 		}
+
+		if (this.locator != null) {
+			this.locator = IControl.evaluateTemplate(this.locator, templateEvaluator);
+		}
 	}
 
 	@Override

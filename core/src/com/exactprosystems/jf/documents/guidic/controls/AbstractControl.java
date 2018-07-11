@@ -542,7 +542,7 @@ public abstract class AbstractControl implements IControl
 			else
 			{
 				operation = Operation.create();
-				Part part = operation.addPart(getBindedClass().defaultOperation());
+				Part part = operation.addPart(this.getBindedClass().defaultOperation());
 				this.prepare(part, value);
 			}
 
