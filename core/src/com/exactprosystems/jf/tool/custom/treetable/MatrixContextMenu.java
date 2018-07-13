@@ -98,14 +98,14 @@ public class MatrixContextMenu extends ContextMenu
 		help.setAccelerator(Common.getShortcut(settings, Settings.HELP));
 		help.setOnAction(showHelp(context, tree));
 
-		MenuItem parAdd = new MenuItem(R.MATRIX_CM_ADD_ITEM.get(), new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
-		parAdd.setAccelerator(Common.getShortcut(settings, Settings.ADD_PARAMETER));
-		parAdd.setOnAction(event -> addParameter(matrix, tree));
+		MenuItem addParameterToEnd = new MenuItem(R.MATRIX_CM_ADD_PARAM.get(), new ImageView(new Image(CssVariables.Icons.ADD_PARAMETER_ICON)));
+		addParameterToEnd.setAccelerator(Common.getShortcut(settings, Settings.ADD_PARAMETER));
+		addParameterToEnd.setOnAction(event -> addParameter(matrix, tree));
 
 		getItems().addAll(
 				breakPoint,
 				new SeparatorMenuItem(),
-				parAdd,
+				addParameterToEnd,
 				new SeparatorMenuItem(),
 				copy,
 				cut,
@@ -124,11 +124,11 @@ public class MatrixContextMenu extends ContextMenu
 			{
 				boolean b = selectedItem.getValue() instanceof End;
 				breakPoint.setDisable(b);
-				parAdd.setDisable(b);
+				addParameterToEnd.setDisable(b);
 				copy.setDisable(b);
 				deleteItem.setDisable(b);
 				help.setDisable(b);
-				parAdd.setDisable(!AbstractAction.additionFieldsAllow(selectedItem.getValue()));
+				addParameterToEnd.setDisable(!AbstractAction.additionFieldsAllow(selectedItem.getValue()));
 				this.addWizards(matrix, tree.getSelectionModel().getSelectedItem().getValue());
 			}
 		});
