@@ -223,7 +223,7 @@ public class ClientTreeNode extends TreeNode
 			ret.getItems().addAll(
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_CLIENT),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
-					ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateClientDictionaries(), R.CLIENT_TREE_NODE_REFRESH_CLIENT_DIC.get()),
+					ConfigurationTreeView.createItem(REFRESH, () -> this.model.refreshClientDictionaries(), R.CLIENT_TREE_NODE_REFRESH_CLIENT_DIC.get()),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_CLIENT_DIC_FOLDER),
 					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
 					ConfigurationTreeView.createDisabledItem(REMOVE),

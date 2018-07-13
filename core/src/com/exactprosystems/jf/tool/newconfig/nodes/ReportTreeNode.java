@@ -51,7 +51,7 @@ public class ReportTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem(OPEN_REPORT),
 				ConfigurationTreeView.createDisabledItem(REMOVE_REPORT),
 				ConfigurationTreeView.createItem(CLEAR_FOLDER, () -> this.model.clearReportFolder(), R.REPORT_TN_ERROR_ON_CLEAR.get()),
-				ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateReport(), R.REPORT_TN_ERROR_ON_REFRESH.get()),
+				ConfigurationTreeView.createItem(REFRESH, () -> this.model.refreshReport(), R.REPORT_TN_ERROR_ON_REFRESH.get()),
 				new SeparatorMenuItem(),
 				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)
 		);

@@ -424,8 +424,8 @@ public class ConfigurationFx extends Configuration
 		}
 	}
 
-	public void updateMatrices()
-	{
+	@Override
+	public void refreshMatrices() {
 		super.refreshMatrices();
 		this.displayMatrix();
 	}
@@ -489,14 +489,14 @@ public class ConfigurationFx extends Configuration
 		{
 			File removeFile = new File(libs.get(collect.get(0)).getNameProperty().get());
 			collect.forEach(super.libs::remove);
-			removeFileFromFileSystem(removeFile, this::updateLibraries);
+			removeFileFromFileSystem(removeFile, this::refreshLibs);
 		}
 	}
 
-	public void updateLibraries()
-	{
-		refreshLibs();
-		displayLibrary();
+	@Override
+	public void refreshLibs() {
+		super.refreshLibs();
+		this.displayLibrary();
 	}
 	//endregion
 
@@ -559,11 +559,12 @@ public class ConfigurationFx extends Configuration
 		}
 	}
 
-	public void updateReport()
-	{
+	@Override
+	public void refreshReport() {
 		super.refreshReport();
 		this.displayReport();
 	}
+
 	//endregion
 
 	//region sql
@@ -641,11 +642,12 @@ public class ConfigurationFx extends Configuration
 		System.out.println(String.format(R.CONFIG_FX_OPEN_CLIENT_DIC.get(), path(file)));
 	}
 
-	public void updateClientDictionaries()
-	{
+	@Override
+	public void refreshClientDictionaries() {
 		super.refreshClientDictionaries();
 		this.displayClient();
 	}
+
 	//endregion
 
 	//region services
@@ -833,11 +835,12 @@ public class ConfigurationFx extends Configuration
 		this.addFile(file, getAppDictionariesValue(), this::displayApp);
 	}
 
-	public void updateAppDictionaries()
-	{
+	@Override
+	public void refreshAppDictionaries() {
 		super.refreshAppDictionaries();
 		this.displayApp();
 	}
+
 	//endregion
 
 	//region file system
@@ -1342,12 +1345,14 @@ public class ConfigurationFx extends Configuration
 
 	private void displayMatrix()
 	{
-		this.controller.displayMatrix(toStringList(getMatricesValue()));
+		Optional.ofNullable(this.controller)
+				.ifPresent(controller -> controller.displayMatrix(toStringList(getMatricesValue())));
 	}
 
 	private void displayLibrary()
 	{
-		this.controller.displayLibrary(super.libs);
+		Optional.ofNullable(this.controller)
+				.ifPresent(controller -> controller.displayLibrary(super.libs));
 	}
 
 	private void displayVars()
@@ -1359,7 +1364,8 @@ public class ConfigurationFx extends Configuration
 
 	private void displayReport()
 	{
-		this.controller.displayReport(getReports().get());
+		Optional.ofNullable(this.controller)
+				.ifPresent(controller -> controller.displayReport(getReports().get()));
 	}
 
 	private void displaySql()
@@ -1374,7 +1380,8 @@ public class ConfigurationFx extends Configuration
 
 	private void displayClient()
 	{
-		this.controller.displayClient(getClientEntries());
+		Optional.ofNullable(this.controller)
+				.ifPresent(controller -> controller.displayClient(getClientEntries()));
 	}
 
 	private void displayService()
@@ -1384,7 +1391,8 @@ public class ConfigurationFx extends Configuration
 
 	private void displayApp()
 	{
-		this.controller.displayApp(getAppEntries());
+		Optional.ofNullable(this.controller)
+				.ifPresent(controller -> controller.displayApp(getAppEntries()));
 	}
 
 	private void displayFileSystem()

@@ -833,7 +833,7 @@ public class Configuration extends AbstractDocument
 	protected void refreshClientDictionaries()
 	{}
 
-	protected void refreshReport()
+	public void refreshReport()
 	{}
 	//endregion
 
