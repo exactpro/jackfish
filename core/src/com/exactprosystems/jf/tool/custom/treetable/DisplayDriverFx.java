@@ -195,10 +195,13 @@ public class DisplayDriverFx implements DisplayDriver
 	}
 
 	@Override
-	public void showCheckBox(MatrixItem item, Object layout, int row, int column, String name, Consumer<Boolean> setter, Supplier<Boolean> getter)
+	public void showCheckBox(MatrixItem item, Object layout, int row, int column, String name, Consumer<Boolean> setter, Supplier<Boolean> getter, String tooltip)
 	{
 		GridPane pane = (GridPane) layout;
 		CheckBox checkBox = new CheckBox(name);
+		if (!Str.IsNullOrEmpty(tooltip)) {
+			checkBox.setTooltip(new Tooltip(tooltip));
+		}
 		checkBox.setMinWidth(name.length() * 8 + 20);
 		checkBox.setSelected(getter.get());
 		checkBox.focusedProperty().addListener((observable, oldValue, newValue) ->

@@ -57,6 +57,7 @@ public class PlainTextFx extends PlainText
 		this.property.fire();
 		this.highlighter.fire();
 		//fixme workaround
+		this.saved();
 		getChangedProperty().accept(false);
 	}
 

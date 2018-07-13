@@ -136,7 +136,7 @@ public class RawMessage extends MatrixItem
 //				return	DialogsHelper.showQuestionDialog("Do you want to change message type?", "The message will cleared");
 				return	true;
 		});
-		driver.showCheckBox(this, layout, 1, 6, "Global", this.global, this.global);
+		driver.showCheckBox(this, layout, 1, 6, "Global", this.global, this.global, null);
 		driver.showToggleButton(this, layout, 1, 7, 
 		        b -> driver.hide(this, layout, 2, b), 
 		        b -> b ? "Hide" : "Show", this.message.size() != 0);

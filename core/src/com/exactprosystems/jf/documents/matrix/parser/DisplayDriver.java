@@ -77,7 +77,6 @@ public interface DisplayDriver
 
 	/**
 	 * Display a simple checkbox for the item on the passed layout.
-	 *
 	 * @param item the item, for which display the checkbox
 	 * @param layout the layout for display the checkbox
 	 * @param row the number of row, where need display the checkbox
@@ -85,8 +84,9 @@ public interface DisplayDriver
 	 * @param name the displaying checkbox text
 	 * @param set the listener, which notify, that checkbox change value
 	 * @param get the listener, which used for get value from the item and set in the checkbox
+	 * @param tooltip if this parameter is not null, it will used into tooltip for the checkbox
 	 */
-	void showCheckBox(MatrixItem item, Object layout, int row, int column, String name, Consumer<Boolean> set, Supplier<Boolean> get);
+	void showCheckBox(MatrixItem item, Object layout, int row, int column, String name, Consumer<Boolean> set, Supplier<Boolean> get, String tooltip);
 
 	/**
 	 * Display a simple combobox for the item on the current layout
