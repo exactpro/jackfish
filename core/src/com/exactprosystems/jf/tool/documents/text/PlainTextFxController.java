@@ -18,6 +18,9 @@ import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.ControllerInfo;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -51,8 +54,11 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 	public  TextField             tfReplace;
 	public  Label                 lblFindCount;
 	private StyleClassedTextArea  textArea;
+	public Button btnReplace;
 
 	private Subscription lastSubscription;
+
+	private BooleanProperty canReplace = new SimpleBooleanProperty(true);
 
 	private Supplier<StyleSpans<Collection<String>>> lastFindSupplier = () -> null;
 	private int                                      lastDifference   = 0;
@@ -99,20 +105,35 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 		this.cbRegexp.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
 		this.cbMatchCase.selectedProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
 		this.tfFind.textProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
+
+		this.btnReplace.disableProperty().bind(canReplace);
 	}
 
 	public void init(Document model, CustomTab customTab)
 	{
 		super.init(model, customTab);
 
-		this.textArea.richChanges().addObserver(change -> {
-			this.model.getProperty().accept(this.textArea.getText());
-			//TODO think about it
+		this.model.getFindCountProperty().setOnChangeListener((oldValue, newValue) -> {
+			if (newValue == null || newValue < 0) {
+				this.lblFindCount.setText("");
+			} else {
+				this.lblFindCount.setText("Found " + newValue);
+			}
+		});
+		this.textArea.replaceText(this.model.getProperty().get());
+
+		this.textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (Objects.equals(newValue, oldValue)) {
+				return;
+			}
+			this.model.getProperty().accept(newValue);
+		});
+		this.model.getProperty().setOnChangeListener((oldValue, newValue) -> {
 			this.model.getChangedProperty().accept(true);
+			this.textArea.replaceText(newValue);
 		});
 		this.model.getHighlighter().setOnChangeListener((o, n) -> this.cbHighlighting.getSelectionModel().select(n));
 
-		this.textArea.replaceText(this.model.getProperty().get());
 		Settings.SettingsValue value = model.getFactory().getSettings().getValueOrDefault(Settings.GLOBAL_NS, Settings.SETTINGS, Settings.FONT);
 		Font font = Common.fontFromString(value.getValue());
 		this.textArea.setStyle("-fx-font-size: " + font.getSize() + "; -fx-font-family: \"" + font.getFamily() + "\";");
@@ -120,22 +141,11 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 
 	public void findAll(ActionEvent actionEvent)
 	{
-		if (this.tfFind.getText().isEmpty())
-		{
-			this.lastFindSupplier = () -> null;
-			this.lblFindCount.setText("");
-			this.subscribeAndSet();
-		}
-		else
-		{
-			this.lastFindSupplier = () -> {
-				AtomicInteger atomicInteger = new AtomicInteger(0);
-				List<StyleWithRange> styles = this.model.findAll(atomicInteger);
-				this.lblFindCount.setText("Found " + atomicInteger.get());
-				return Common.convertFromList(styles);
-			};
-			subscribeAndSet();
-		}
+		this.lastFindSupplier = () -> {
+			List<StyleWithRange> styles = this.model.findAll();
+			return Common.convertFromList(styles);
+		};
+		subscribeAndSet();
 	}
 
 	public void replaceAll(ActionEvent actionEvent)
@@ -152,7 +162,14 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 		this.lastFindSupplier = () -> Common.convertFromList(this.model.getCurrentStyles(lastDifference));
 		if (styles.size() != 1)
 		{
-			styles.stream().filter(s -> s.getStyle() == null).findFirst().ifPresent(s -> this.textArea.moveTo(s.getRange()));
+			styles.stream()
+					.filter(s -> s.getStyle() == null)
+					.findFirst()
+					.ifPresent(swr -> {
+						this.textArea.moveTo(swr.getRange());
+						this.textArea.selectWord();
+					});
+			this.canReplace.setValue(false);
 		}
 		this.subscribeAndSet();
 	}
@@ -160,6 +177,7 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 	public void replaceCurrent(ActionEvent actionEvent)
 	{
 		this.model.replaceCurrent(this.tfReplace.getText());
+		this.canReplace.setValue(true);
 	}
 
 	public void replaceAndFind(ActionEvent actionEvent)
@@ -176,10 +194,12 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 		Optional.ofNullable(this.lastSubscription).ifPresent(Subscription::unsubscribe);
 		this.textArea.setStyleSpans(0, union(convert(highlighter), this.lastFindSupplier.get()));
 
-		this.lastSubscription = this.textArea.richChanges().filter(ch -> !ch.getInserted().equals(ch.getRemoved())).subscribe(change -> {
-			this.lastDifference = change.getInserted().length() - change.getRemoved().length();
-			this.textArea.setStyleSpans(0, union(convert(highlighter), this.lastFindSupplier.get()));
-		});
+		this.lastSubscription = this.textArea.richChanges()
+				.filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+				.subscribe(change -> {
+					this.lastDifference = change.getInserted().length() - change.getRemoved().length();
+					this.textArea.setStyleSpans(0, union(convert(highlighter), this.lastFindSupplier.get()));
+				});
 	}
 
 	private StyleSpans<Collection<String>> convert(Highlighter highlighter)

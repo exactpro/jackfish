@@ -56,7 +56,7 @@
 						<Button text="Replace all" onAction="#replaceAll" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
 						<Button text="Find next" onAction="#findNext" GridPane.columnIndex="3"/>
-						<Button text="Replace" onAction="#replaceCurrent" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+						<Button fx:id="btnReplace" text="Replace" onAction="#replaceCurrent" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
 
 						<Button text="Replace and find" onAction="#replaceAndFind" GridPane.columnIndex="4"/>
 
