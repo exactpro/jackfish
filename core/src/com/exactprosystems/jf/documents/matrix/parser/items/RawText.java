@@ -100,7 +100,7 @@ public class RawText extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get(), null);
 		driver.showTitle(this, layout, 1, 1, Tokens.RawText.get(), context.getFactory().getSettings());
 		driver.showTextBox(this, layout, 1, 2, this.description, this.description, () -> this.description.get(), null);
-		driver.showCheckBox(this, layout, 1, 3, "Global", super.global, super.global);
+		driver.showCheckBox(this, layout, 1, 3, "Global", super.global, super.global, null);
 		driver.showTextArea(this, layout, 2, 0, this.text, list -> {
 			List<String> oldList = new ArrayList<>(this.text.subList(0, this.text.size()));
 			if (list.equals(oldList))

@@ -212,8 +212,8 @@ public final class ActionItem extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, this.id, this.id, () -> this.id.get() + ".Out", null);
 		driver.showTitle(this, layout, 1, 1, this.getActionName(), context.getFactory().getSettings());
 		driver.showParameters(this, layout, 1, 2, this.parameters, () -> this.id.get() + ".In.", false);
-		driver.showCheckBox(this, layout, 2, 0, "G", this.global, this.global);
-		driver.showCheckBox(this, layout, 2, 0, "I", this.ignoreErr, this.ignoreErr);
+		driver.showCheckBox(this, layout, 2, 0, "G", this.global, this.global, "Global");
+		driver.showCheckBox(this, layout, 2, 0, "I", this.ignoreErr, this.ignoreErr, "Ignore errors");
 		driver.showToggleButton(this, layout, 2, 1,
 				b -> driver.hide(this, layout, 3, b),
 				b -> "Asserts", !(this.assertBool.isExpressionNullOrEmpty()));

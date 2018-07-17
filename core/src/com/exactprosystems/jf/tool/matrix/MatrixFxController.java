@@ -185,6 +185,7 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		Common.runLater(() -> this.area.appendDefaultTextOnNewLine(String.format(R.MATRIX_FX_CONTR_MATRIX_FINISHED.get(), matrix.getNameProperty().get())));
 		this.forceRefresh();
 		this.disableButtons(false);
+		this.model.getFactory().getConfiguration().refreshReport();
 	}
 
 	@Override

@@ -122,7 +122,7 @@ public final class Call extends MatrixItem
 				return str;
 			}, null, 'G' ); 
 		driver.showParameters(this, layout, 1, 3, this.parameters, null, false);
-		driver.showCheckBox(this, layout, 2, 0, "Global", this.global, this.global);
+		driver.showCheckBox(this, layout, 2, 0, "Global", this.global, this.global, null);
 
 		return layout;
 	}
@@ -243,7 +243,7 @@ public final class Call extends MatrixItem
 				evaluator.getLocals().clear();
 
 				this.ref.setRealParameters(parameters);
-				boolean isSubcaseIntoMatrix = super.getMatrix().getRoot().find(true, SubCase.class, this.ref.getId()) == this.ref;
+				boolean isSubcaseIntoMatrix = super.getSource().getRoot().find(true, SubCase.class, this.ref.getId()) == this.ref;
 				if (isSubcaseIntoMatrix)
 				{
 					super.changeState(super.isBreakPoint() ? MatrixItemState.BreakPoint : MatrixItemState.ExecutingParent);

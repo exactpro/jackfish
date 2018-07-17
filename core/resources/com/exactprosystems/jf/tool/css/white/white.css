@@ -820,7 +820,8 @@ CellView > .text-input.text-field{
 }
 .found {
 	-fx-background-fill: #E17F00;
-	-fx-fill : #eeeeee;
+	-fx-fill : darkgreen;
+
 
 }
 /*Java syntax*/

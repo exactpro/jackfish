@@ -91,7 +91,9 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		dialog.getDialogPane().setContent(this.parent);
-		dialog.setHeaderText(String.format(R.TESTING_CONNECTION_FX_CONTR_TEST.get(), this.name));
+		dialog.setTitle(String.format(R.TESTING_CONNECTION_FX_CONTR_TEST.get(), this.name));
+		dialog.setHeaderText(null);
+		dialog.setGraphic(new Label());
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
 		dialog.show();
 	}

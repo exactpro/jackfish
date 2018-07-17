@@ -298,7 +298,7 @@ public class AppTreeNode extends TreeNode
 					ConfigurationTreeView.createDisabledItem(ADD_NEW_APP),
 					ConfigurationTreeView.createDisabledItem(TEST_VERSION),
 					ConfigurationTreeView.createDisabledMenu(CLOSE_APPS),
-					ConfigurationTreeView.createItem(REFRESH, () -> this.model.updateAppDictionaries(), R.APP_TREE_NODE_ERROR_REFRESH_APP_DIC.get()),
+					ConfigurationTreeView.createItem(REFRESH, () -> this.model.refreshAppDictionaries(), R.APP_TREE_NODE_ERROR_REFRESH_APP_DIC.get()),
 					ConfigurationTreeView.createDisabledItem(EXCLUDE_APP_DIC_FOLDER),
 					ConfigurationTreeView.createDisabledItem(OPEN_DICTIONARY),
 					ConfigurationTreeView.createDisabledItem(REMOVE),

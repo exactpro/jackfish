@@ -85,7 +85,7 @@ public class RawTable extends MatrixItem
 		driver.showTextBox(this, layout, 1, 0, super.id, super.id, () -> super.id.get(), null);
 		driver.showTitle(this, layout, 1, 1, Tokens.RawTable.get(), context.getFactory().getSettings());
 		driver.showLabel(this, layout, 1, 2, this.typeName.get());
-		driver.showCheckBox(this, layout, 1, 3, "Global", super.global, super.global);
+		driver.showCheckBox(this, layout, 1, 3, "Global", super.global, super.global, null);
 		driver.showGrid(this, layout, 2, 0, this.table);
 		driver.showToggleButton(this, layout, 1, 4, 
 				b -> driver.hide(this, layout, 2, b),

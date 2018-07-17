@@ -79,7 +79,7 @@ public class MatrixTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem(ADD_TO_TOOLBAR),
 				ConfigurationTreeView.createDisabledItem(REMOVE_MATRIX_FOLDER),
 				ConfigurationTreeView.createDisabledItem(EXCLUDE_MATRIX_FOLDER),
-				ConfigurationTreeView.createItem(REFRESH_MATRIX, () -> this.model.updateMatrices(), R.MATRIX_TN_ERROR_ON_REFRESH.get()),
+				ConfigurationTreeView.createItem(REFRESH_MATRIX, () -> this.model.refreshMatrices(), R.MATRIX_TN_ERROR_ON_REFRESH.get()),
 				ConfigurationTreeView.createDisabledItem(RENAME_MATRIX),
 				new SeparatorMenuItem(),
 				ConfigurationTreeView.createDisabledItem(R.COMMON_GIT.get(), null)

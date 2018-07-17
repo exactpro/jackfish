@@ -74,7 +74,7 @@ public class LibraryTreeNode extends TreeNode
 				ConfigurationTreeView.createDisabledItem(OPEN_LIBRARY),
 				ConfigurationTreeView.createDisabledItem(OPEN_AS_TEXT),
 				ConfigurationTreeView.createDisabledItem(REMOVE_LIBRARY),
-				ConfigurationTreeView.createItem(REFRESH_LIBRARY, () -> this.model.updateLibraries(), R.LIBRARY_TN_REFRESH_LIBS.get())
+				ConfigurationTreeView.createItem(REFRESH_LIBRARY, () -> this.model.refreshLibs(), R.LIBRARY_TN_REFRESH_LIBS.get())
 		);
 
 		boolean isLibEmpty = this.model.getLibrariesValue().isEmpty();

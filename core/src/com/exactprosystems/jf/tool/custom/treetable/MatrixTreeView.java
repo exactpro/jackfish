@@ -300,7 +300,11 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			}
 		});
 
-		TreeTableColumn<MatrixItem, MatrixItemState> iconColumn = new TreeTableColumn<>("I");
+		TreeTableColumn<MatrixItem, MatrixItemState> iconColumn = new TreeTableColumn<>();
+		Label iconLabel = new Label("I");
+		iconColumn.setGraphic(iconLabel);
+		iconLabel.setTooltip(new Tooltip("State column"));
+
 		iconColumn.setSortable(false);
 		iconColumn.setMinWidth(23);
 		iconColumn.setPrefWidth(23);
@@ -313,7 +317,11 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 		gridColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue()));
 		gridColumn.setCellFactory(param -> new MatrixItemCell());
 
-		TreeTableColumn<MatrixItem, MatrixItem> reportOffColumn = new TreeTableColumn<>("R");
+		TreeTableColumn<MatrixItem, MatrixItem> reportOffColumn = new TreeTableColumn<>();
+		Label reportOffLabel = new Label("R");
+		reportOffLabel.setTooltip(new Tooltip("Exclude item from report"));
+		reportOffColumn.setGraphic(reportOffLabel);
+
 		reportOffColumn.setSortable(false);
 		reportOffColumn.setMinWidth(25);
 		reportOffColumn.setMaxWidth(25);
@@ -351,7 +359,11 @@ public class MatrixTreeView extends TreeTableView<MatrixItem>
 			}
 		});
 
-		TreeTableColumn<MatrixItem, MatrixItem> offColumn = new TreeTableColumn<>("E");
+		TreeTableColumn<MatrixItem, MatrixItem> offColumn = new TreeTableColumn<>();
+		Label offLabel = new Label("E");
+		offLabel.setTooltip(new Tooltip("Off item from execution"));
+		offColumn.setGraphic(offLabel);
+
 		offColumn.setSortable(false);
 		offColumn.setMinWidth(25);
 		offColumn.setMaxWidth(25);
