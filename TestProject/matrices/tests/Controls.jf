@@ -128,7 +128,7 @@ EXECUTE;;;;
     isdef parameter && parameter >= 0 && parameter <=4;'Parameter for the matrix should be defined and has value from 0 to 4. Actual : ' + parameter
 
     #Id;#Let
-    allPlugins;['Swing', 'InternetExplorer', 'Win', 'Chrome']
+    allPlugins;['Chrome', 'Swing', 'InternetExplorer', 'Win' ]
 
     #Id;#Let
     pluginName;allPlugins[parameter]
