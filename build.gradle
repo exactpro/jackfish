@@ -11,9 +11,9 @@ plugins {
 	id 'java'
 	id 'maven'
 	id 'com.jfrog.artifactory' version '2.2.5'
-	id 'us.kirchmeier.capsule' version '1.0.2'
 	id 'com.ullink.msbuild' version '2.19' apply false // more recent versions may require .NET 4.6
 	id 'com.ullink.nuget' version '2.15' apply false
+	id 'de.undercouch.download' version '3.4.3'
 }
 
 artifactoryPublish.skip = true
@@ -21,62 +21,41 @@ artifactoryPublish.skip = true
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.util.regex.Pattern
 import org.gradle.plugins.ide.eclipse.model.AccessRule
 
 defaultTasks 'createTool'
 
 configurations {
 	sqlData
-	unixDriver
-	winDriver
-	macDriver
 }
 
 repositories {
-	maven {
-		name "ArtifactoryLocal" //used for local builds
-		url "${project.rootDir}/artifactory"
-	}
+//	maven {
+//		name "ArtifactoryLocal" //used for local builds
+//		url "${project.rootDir}/artifactory"
+//	}
 
 	mavenCentral()
 }
 
 dependencies {
-	sqlData(group:	'mysql',									name: 'mysql-connector-java',  version: '5.1.26')
-	//sqlData(group:	'com.oracle',								name: 'ojdbc7',				version: '12.1.0.1')
-	sqlData(group:	'org.postgresql',							name: 'postgresql',			version: '9.4.1212.jre7')
-	sqlData(group:	'com.microsoft.sqlserver',					name: 'mssql-jdbc',			version: '6.1.0.jre8', transitive : false)
-
-// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-firefox-driver
-
-	//unixDriver(group: 'com.googleapis.storage.chromedriver',	name: 'chromedriver-linux',	version: '2.37',	classifier: 'x64', ext: 'elf')
-	//unixDriver(group: 'org.mozilla.geckodriver',				name: 'geckodriver-linux',	version: '0.19.1',	classifier: 'x86', ext: 'elf')
-	//unixDriver(group: 'org.mozilla.geckodriver',				name: 'geckodriver-linux',	version: '0.19.1',	classifier: 'x64', ext: 'elf')
-
-	unixDriver(group: 'org.seleniumhq.selenium',                name: 'selenium-chrome-driver',  version: '3.12.0')
-	unixDriver(group: 'org.seleniumhq.selenium',				name: 'selenium-firefox-driver', version: '3.12.0')
-	
-	//winDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-win',	version: '2.37',	classifier: 'x86', ext: 'exe')
-	winDriver(group: 'org.seleniumhq.selenium',                name: 'selenium-chrome-driver', version: '3.12.0')
-	//winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',	version: '0.19.1',	classifier: 'x86', ext: 'exe')
-	//winDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-win',	version: '0.19.1',	classifier: 'x64', ext: 'exe')
-	winDriver(group: 'org.seleniumhq.selenium',				name: 'selenium-firefox-driver', version: '3.12.0')
-	//winDriver(group: 'org.seleniumhq.iedriverserver',			name: 'iedriverserver',		version: '3.8.0',	classifier: 'x86', ext: 'exe')
-	//winDriver(group: 'org.seleniumhq.iedriverserver',			name: 'iedriverserver',		version: '3.8.0',	classifier: 'x64', ext: 'exe')
-	winDriver(group: 'org.seleniumhq.selenium',			name: 'selenium-ie-driver',		version: '3.12.0')
-
-	//macDriver(group: 'com.googleapis.storage.chromedriver',		name: 'chromedriver-mac',	version: '2.37',	classifier: 'x64', ext: 'bin')
-	//macDriver(group: 'org.mozilla.geckodriver',					name: 'geckodriver-mac',	version: '0.19.1',	classifier: 'x64', ext: 'bin')
-	macDriver(group: 'org.seleniumhq.selenium',                name: 'selenium-chrome-driver', version: '3.12.0')
-	macDriver(group: 'org.seleniumhq.selenium',				name: 'selenium-firefox-driver', version: '3.12.0')
+	sqlData(group: 'mysql', name: 'mysql-connector-java', version: '5.1.26')
+	//sqlData(group: 'com.oracle', name: 'ojdbc7', version: '12.1.0.1')
+	sqlData(group: 'org.postgresql', name: 'postgresql', version: '9.4.1212.jre7')
+	sqlData(group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.1.0.jre8', transitive : false)
 }
 
-rootProject.ext {
+def ieDriverVersion = '3.13.0'
+def chromeDriverVersion = '2.40'
+def geckoDriverVersion = '0.21.0'
+
+project.ext {
 	jfVersion = '4.5.12'
 	version = jfVersion + '.' + (System.getProperty('revision') ?: 'local_build')
 	println version
 
-	jfSourceDir	= rootProject.rootDir.path + '/core'
+	jfSourceDir	= project.rootDir.path + '/core'
 	appsDir		= jfSourceDir + '/apps';
 	clientsDir	= jfSourceDir + '/clients';
 	docsDir		= jfSourceDir + '/docs';
@@ -86,8 +65,8 @@ rootProject.ext {
 	servicesDir	= jfSourceDir + '/services';
 	sqlDir		= jfSourceDir + '/sql';
 	reportsDir	= jfSourceDir + '/reports';
+	sharedDir   = file("${project.rootDir}/shared");
 	coreProject	= 'core';
-	sharedDir = file("${project.rootDir}/shared");
 
 	copyTo		= { Project proj, String dest ->
 		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.archivesBaseName + '-' + proj.version + '.jar')
@@ -99,22 +78,22 @@ rootProject.ext {
 		copyFolder(src,dest);
 	}
 
-	copyFolder = {File src, File dest ->
-		if(src.isDirectory()){
-			//if directory not exists, create it
-			if(!dest.exists()){
+	copyFolder = { File src, File dest ->
+		if (src.isDirectory()) {
+			// if directory does not exist, create it
+			if(!dest.exists()) {
 				dest.mkdir();
 			}
 
-			//list all the directory contents
+			// list all directory content
 			String[] files = src.list();
 
 			for (String file : files) {
-				//construct the src and dest file structure
+				// construct the src and dest file structure
 				File srcFile = new File(src, file);
 				File destFile = new File(dest, file);
-				//recursive copy
-				copyFolder(srcFile,destFile);
+				// recursive copy
+				copyFolder(srcFile, destFile);
 			}
 
 		}
@@ -128,7 +107,7 @@ rootProject.ext {
 
 			int length;
 			//copy the file content in bytes
-			while ((length = inS.read(buffer)) > 0){
+			while ((length = inS.read(buffer)) > 0) {
 				out.write(buffer, 0, length);
 			}
 
@@ -160,7 +139,6 @@ subprojects {
 	apply plugin: 'idea'
 	apply plugin: 'eclipse'
 	apply plugin: 'artifactory'
-	apply plugin: 'us.kirchmeier.capsule'
 
 	group = 'com.exactprosystems.jf'
 	version = rootProject.ext.jfVersion + '-SNAPSHOT'
@@ -176,10 +154,10 @@ subprojects {
 	def buildDir = dir('/build');
 
 	repositories {
-		maven {
-			name "ArtifactoryLocal" //used for local builds
-			url "${project.rootDir}/artifactory"
-		}
+//		maven {
+//			name "ArtifactoryLocal" //used for local builds
+//			url "${project.rootDir}/artifactory"
+//		}
 		
 		mavenCentral()
 	}
@@ -274,28 +252,127 @@ task makeTool() {
 	}
 }
 
+def buildDir = file('build')
+def seleniumDir = new File(buildDir, 'selenium')
+def macDriversDir = new File(seleniumDir, 'mac')
+def linuxDriversDir = new File (seleniumDir, 'unix')
+def windowsDriversDir = new File(seleniumDir, 'win')
+
+task getChromeDrivers << {
+    def baseUrl = "https://chromedriver.storage.googleapis.com/${chromeDriverVersion}"
+    
+    [   [ os: 'linux64', dest: linuxDriversDir ],
+        [ os: 'mac64', dest: macDriversDir ],
+        [ os: 'win32', dest: windowsDriversDir ]
+    ].each { spec ->
+        def archiveName = "chromedriver_${spec.os}.zip"
+    
+	    download {
+	        src "${baseUrl}/${archiveName}"
+	        dest buildDir
+	        overwrite false
+	    }
+	
+	    copy {
+	        from zipTree(new File(buildDir, archiveName))
+	        include 'chromedriver'
+	        include 'chromedriver.*'
+	        into spec.dest
+	        rename ~/^chromedriver(|\..+)$/, "chromedriver_${chromeDriverVersion}\$1"
+	    }
+    }
+}
+
+task getGeckoDrivers << {
+    def baseUrl = "https://github.com/mozilla/geckodriver/releases/download/v${geckoDriverVersion}"
+    
+    [   [ os: 'linux32', dest: linuxDriversDir, format: 'tgz' ],
+        [ os: 'linux64', dest: linuxDriversDir, format: 'tgz'  ],
+        [ os: 'macos', dest: macDriversDir, format: 'tgz'  ],
+        [ os: 'win32', dest: windowsDriversDir ],
+        [ os: 'win64', dest: windowsDriversDir ]
+    ].each { spec ->
+        def format = spec.get('format', 'zip') 
+        String ext
+        switch (format) {
+            case 'zip':
+                ext = 'zip'
+                break
+            case 'tgz':
+                ext = 'tar.gz'
+                break
+        }
+        def archiveName = "geckodriver-v${geckoDriverVersion}-${spec.os}.${ext}"
+    
+	    download {
+	        src "${baseUrl}/${archiveName}"
+	        dest buildDir
+	        overwrite false
+	    }
+	
+	    def archiveFile = new File(buildDir, archiveName)
+	    copy {
+	        switch (format) {
+	            case 'zip':
+	                from zipTree(archiveFile)
+	                break
+	            case 'tgz':
+	                from tarTree(archiveFile)
+	                break
+	        }
+	        include 'geckodriver'
+	        include 'geckodriver.*'
+	        into spec.dest
+	        rename ~/^geckodriver(|\..+)$/, "geckodriver-v${geckoDriverVersion}-${spec.os}\$1"
+	    }
+    }
+}
+
+task getIEDrivers << {
+    def ieDriverFolder = ieDriverVersion.split('\\.')[0..1].join('.')
+    def baseUrl = "https://selenium-release.storage.googleapis.com/${ieDriverFolder}"
+    def ieDriverExeName = 'IEDriverServer.exe'
+    
+    [   [ os: 'Win32', dest: windowsDriversDir ],
+        [ os: 'x64', dest: windowsDriversDir ]
+    ].each { spec ->
+        def archiveName = "IEDriverServer_${spec.os}_${ieDriverVersion}.zip"
+    
+	    download {
+	        src "${baseUrl}/${archiveName}"
+	        dest buildDir
+	        overwrite false
+	    }
+	
+	    copy {
+	        from zipTree(new File(buildDir, archiveName))
+	        include 'IEDriverServer'
+	        include 'IEDriverServer.*'
+	        into spec.dest
+	        rename ~/^IEDriverServer(|\..+)$/, "IEDriverServer_${spec.os}_${ieDriverVersion}\$1"
+	    }
+    }
+}
+
+task getSeleniumDrivers {
+    dependsOn getChromeDrivers
+    dependsOn getGeckoDrivers
+    dependsOn getIEDrivers
+}
+
 task copyData(type: Copy) {
-	dependsOn makeTool;
-	destinationDir = project(':core').projectDir;
+	dependsOn makeTool
+	dependsOn getSeleniumDrivers
+	
+	destinationDir = project(':core').projectDir
 
 	into ('sql') {
 		from configurations.sqlData
 	}
-
-	into ('apps/unix') {
-		from configurations.unixDriver
+	
+	into ('apps') {
+	    from seleniumDir
 	}
-	rename '^(.*)\\.elf$', '$1.'
-	fileMode 0755
-
-	into ('apps/win') {
-		from configurations.winDriver
-	}
-
-	into ('apps/mac') {
-		from configurations.macDriver
-	}
-	rename '^(.*)\\.bin$', '$1.'
 	fileMode 0755
 }
 
@@ -317,10 +394,6 @@ task createTool(type: Zip) {
 		exclude("logs")
 		exclude("remote_out.txt")
 	}
-}
-
-task wrapper(type: Wrapper) {
-	gradleVersion = '3.0' //we want gradle 3.0 to run this project
 }
 
 clean {
