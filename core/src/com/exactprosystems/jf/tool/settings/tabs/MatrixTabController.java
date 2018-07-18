@@ -34,6 +34,7 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 	public ComboBox<ScreenshotKind> cbScreenshot;
 	public CheckBox cbPopup;
 	public CheckBox cbFoldNewItems;
+	public CheckBox cbOpenReportAfterFinished;
 	private SettingsPanel model;
 
 	//region Initializable
@@ -63,6 +64,7 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 		SettingsPanel.setValue(Settings.MATRIX_DEFAULT_SCREENSHOT, collect, str -> this.cbScreenshot.getSelectionModel().select(ScreenshotKind.valueOf(str)));
 		SettingsPanel.setValue(Settings.MATRIX_POPUPS, collect, str -> this.cbPopup.setSelected(Boolean.parseBoolean(str)));
 		SettingsPanel.setValue(Settings.MATRIX_FOLD_ITEMS, collect, str -> this.cbFoldNewItems.setSelected(Boolean.parseBoolean(str)));
+		SettingsPanel.setValue(Settings.MATRIX_OPEN_REPORT_AFTER_FINISHED, collect, str -> this.cbOpenReportAfterFinished.setSelected(Boolean.parseBoolean(str)));
 	}
 
 	public void displayInto(Tab tab)
@@ -84,6 +86,7 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 		this.model.updateSettingsValue(Settings.MATRIX_DEFAULT_SCREENSHOT, Settings.MATRIX_NAME, this.cbScreenshot.getSelectionModel().getSelectedItem().name());
 		this.model.updateSettingsValue(Settings.MATRIX_POPUPS, Settings.MATRIX_NAME, String.valueOf(this.cbPopup.isSelected()));
 		this.model.updateSettingsValue(Settings.MATRIX_FOLD_ITEMS, Settings.MATRIX_NAME, String.valueOf(this.cbFoldNewItems.isSelected()));
+		this.model.updateSettingsValue(Settings.MATRIX_OPEN_REPORT_AFTER_FINISHED, Settings.MATRIX_NAME, String.valueOf(this.cbOpenReportAfterFinished.isSelected()));
 	}
 
 	@Override
@@ -94,6 +97,7 @@ public class MatrixTabController implements Initializable, ContainingParent, ITa
 		this.cbScreenshot.getSelectionModel().select(ScreenshotKind.valueOf(settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_DEFAULT_SCREENSHOT).getValue()));
 		this.cbPopup.setSelected(Boolean.parseBoolean(settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_POPUPS).getValue()));
 		this.cbFoldNewItems.setSelected(Boolean.parseBoolean(settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_FOLD_ITEMS).getValue()));
+		this.cbOpenReportAfterFinished.setSelected(Boolean.parseBoolean(settings.getValue(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_OPEN_REPORT_AFTER_FINISHED).getValue()));
 
 	}
 

@@ -39,7 +39,7 @@
 				<ColumnConstraints halignment="RIGHT"
 								   hgrow="SOMETIMES"
 								   minWidth="10.0"
-								   percentWidth="50.0"
+								   percentWidth="30.0"
 								   prefWidth="100.0"/>
 				<ColumnConstraints halignment="LEFT"
 								   hgrow="SOMETIMES"
@@ -98,9 +98,17 @@
 						</Tooltip>
 					</tooltip>
 				</CheckBox>
+				<CheckBox fx:id="cbOpenReportAfterFinished"
+						  mnemonicParsing="false"
+						  GridPane.rowIndex="3"
+						  GridPane.columnIndex="1">
+					<text>
+						<R fx:constant="MATRIX_TAB_OPEN_REPORT_AFTER_FINISHED"/>
+					</text>
+				</CheckBox>
 				<Button onAction="#restoreDefaults"
 						GridPane.columnIndex="1"
-						GridPane.rowIndex="3"
+						GridPane.rowIndex="4"
 						GridPane.halignment="RIGHT"
 						GridPane.valignment="CENTER">
 					<text>
