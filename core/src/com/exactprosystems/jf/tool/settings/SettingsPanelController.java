@@ -190,8 +190,9 @@ public class SettingsPanelController implements Initializable, ContainingParent
 		DialogsHelper.centreDialog(dialog);
 		Common.addIcons(((Stage) dialog.getDialogPane().getScene().getWindow()));
 		ButtonType save = new ButtonType(R.COMMON_SAVE.get(), ButtonBar.ButtonData.OK_DONE);
-		this.dialog.getDialogPane().getButtonTypes().addAll(save, ButtonType.CANCEL);
+		this.dialog.getDialogPane().getButtonTypes().addAll(save, ButtonType.CLOSE);
 		ButtonBar.setButtonData(this.dialog.getDialogPane().lookupButton(save), ButtonBar.ButtonData.OTHER);
+		((ButtonBar) dialog.getDialogPane().lookup(".button-bar")).setButtonOrder(ButtonBar.BUTTON_ORDER_NONE);
 		this.dialog.getDialogPane().setContent(this.pane);
 		this.dialog.setTitle(title);
 		this.dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
