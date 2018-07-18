@@ -19,6 +19,7 @@ import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import javafx.application.Platform;
+import javafx.beans.binding.Binding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -53,8 +54,10 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 	public  TextField             tfFind;
 	public  TextField             tfReplace;
 	public  Label                 lblFindCount;
-	private StyleClassedTextArea  textArea;
 	public Button btnReplace;
+	public Button btnReplaceAndFind;
+
+	private StyleClassedTextArea  textArea;
 
 	private Subscription lastSubscription;
 
@@ -107,6 +110,7 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 		this.tfFind.textProperty().addListener((observable, oldValue, newValue) -> this.model.resetMatcher(this.tfFind.getText(), this.cbMatchCase.isSelected(), this.cbRegexp.isSelected()));
 
 		this.btnReplace.disableProperty().bind(canReplace);
+		this.btnReplaceAndFind.setDisable(true);
 	}
 
 	public void init(Document model, CustomTab customTab)
@@ -121,6 +125,8 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 			}
 		});
 		this.textArea.replaceText(this.model.getProperty().get());
+		this.textArea.setEstimatedScrollY(0.0);
+		this.textArea.setEstimatedScrollX(0.0);
 
 		this.textArea.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (Objects.equals(newValue, oldValue)) {
@@ -159,6 +165,7 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 	public void findNext(ActionEvent actionEvent)
 	{
 		List<StyleWithRange> styles = this.model.findNext();
+		this.btnReplaceAndFind.setDisable(true);
 		this.lastFindSupplier = () -> Common.convertFromList(this.model.getCurrentStyles(lastDifference));
 		if (styles.size() != 1)
 		{
@@ -166,8 +173,12 @@ public class PlainTextFxController extends AbstractDocumentController<PlainTextF
 					.filter(s -> s.getStyle() == null)
 					.findFirst()
 					.ifPresent(swr -> {
-						this.textArea.moveTo(swr.getRange());
+						this.textArea.moveTo(swr.getRange() + 1);
 						this.textArea.selectWord();
+						int currentParagraph = this.textArea.getCurrentParagraph();
+						this.textArea.setEstimatedScrollY(this.textArea.getTotalHeightEstimate() / this.textArea.getParagraphs().size() * currentParagraph);
+
+						this.btnReplaceAndFind.setDisable(false);
 					});
 			this.canReplace.setValue(false);
 		}

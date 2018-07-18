@@ -128,6 +128,9 @@ public class PlainTextFx extends PlainText
 	{
 		ArrayList<StyleWithRange> list = new ArrayList<>();
 		Matcher matcher = this.matcher.reset(this.property.get());
+		if (this.lastPos > this.getProperty().get().length()) {
+			this.lastPos = this.getProperty().get().length() - 1;
+		}
 		boolean lastFind = matcher.find(this.lastPos);
 		if (!lastFind)
 		{
