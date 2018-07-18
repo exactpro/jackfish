@@ -12,6 +12,7 @@ package com.exactprosystems.jf.tool.newconfig;
 import com.exactprosystems.jf.api.common.i18n.R;
 import com.exactprosystems.jf.tool.Common;
 import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton;
+import com.exactprosystems.jf.tool.custom.tab.CustomTab;
 import com.exactprosystems.jf.tool.newconfig.nodes.TreeNode;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -95,12 +96,22 @@ public class ParametersTableView extends TableView<TablePair>
 			super.updateItem(item, empty);
 			if (item != null && !empty)
 			{
-				setText(item);
+				TablePair tablePair = get();
+				if (tablePair != null && tablePair.isRequired()) {
+					setText(item + CustomTab.CHANGED_MARKER);
+				} else {
+					setText(item);
+				}
 			}
 			else
 			{
 				setText(null);
 			}
+		}
+
+		protected TablePair get()
+		{
+			return getTableRow().getItem() != null ? ((TablePair) getTableRow().getItem()) : null;
 		}
 	}
 
@@ -239,10 +250,5 @@ public class ParametersTableView extends TableView<TablePair>
 		}
 
 		boolean needCancel = true;
-
-		private TablePair get()
-		{
-			return getTableRow().getItem() != null ? ((TablePair) getTableRow().getItem()) : null;
-		}
 	}
 }

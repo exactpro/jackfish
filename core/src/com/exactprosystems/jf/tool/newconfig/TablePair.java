@@ -19,6 +19,7 @@ public class TablePair
 	private String tooltipSeparator = null;
 	private boolean isEditable = true;
 	private Supplier<File> pathFunction;
+	private boolean isRequired = false;
 
 	public TablePair(String key, String value)
 	{
@@ -44,6 +45,10 @@ public class TablePair
 	public boolean isEditable()
 	{
 		return isEditable;
+	}
+
+	public boolean isRequired() {
+		return this.isRequired;
 	}
 
 	public String getTooltipSeparator()
@@ -82,6 +87,11 @@ public class TablePair
 		public TablePairBuilder tooltipSeparator(String s)
 		{
 			this.tablePair.tooltipSeparator = s;
+			return this;
+		}
+
+		public TablePairBuilder required() {
+			tablePair.isRequired = true;
 			return this;
 		}
 
