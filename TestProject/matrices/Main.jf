@@ -30,7 +30,7 @@ INIT;;;;
     15;;matrices/tests/MatrixItems;;q;;;;1;
     16;;matrices/tests/Keys/KeysChrome;;q;;;;1;
     17;;matrices/tests/Keys/KeysInternetExplorer;;q;;;;1;
-    18;;matrices/tests/Keys/KeysFirefox;;q;;;;1;
+    18;x;matrices/tests/Keys/KeysFirefox;;q;;;;1;
     19;;matrices/tests/Keys/KeysSwing;;q;;;;1;
     20;;matrices/tests/Keys/KeysWin;;q;;;;1;
     21;;matrices/tests/Matchers;;q;;;;1;
