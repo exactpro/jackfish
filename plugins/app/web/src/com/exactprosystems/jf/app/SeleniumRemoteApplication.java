@@ -909,11 +909,18 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		return dialogs.size();
 	}
 
+	//changed cause if only one window was opened in the browser, the browser was closed, but the process remained even after the application was stopped
 	@Override
 	protected String closeWindowDerived() throws Exception
 	{
 		String title = this.driver.getTitle();
-		this.driver.close();
+		if (this.driver.getWindowHandles().size() > 1) {
+			this.driver.close();
+			//todo think about switch to another window after close current
+		}
+		else {
+			this.driver.quit();
+		}
 		return title;
 	}
 
