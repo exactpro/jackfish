@@ -23,10 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -70,7 +67,8 @@ public class LogsFxController implements Initializable, ContainingParent
 	@Override
 	public void setParent(Parent parent)
 	{
-		this.dialog = new Alert(Alert.AlertType.INFORMATION);
+		ButtonType close = new ButtonType(R.COMMON_CLOSE.get(), ButtonBar.ButtonData.OK_DONE);
+		this.dialog = new Alert(Alert.AlertType.INFORMATION, "", close);
 		DialogsHelper.centreDialog(this.dialog);
 		Common.addIcons(((Stage) this.dialog.getDialogPane().getScene().getWindow()));
 		this.dialog.setResizable(true);
