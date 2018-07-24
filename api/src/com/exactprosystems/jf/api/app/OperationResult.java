@@ -10,8 +10,6 @@
 
 package com.exactprosystems.jf.api.app;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 
 import javax.xml.transform.OutputKeys;
@@ -21,12 +19,14 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.Color;
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.rmi.server.ExportException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OperationResult implements Serializable
 {
@@ -231,20 +231,19 @@ public class OperationResult implements Serializable
 	}
 
 	private static String xmlToString(Document doc) {
-		OutputFormat format = new OutputFormat();
-		format.setIndenting(true);
-		format.setIndent(10);
-		format.setLineWidth(Integer.MAX_VALUE);
-
-		Writer outxml = new StringWriter();
-		XMLSerializer serializer = new XMLSerializer(outxml, format);
 		try {
-			serializer.serialize(doc);
-		}
-		catch (Exception e){
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.setOutputProperty(OutputKeys.INDENT, "no");
 
+			Writer stringWriter = new StringWriter();
+			transformer.transform(new DOMSource(doc), new StreamResult(stringWriter));
+			return stringWriter.toString();
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-		return outxml.toString();
 	}
 
 	@Override

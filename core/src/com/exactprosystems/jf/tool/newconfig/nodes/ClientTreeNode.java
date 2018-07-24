@@ -166,10 +166,10 @@ public class ClientTreeNode extends TreeNode
 			{
 				List<TablePair> list = new ArrayList<>();
 				list.add(TablePair.TablePairBuilder.create(Configuration.clientDescription, getEntry().get(Configuration.clientDescription)).edit(true).build());
-				list.add(TablePair.TablePairBuilder.create(Configuration.clientJar, getEntry().get(Configuration.clientJar)).edit(true).pathFunc(
+				list.add(TablePair.TablePairBuilder.create(Configuration.clientJar, getEntry().get(Configuration.clientJar)).edit(true).required().pathFunc(
 						() -> DialogsHelper.showOpenSaveDialog(String.format(R.CLIENT_TREE_NODE_CHOOSE_CLIENT.get(), getEntry().toString()), R.COMMON_JAR_FILTER.get(), "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
-				list.add(TablePair.TablePairBuilder.create(Configuration.clientDictionary, getEntry().get(Configuration.clientDictionary)).edit(true).pathFunc(
+				list.add(TablePair.TablePairBuilder.create(Configuration.clientDictionary, getEntry().get(Configuration.clientDictionary)).required().edit(true).pathFunc(
 						() -> DialogsHelper.showOpenSaveDialog(R.CLIENT_TREE_NODE_CHOOSE_CLIENT_DIC.get(), R.COMMON_XML_FILTER.get(), "*.xml", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.clientLimit, getEntry().get(Configuration.clientLimit)).edit(true).build());

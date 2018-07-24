@@ -19,6 +19,7 @@ import com.exactprosystems.jf.tool.custom.table.CustomTable;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.ControllerInfo;
 import javafx.collections.FXCollections;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.GridPane;
 
@@ -73,6 +74,7 @@ public class SystemVarsFxController extends AbstractDocumentController<SystemVar
 		this.tableView.onFinishEditFourthColumn((par, value) -> this.model.updateDescriptionRow(current(), value));
 		this.tableView.setRowFactory(v -> new ColorRow());
 		this.tableView.setSortable(false);
+		this.tableView.setPlaceholder(new Label(R.SYSTEMS_VARS_FX_CONTR_NO_CONTENT.get()));
 	}
 
 	private int current()

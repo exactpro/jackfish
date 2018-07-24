@@ -28,11 +28,27 @@ import org.apache.log4j.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlValue;
 import java.io.File;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -118,8 +134,9 @@ public class Settings
 
 	//region Matrix
 	public static final String MATRIX_DEFAULT_SCREENSHOT = "matrixDefaultScreenshot";
-	public static final String	MATRIX_POPUPS				= "matrixPopups";
-	public static final String MATRIX_FOLD_ITEMS = "foldNewItems";
+	public static final String MATRIX_POPUPS             = "matrixPopups";
+	public static final String MATRIX_FOLD_ITEMS         = "foldNewItems";
+	public static final String MATRIX_OPEN_REPORT_AFTER_FINISHED = "matrixOpenReportAfterFinished";
 	//endregion
 
 	public static final String	THRESHOLD			= "threshold";
@@ -428,7 +445,8 @@ public class Settings
 			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, MATRIX_NAME, mapOf(
 					MATRIX_DEFAULT_SCREENSHOT, ScreenshotKind.Never.name(),
 					MATRIX_POPUPS, Boolean.FALSE.toString(),
-					MATRIX_FOLD_ITEMS, Boolean.FALSE.toString()
+					MATRIX_FOLD_ITEMS, Boolean.FALSE.toString(),
+					MATRIX_OPEN_REPORT_AFTER_FINISHED, Boolean.FALSE.toString()
 			));
 
 			DEFAULT_SETTINGS.setMapValues(GLOBAL_NS, GIT, mapOf(

@@ -209,7 +209,7 @@ public class ServiceTreeNode extends TreeNode
 			{
 				List<TablePair> list = new ArrayList<>();
 				list.add(TablePair.TablePairBuilder.create(Configuration.serviceDescription, getEntry().get(Configuration.serviceDescription)).edit(true).build());
-				list.add(TablePair.TablePairBuilder.create(Configuration.serviceJar, getEntry().get(Configuration.serviceJar)).edit(true).pathFunc(
+				list.add(TablePair.TablePairBuilder.create(Configuration.serviceJar, getEntry().get(Configuration.serviceJar)).edit(true).required().pathFunc(
 						() -> DialogsHelper.showOpenSaveDialog(R.SERVICE_TN_CHOOSE_SERVICE.get(), R.COMMON_JAR_FILTER.get(), "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
 				getEntry().getParameters().stream()

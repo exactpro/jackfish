@@ -13,54 +13,116 @@
 
 <?import com.exactprosystems.jf.tool.CssVariables?>
 <?import com.exactprosystems.jf.tool.custom.controls.field.CustomFieldWithButton?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<BorderPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
-			xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.exactprosystems.jf.tool.documents.text.PlainTextFxController">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:id="mainPane"
+			maxHeight="1.7976931348623157E308"
+			maxWidth="1.7976931348623157E308"
+			minHeight="-Infinity"
+			minWidth="-Infinity"
+			prefHeight="400.0"
+			prefWidth="600.0"
+			xmlns="http://javafx.com/javafx/8"
+			xmlns:fx="http://javafx.com/fxml/1"
+			fx:controller="com.exactprosystems.jf.tool.documents.text.PlainTextFxController">
 	<top>
 		<VBox>
 			<children>
-				<ToolBar fx:id="toolbar" prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+				<ToolBar fx:id="toolbar"
+						 prefHeight="40.0"
+						 prefWidth="600.0"
+						 BorderPane.alignment="CENTER">
 					<items>
-						<CheckBox fx:id="cbShowLineNumbers" mnemonicParsing="false" text="Show line number"/>
+						<CheckBox fx:id="cbShowLineNumbers"
+								  mnemonicParsing="false"
+								  text="Show line number"/>
 						<Separator orientation="VERTICAL"/>
 						<Label text="Highlight"/>
-						<ComboBox fx:id="cbHighlighting" prefWidth="150.0"/>
+						<ComboBox fx:id="cbHighlighting"
+								  prefWidth="150.0"/>
 						<Separator orientation="VERTICAL"/>
-						<ToggleButton fx:id="tbFindAndReplace" mnemonicParsing="false" text="FindAndReplace"/>
+						<ToggleButton fx:id="tbFindAndReplace"
+									  mnemonicParsing="false"
+									  text="FindAndReplace"/>
 					</items>
 				</ToolBar>
-				<GridPane fx:id="findPane" prefHeight="0.0" minHeight="0.0" maxHeight="0.0" BorderPane.alignment="CENTER" visible="false">
+				<GridPane fx:id="findPane"
+						  prefHeight="0.0"
+						  minHeight="0.0"
+						  maxHeight="0.0"
+						  BorderPane.alignment="CENTER"
+						  visible="false">
 					<styleClass>
-						<CssVariables fx:constant="HGAP_MAX" />
+						<CssVariables fx:constant="HGAP_MAX"/>
 					</styleClass>
 					<rowConstraints>
-						<RowConstraints vgrow="SOMETIMES" percentHeight="50.0"/>
-						<RowConstraints vgrow="SOMETIMES" percentHeight="50.0"/>
+						<RowConstraints vgrow="SOMETIMES"
+										percentHeight="50.0"/>
+						<RowConstraints vgrow="SOMETIMES"
+										percentHeight="50.0"/>
 					</rowConstraints>
 					<columnConstraints>
-						<ColumnConstraints halignment="LEFT" percentWidth="52.0"/>
-						<ColumnConstraints halignment="LEFT" percentWidth="12.0"/>
-						<ColumnConstraints halignment="LEFT" percentWidth="12.0"/>
-						<ColumnConstraints halignment="LEFT" percentWidth="12.0"/>
-						<ColumnConstraints halignment="LEFT" percentWidth="12.0"/>
+						<ColumnConstraints halignment="LEFT"
+										   percentWidth="52.0"/>
+						<ColumnConstraints halignment="LEFT"
+										   percentWidth="12.0"/>
+						<ColumnConstraints halignment="LEFT"
+										   percentWidth="12.0"/>
+						<ColumnConstraints halignment="LEFT"
+										   percentWidth="12.0"/>
+						<ColumnConstraints halignment="LEFT"
+										   percentWidth="12.0"/>
 					</columnConstraints>
 					<children>
-						<CustomFieldWithButton promptText="Find" fx:id="tfFind"/>
-						<CustomFieldWithButton promptText="Replace" fx:id="tfReplace" GridPane.rowIndex="1"/>
+						<CustomFieldWithButton promptText="Find"
+											   fx:id="tfFind"/>
+						<CustomFieldWithButton promptText="Replace"
+											   fx:id="tfReplace"
+											   GridPane.rowIndex="1"/>
 
-						<CheckBox fx:id="cbMatchCase" text="Match case" GridPane.columnIndex="1"/>
-						<CheckBox fx:id="cbRegexp" text="RegExp" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+						<CheckBox fx:id="cbMatchCase"
+								  text="Match case"
+								  GridPane.columnIndex="1"/>
+						<CheckBox fx:id="cbRegexp"
+								  text="RegExp"
+								  GridPane.columnIndex="1"
+								  GridPane.rowIndex="1"/>
 
-						<Button text="Find all" onAction="#findAll" GridPane.columnIndex="2"/>
-						<Button text="Replace all" onAction="#replaceAll" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+						<Button text="Find all"
+								onAction="#findAll"
+								GridPane.columnIndex="2"/>
+						<Button text="Replace all"
+								onAction="#replaceAll"
+								GridPane.columnIndex="2"
+								GridPane.rowIndex="1"/>
 
-						<Button text="Find next" onAction="#findNext" GridPane.columnIndex="3"/>
-						<Button fx:id="btnReplace" text="Replace" onAction="#replaceCurrent" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+						<Button text="Find next"
+								onAction="#findNext"
+								GridPane.columnIndex="3"/>
+						<Button fx:id="btnReplace"
+								text="Replace"
+								onAction="#replaceCurrent"
+								GridPane.rowIndex="1"
+								GridPane.columnIndex="3"/>
 
-						<Button text="Replace and find" onAction="#replaceAndFind" GridPane.columnIndex="4"/>
+						<Button fx:id="btnReplaceAndFind"
+								text="Replace and find"
+								onAction="#replaceAndFind"
+								GridPane.columnIndex="4"/>
 
-						<Label fx:id="lblFindCount" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+						<Label fx:id="lblFindCount"
+							   GridPane.columnIndex="4"
+							   GridPane.rowIndex="1"/>
 					</children>
 				</GridPane>
 			</children>

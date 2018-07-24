@@ -126,10 +126,10 @@ public class SqlTreeNode extends TreeNode
 			try
 			{
 				List<TablePair> list = new ArrayList<>();
-				list.add(TablePair.TablePairBuilder.create(Configuration.sqlJar, getEntry().get(Configuration.sqlJar)).edit(true).pathFunc(
+				list.add(TablePair.TablePairBuilder.create(Configuration.sqlJar, getEntry().get(Configuration.sqlJar)).required().edit(true).pathFunc(
 						() -> DialogsHelper.showOpenSaveDialog(R.SQL_TN_CHOOSE_SQL.get(), R.COMMON_JAR_FILTER.get(), "*.jar", DialogsHelper.OpenSaveMode.OpenFile))
 						.build());
-				list.add(TablePair.TablePairBuilder.create(Configuration.sqlConnection, getEntry().get(Configuration.sqlConnection)).edit(true).build());
+				list.add(TablePair.TablePairBuilder.create(Configuration.sqlConnection, getEntry().get(Configuration.sqlConnection)).required().edit(true).build());
 				return list;
 			}
 			catch (Exception e)

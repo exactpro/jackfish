@@ -145,7 +145,7 @@ public class ColorsTabController implements Initializable, ContainingParent, ITa
 		if (selectedItem != null)
 		{
 			String name = selectedItem.getValue().name;
-			this.colorsMap.replace(name, Color.TRANSPARENT);
+			this.colorsMap.replace(name, this.getDefaultColor(Settings.defaultSettings(), name));
 			updateTree();
 		}
 	}

@@ -41,7 +41,7 @@ import static com.exactprosystems.jf.tool.custom.tab.CustomTabPane.TAB_DRAG_KEY;
 
 public class CustomTab extends Tab
 {
-	private static final String	CHANGED_MARKER	= " *";
+	public static final String	CHANGED_MARKER	= " *";
 	private Hyperlink			crossButton;
 	private Text				text;
 

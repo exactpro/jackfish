@@ -34,6 +34,7 @@ import com.exactprosystems.jf.tool.custom.treetable.MatrixParametersContextMenu;
 import com.exactprosystems.jf.tool.custom.treetable.MatrixTreeView;
 import com.exactprosystems.jf.tool.documents.AbstractDocumentController;
 import com.exactprosystems.jf.tool.documents.ControllerInfo;
+import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.matrix.watch.WatcherFx;
 import com.exactprosystems.jf.tool.settings.SettingsPanel;
 import javafx.collections.FXCollections;
@@ -186,6 +187,11 @@ public class MatrixFxController extends AbstractDocumentController<MatrixFx> imp
 		this.forceRefresh();
 		this.disableButtons(false);
 		this.model.getFactory().getConfiguration().refreshReport();
+
+		String value = this.model.getFactory().getSettings().getValue(Settings.GLOBAL_NS, Settings.MATRIX_NAME, Settings.MATRIX_OPEN_REPORT_AFTER_FINISHED).getValue();
+		if (Boolean.parseBoolean(value)) {
+			DialogsHelper.displayReport(new File(matrix.getEngine().getReportName()), matrix.getNameProperty().get(), this.model.getFactory());
+		}
 	}
 
 	@Override
