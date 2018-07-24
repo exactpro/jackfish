@@ -327,14 +327,11 @@ task copyData(type: Copy) {
 
 configure(subprojects.findAll { it.path ==~ /\:plugins\:app\:.+/ }) {
     afterEvaluate { Project pluginProject ->
-        println pluginProject.path
 	    rootProject.copyData {
 			into ('apps') {
 			    from pluginProject.tasks.shadowJar
 			}
 			rename ~/${pluginProject.name}-.+-all\.jar/, "${pluginProject.name}.jar"
-			
-			println "${pluginProject.name}.jar" 
 	    }
 	}
 }

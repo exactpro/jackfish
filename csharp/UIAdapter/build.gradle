@@ -24,7 +24,32 @@ task copyDllExportBat(type: Copy) {
     into '.'
 }
 
-msbuild {
+class CSharpLibraryBuild extends Msbuild {
+
+    @InputFiles
+    Iterable<File> getSourceFiles() {
+        this.project.fileTree(this.project.file(this.projectFile).parentFile) {
+	        include '**/*.cs'
+	        include '*.csproj'
+	        exclude 'obj/**'
+	        exclude 'bin/**'
+	    }
+    }
+    
+    @OutputFiles
+    Iterable<File> getOutputFiles() {
+        def projectFile = this.project.file(this.projectFile)
+        def projectDirName = projectFile.parent
+        def projectName = projectFile.name.replaceAll(/\..+/, '')
+        def output = this.project.files("$projectDirName/bin/$configuration/${projectName}.dll") 
+        if (this.configuration == 'Debug') {
+            output = output + this.project.files("$projectDirName/bin/$configuration/${projectName}.pdb")
+        }
+        return output
+    }
+}
+
+task csbuild(type: CSharpLibraryBuild) {
     dependsOn copyDllExportBat
     onlyIf {
         System.getProperty('os.name').toLowerCase().contains('windows')
@@ -36,16 +61,4 @@ msbuild {
     verbosity = 'detailed'
     parameters.SolutionDir = project.projectDir.path + java.io.File.separator
     ext["flp1"] = "LogFile=" + file("${project.name}.errors.log").path + ";ErrorsOnly;Verbosity=diag"
-    
-    inputs.files(fileTree('UIAdapter') {
-        include '**/*.cs'
-        include '*.csproj'
-        exclude 'obj/**'
-        exclude 'bin/**'
-    })
-    
-    outputs.file "UIAdapter/bin/$configuration/UIAdapter.dll"
-    if (configuration == 'Debug') {
-        outputs.file "UIAdapter/bin/$configuration/UIAdapter.pdb"
-    }
 }
