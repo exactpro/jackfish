@@ -7,31 +7,26 @@
  * This is unpublished, licensed software, confidential and proprietary
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
+
 description = "Plugin for javafx applications"
-ext.jarName = "javafx.jar"
-ext.javaVersion = 1.8
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 dependencies {
-	compile project(':api')
-	compile group: 'log4j', name: 'log4j', version: '1.2.17'
+	implementation project(':api')
+	
+	implementation 'log4j:log4j:1.2.17' // TODO switch to either logback or log4j 2
 }
 
 jar {
 	manifest {
 		attributes(
-			'Main-class' : 'com.exactprosystems.jf.app.FXRemoteApplication',
-			'Class-Path' : '.'
+			'Main-class': 'com.exactprosystems.jf.app.FXRemoteApplication',
 		)
 	}
-	from { 
-		configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
-	}
-	from('META-INF') {
-		into 'META-INF'
-		include 'services/*.*' 
-	}
-	
 }
-distribute.doLast {
-	copyTo(project, rootProject.appsDir)
+
+distribute {
+    dependsOn shadowJar
 }

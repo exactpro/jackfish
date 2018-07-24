@@ -7,41 +7,34 @@
  * This is unpublished, licensed software, confidential and proprietary
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
-description = 'Plugin for WEB application'
-ext.jarName = 'web.jar'
-ext.javaVersion = 1.8
 
-archivesBaseName = 'jackfish-app-web'
+description = 'Plugin for WEB application'
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 dependencies {
-	compile project(':api')
-	compile ('org.seleniumhq.selenium:selenium-java:3.12.0') {
+	implementation project(':api')
+	
+	implementation ('org.seleniumhq.selenium:selenium-java:3.12.0') {
 		exclude group: 'xerces'
 	}
-	compile ('com.codeborne:phantomjsdriver:1.4.3')	{
+	implementation ('com.codeborne:phantomjsdriver:1.4.3')	{
 		exclude group: 'xerces'
 	}
 
-	compile group: 'log4j', name: 'log4j', version: '1.2.17'
-	compile group: 'org.jsoup', name: 'jsoup', version: '1.9.2'
+	implementation 'log4j:log4j:1.2.17' // TODO switch to either logback or log4j 2
+	implementation 'org.jsoup:jsoup:1.9.2'
 }
 
 jar {
 	manifest {
 		attributes(
 			'Main-class' : 'com.exactprosystems.jf.app.SeleniumRemoteApplication',
-			'Class-Path' : '.'
 		)
-	}
-	from { 
-		configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
-	}
-	from('META-INF') {
-		into 'META-INF'
-		include 'services/*.*' 
 	}
 }
 
-distribute.doLast {
-	copyTo(project, rootProject.appsDir)
+distribute {
+    dependsOn shadowJar
 }

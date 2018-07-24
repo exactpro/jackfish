@@ -7,38 +7,34 @@
  * This is unpublished, licensed software, confidential and proprietary
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
+
 description = 'Plugin for testing win based application'
-ext.jarName = 'win.jar'
-ext.javaVersion = 1.7
-sourceCompatibility = 1.7
 
-
-archivesBaseName = 'jackfish-app-win'
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 dependencies {
-	compile project(':api')
+	implementation project(':api')
 
-	compile group: 'log4j', name: 'log4j', version: '1.2.17'
-	compile group: 'net.java.dev.jna', name: 'jna', version: '4.2.2'
-
+	implementation 'log4j:log4j:1.2.17' // TODO switch to either logback or log4j 2
+	implementation 'net.java.dev.jna:jna:4.2.2'
 }
 
 jar {
 	manifest {
 		attributes(
 			'Main-class' : 'com.exactprosystems.jf.app.WinRemoteApplication',
-			'Class-Path' : '.'
 		)
 	}
-	from { 
-		configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
-	}
-	from('META-INF') {
-		into 'META-INF'
-		include 'services/*.*' 
-	}
-	
 }
-distribute.doLast {
-	copyTo(project, rootProject.appsDir)
+
+task copyUIAdapterDll(type: Copy) {
+    from project(':csharp:UIAdapter').tasks.msbuild
+    into 'resources/com/exactprosystems/jf/app/bin'
+}
+
+processResources.dependsOn copyUIAdapterDll
+
+distribute {
+    dependsOn shadowJar
 }
