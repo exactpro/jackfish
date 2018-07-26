@@ -7,6 +7,7 @@
  * This is unpublished, licensed software, confidential and proprietary
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
+
 description = "Core of JackFish"
 ext.jarName = "jackfish.jar"
 ext.javaVersion = 1.8;
@@ -16,13 +17,6 @@ compileJava.options.encoding = 'UTF-8'
 
 repositories {
 	mavenCentral()
-	
-	/*
-	maven {
-	    name "Maven 4.8 artifactory"
-	    url "https://repo.maven.apache.org/maven2/"
-	}
-	*/
 }
 
 dependencies {
