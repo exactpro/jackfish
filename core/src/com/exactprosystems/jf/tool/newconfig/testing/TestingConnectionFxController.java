@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
@@ -95,6 +96,7 @@ public class TestingConnectionFxController implements Initializable, ContainingP
 		dialog.setHeaderText(null);
 		dialog.setGraphic(new Label());
 		dialog.getDialogPane().getStylesheets().addAll(Theme.currentThemesPaths());
+		dialog.initModality(Modality.WINDOW_MODAL);
 		dialog.show();
 	}
 
