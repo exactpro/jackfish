@@ -7,6 +7,7 @@
  * This is unpublished, licensed software, confidential and proprietary
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
+
 plugins {
 	id 'java'
 	id 'maven'
@@ -123,17 +124,6 @@ subprojects {
 
 	clean << {
 		file(releaseDir).deleteDir()
-	}
-
-	sourceSets {
-		main {
-			java {
-				srcDir('src')
-			}
-			resources {
-				srcDir('resources')
-			}
-		}
 	}
 
 	eclipse {
@@ -348,7 +338,6 @@ task createTool(type: Zip) {
 		exclude(".*")
 		exclude("src")
 		exclude("bin")
-		exclude("resources")
 		exclude("reports/*")
 		exclude("logs")
 		exclude("remote_out.txt")

@@ -27,8 +27,6 @@ include	'core',
 		'mocks:swing',
 		'mocks:win',
 		'mocks:javafx',
-		//UIAdapter
-		'csharp:UIAdapter',
 		//clients
 		//'plugins:client:dts',
 		//'plugins:client:fix',

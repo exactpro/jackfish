@@ -7,10 +7,11 @@
  * This is unpublished, licensed software, confidential and proprietary
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
+
 description = "The shared API for plugins and code"
+
 ext {
 	jarName = "api.jar"
-	javaVersion = 1.8
 }
 
 archivesBaseName = 'jackfish-api'

@@ -8,10 +8,18 @@
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
 
-description = 'Plugin for testing win based application'
+description = 'Plugin for testing Win32 applications'
+
+import java.nio.file.Paths
+import com.ullink.Msbuild
+
+import static org.apache.tools.ant.taskdefs.condition.Os.*
 
 apply plugin: 'java'
+
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'com.ullink.msbuild'
+apply plugin: 'com.ullink.nuget'
 
 dependencies {
 	implementation project(':api')
@@ -20,20 +28,72 @@ dependencies {
 	implementation 'net.java.dev.jna:jna:4.2.2'
 }
 
-jar {
-	manifest {
-		attributes(
-			'Main-class' : 'com.exactprosystems.jf.app.WinRemoteApplication',
-		)
-	}
+def dllExportVersion = '1.6.0' // TODO get version from packages.config
+
+def dotNetSolutionDirectory = Paths.get('src', 'main', 'dotnet')
+
+nugetRestore {
+    workingDir = dotNetSolutionDirectory
+}
+
+task copyDllExportBat(type: Copy) {
+    dependsOn nugetRestore
+    
+    from dotNetSolutionDirectory.resolve(Paths.get('packages', "DllExport.${dllExportVersion}", 'DllExport.bat'))
+    into dotNetSolutionDirectory
+}
+
+class CSharpLibraryBuild extends Msbuild {
+
+    @InputFiles
+    Iterable<File> getSourceFiles() {
+        this.project.fileTree(this.project.file(this.projectFile).parentFile) {
+            include '**/*.cs'
+            include '*.csproj'
+            exclude 'obj/**'
+            exclude 'bin/**'
+        }
+    }
+    
+    @OutputFiles
+    Iterable<File> getOutputFiles() {
+        def projectFile = this.project.file(this.projectFile)
+        def projectDirName = projectFile.parent
+        def projectName = projectFile.name.replaceAll(/\..+/, '')
+        def output = this.project.files("$projectDirName/bin/$configuration/${projectName}.dll") 
+        if (this.configuration == 'Debug') {
+            output = output + this.project.files("$projectDirName/bin/$configuration/${projectName}.pdb")
+        }
+        return output
+    }
+}
+
+task csbuild(type: CSharpLibraryBuild) {
+    dependsOn copyDllExportBat
+    onlyIf { isFamily(FAMILY_WINDOWS) }
+    
+    projectFile = dotNetSolutionDirectory.resolve(Paths.get('UIAdapter', 'UIAdapter.csproj')).toString()
+    platform = 'x64'
+    configuration = 'Debug'
+    verbosity = 'detailed'
+    parameters.SolutionDir = file(dotNetSolutionDirectory).toString() + File.separator
+    ext["flp1"] = "LogFile=" + file("${name}.errors.log").path + ";ErrorsOnly;Verbosity=diag"
 }
 
 task copyUIAdapterDll(type: Copy) {
-    from project(':csharp:UIAdapter').tasks.csbuild
-    into 'resources/com/exactprosystems/jf/app/bin'
+    from csbuild
+    into 'src/main/resources/com/exactprosystems/jf/app/bin'
 }
 
 processResources.dependsOn copyUIAdapterDll
+
+jar {
+    manifest {
+        attributes(
+            'Main-class' : 'com.exactprosystems.jf.app.WinRemoteApplication',
+        )
+    }
+}
 
 distribute {
     dependsOn shadowJar
