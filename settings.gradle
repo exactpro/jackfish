@@ -17,20 +17,30 @@ pluginManagement {
 }
 
 include	'core',
-		'api',
+		'api'//,
 		//app plugins
+		/*
 		'plugins:app:javafx',
 		'plugins:app:web',
 		'plugins:app:swing',
 		'plugins:app:win',
+		*/
 		//app mocks
+		/*
 		'mocks:swing',
 		'mocks:win',
-		'mocks:javafx',
+		'mocks:javafx'//,
+		*/
 		//clients
 		//'plugins:client:dts',
 		//'plugins:client:fix',
 		//'plugins:client:sfclient',
 		//services
-		'plugins:service:matrix'//,
+		//'plugins:service:matrix'//,
 		//'plugins:service:sailfish'
+['mocks', 'plugins/app', 'plugins/client', 'plugins/service'].each{pluginDir -> 
+    file(pluginDir).eachDir { dir ->
+        include dir.name
+        project(":${dir.name}").projectDir = dir
+    }
+}

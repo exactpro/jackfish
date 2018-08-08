@@ -34,6 +34,23 @@ configurations {
 
 repositories {
 	mavenCentral()
+    maven {
+			name "ExactproArtifactory"
+			url "http://arti.exactpro.com/libs-release/"
+		}
+		//*/
+		maven {
+			name "ArtifactoryLocal" //used for local builds
+			url "${project.rootDir}/artifactory"
+		}
+		/**/
+		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
+		/**/
+		maven {
+	    	name "Maven 4.8 artifactory"
+		    url "https://repo.maven.apache.org/maven2/"
+		}
+		//*/
 }
 
 dependencies {
@@ -66,8 +83,12 @@ project.ext {
 	coreProject	= 'core';
 
 	copyTo		= { Project proj, String dest ->
+	println "----------------------------copyTo"
+	println proj
+	println dest
 		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.archivesBaseName + '-' + proj.version + '.jar')
 		def d = Paths.get(dest + '/' + proj.ext.jarName)
+	println s +" -> "+d
 		Files.copy(s, d, StandardCopyOption.REPLACE_EXISTING)
 	}
 }
@@ -109,6 +130,23 @@ subprojects {
 	def buildDir = dir('/build');
 
 	repositories {
+    maven {
+			name "ExactproArtifactory"
+			url "http://arti.exactpro.com/libs-release/"
+		}
+		//*/
+		maven {
+			name "ArtifactoryLocal" //used for local builds
+			url "${project.rootDir}/artifactory"
+		}
+		/**/
+		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
+		/**/
+		maven {
+	    	name "Maven 4.8 artifactory"
+		    url "https://repo.maven.apache.org/maven2/"
+		}
+		//*/
 		mavenCentral()
 	}
 	
@@ -149,6 +187,7 @@ subprojects {
 	}
 
 	task distribute() { // TODO implement distribute.doLast for all plugins which need it
+	println "distribute"
 		dependsOn clean, jar
 	}
 	
@@ -300,15 +339,21 @@ task getSeleniumDrivers {
 }
 
 task copyData(type: Copy) {
+println "--- make tool"
 	dependsOn makeTool
+println "--- getSeleniumDrivers"
 	dependsOn getSeleniumDrivers
 	
 	destinationDir = project(':core').projectDir
+
+println "--- copy configurations.sqlData"
 
 	into ('sql') {
 		from configurations.sqlData
 	}
 	
+println "--- copy seleniumDir"
+
 	into ('apps') {
 	    from seleniumDir
 	}

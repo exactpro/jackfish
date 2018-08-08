@@ -32,5 +32,6 @@ jar {
 }
 
 distribute.doLast {
+println "--- copyTo "+project+" === "+rootProject.servicesDir
 	copyTo(project, rootProject.servicesDir)
 }
