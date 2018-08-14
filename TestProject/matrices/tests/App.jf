@@ -1,12 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2009-2018, Exactpro Systems LLC
 // www.exactpro.com
 // Build Software to Test Software
-//
+// 
 // All rights reserved.
 // This is unpublished, licensed software, confidential and proprietary
 // information which is the property of Exactpro Systems LLC or its licensors.
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 #TestCase;#Kind;#Depends;#For
 Prepare;;;
     #Id;#Global;#Let
@@ -810,8 +810,8 @@ Application Resize;;;
 
     #EndStep
 
-    #Step;#Kind;#For;#Depends
-    'Negative';;;
+    #Off;#Step;#Kind;#For;#Depends
+    1;'Negative';;;
         #Id;#Action;#Assert;$AppConnection
         APPSZ2;ApplicationResize;This.Result == Result.Failed && This.Kind == ErrorKind.EMPTY_PARAMETER;
 
