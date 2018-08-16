@@ -23,7 +23,6 @@ include	'core',
     file(pluginDir).eachDirMatch(~/^((?!\.|bin|build).)+$/) { dir ->
     	if (new File(dir.path+'/build.gradle').exists()) {
         	def projectName = ":"+pluginDir.replace(/\//, ":")+":"+dir.name;
-        	println "(((((( configure names: "+projectName
         	include projectName
         	project(projectName).projectDir = dir
         }
