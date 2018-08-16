@@ -83,13 +83,13 @@ project.ext {
 	coreProject	= 'core';
 
 	copyTo		= { Project proj, String dest ->
-	println "----------------------------copyTo"
-	println proj
-	println dest
+		println "----------------------------copyTo"
+		println proj
+		println dest
 		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.archivesBaseName + '-' + proj.version + '.jar')
 		def d = Paths.get(dest + '/' + proj.ext.jarName)
-	println s +" -> "+d
-		Files.copy(s, d, StandardCopyOption.REPLACE_EXISTING)
+		println s +" -> "+d
+		//Files.copy(s, d, StandardCopyOption.REPLACE_EXISTING)
 	}
 }
 
@@ -366,8 +366,49 @@ configure(subprojects.findAll { it.path ==~ /\:plugins\:app\:.+/ }) {
 			into ('apps') {
 			    from pluginProject.tasks.shadowJar
 			}
-			rename ~/${pluginProject.name}-.+-all\.jar/, "${pluginProject.name}.jar"
+			rename '(.+)-([^-]+)-([^-]+)-all\\.jar', '$1.jar'
 	    }
+	}
+}
+
+configure(subprojects.findAll { it.path ==~ /\:plugins\:client\:.+/ }) {
+    println "CCCCCC 3 === rootProject.copyData (${it.path})  "
+    afterEvaluate { Project pluginProject ->
+	    rootProject.copyData {
+			into ('clients') {
+		    	println "XXXXX 3 === rootProject.copyData (${pluginProject.name}.jar)  "//+it.path
+				from pluginProject.tasks.shadowJar
+			}
+			rename '(.+)-([^-]+)-([^-]+)-all\\.jar', '$1.jar'
+		}
+	}
+}
+
+configure(subprojects.findAll { it.path ==~ /\:plugins\:service\:.+/ }) {
+    println "CCCCCC 4 === rootProject.copyData (${it.path})  "
+    afterEvaluate { Project pluginProject ->
+	    rootProject.copyData {
+			into ('services') {
+		    	println "XXXXX 4 === rootProject.copyData (${pluginProject.name}.jar)  "//+it.path
+				from pluginProject.tasks.shadowJar
+			}
+			rename '(.+)-([^-]+)-([^-]+)-all\\.jar', '$1.jar'
+		}
+	}
+}
+
+configure(subprojects.findAll { it.path ==~ /\:mocks\:.+/ }) {
+    println "BBBBBB 5 === rootProject.copyData (${it.path})  "
+    afterEvaluate { Project pluginProject ->
+	    copy {
+	    	//destinationDir = new File("${pluginProject.rootProject.rootDir.path}/mocks/")
+			//into (new File("\${rootProject.rootDir.path}/mocks/\${pluginProject.name}")) {
+			into (pluginProject.rootProject.rootDir.path+"/mocks/"+pluginProject.name) {
+		    	//println "WWWWWW 5 === rootProject.copyData (${pluginProject.name}.jar)  "+pluginProject.tasks.shadowJar.archivePath
+				from pluginProject.tasks.shadowJar
+			}
+			rename '(.+)-([^-]+)-([^-]+)-all\\.jar', '$1.jar'
+		}
 	}
 }
 

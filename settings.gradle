@@ -17,30 +17,15 @@ pluginManagement {
 }
 
 include	'core',
-		'api'//,
-		//app plugins
-		/*
-		'plugins:app:javafx',
-		'plugins:app:web',
-		'plugins:app:swing',
-		'plugins:app:win',
-		*/
-		//app mocks
-		/*
-		'mocks:swing',
-		'mocks:win',
-		'mocks:javafx'//,
-		*/
-		//clients
-		//'plugins:client:dts',
-		//'plugins:client:fix',
-		//'plugins:client:sfclient',
-		//services
-		//'plugins:service:matrix'//,
-		//'plugins:service:sailfish'
+		'api'
+
 ['mocks', 'plugins/app', 'plugins/client', 'plugins/service'].each{pluginDir -> 
-    file(pluginDir).eachDir { dir ->
-        include dir.name
-        project(":${dir.name}").projectDir = dir
+    file(pluginDir).eachDirMatch(~/^((?!\.|bin|build).)+$/) { dir ->
+    	if (new File(dir.path+'/build.gradle').exists()) {
+        	def projectName = ":"+pluginDir.replace(/\//, ":")+":"+dir.name;
+        	println "(((((( configure names: "+projectName
+        	include projectName
+        	project(projectName).projectDir = dir
+        }
     }
 }

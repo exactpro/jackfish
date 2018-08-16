@@ -8,8 +8,12 @@
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
 description = "Swing Mock"
-ext.jarName = "mock_swing.jar"
 ext.javaVersion = 1.7;
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+archivesBaseName = 'mock_swing'
 
 dependencies {
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'
@@ -31,7 +35,6 @@ jar {
     }
 }
 
-distribute.doLast {
-println "--- copyTo "+project+" === "+rootProject.rootDir.path + '/mocks/swing'
-    copyTo(project, rootProject.rootDir.path + '/mocks/swing')
+distribute {
+	dependsOn shadowJar
 }

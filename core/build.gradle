@@ -77,7 +77,3 @@ jar {
 	exclude ('**/*.SF')
 
 }
-distribute.doLast {
-println "--- copyTo "+project+" === "+rootProject.jfSourceDir
-	rootProject.copyTo(project, rootProject.jfSourceDir)
-}

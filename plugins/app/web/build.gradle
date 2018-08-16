@@ -36,5 +36,5 @@ jar {
 }
 
 distribute {
-    dependsOn shadowJar
+	dependsOn shadowJar
 }
