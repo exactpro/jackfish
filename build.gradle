@@ -312,7 +312,6 @@ task copyData(type: Copy) {
 	into ('apps') {
 		from seleniumDir
 	}
-	rename '(.+)-[^-]+-SNAPSHOT-all\\.jar', '$1.jar'
 	fileMode 0755
 }
 
