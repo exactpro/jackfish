@@ -20,7 +20,7 @@ include	'core',
 		'api'
 
 ['mocks', 'plugins/app', 'plugins/client', 'plugins/service'].each{pluginDir -> 
-    file(pluginDir).eachDirMatch(~/^((?!\.|bin|build).)+$/) { dir ->
+    file(pluginDir).eachDir() { dir ->
     	if (new File(dir.path, 'build.gradle').exists()) {
 			include ":"+java.nio.file.Paths.get(pluginDir, dir.name).toList().join(":")
         }

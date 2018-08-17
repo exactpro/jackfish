@@ -312,14 +312,22 @@ task copyData(type: Copy) {
 	into ('apps') {
 		from seleniumDir
 	}
-	rename '(.+)-[^-]+-[^-]+-all\\.jar', '$1.jar'
+	rename '(.+)-[^-]+-SNAPSHOT-all\\.jar', '$1.jar'
+	fileMode 0755
+}
+
+task copyPlugins(type: Copy) {
+
+	destinationDir = project(':core').projectDir
+
+	rename '(.+)-[^-]+-SNAPSHOT-all\\.jar', '$1.jar'
 	fileMode 0755
 }
 
 task copyMocks(type: Copy) {
 	
 	destinationDir = project(':mocks').projectDir
-	rename '(.+)-[^-]+-[^-]+-all\\.jar', '$1.jar'
+	rename '(.+)-[^-]+-SNAPSHOT-all\\.jar', '$1.jar'
 
 	fileMode 0755
 }
@@ -336,7 +344,7 @@ configure(subprojects.findAll { it.path ==~ /\:plugins\:app\:.+/ }) {
 
 configure(subprojects.findAll { it.path ==~ /\:plugins\:client\:.+/ }) {
 	afterEvaluate { Project pluginProject ->
-		rootProject.copyData {
+		rootProject.copyPlugins {
 			into ('clients') {
 				from pluginProject.tasks.shadowJar
 			}
@@ -346,7 +354,7 @@ configure(subprojects.findAll { it.path ==~ /\:plugins\:client\:.+/ }) {
 
 configure(subprojects.findAll { it.path ==~ /\:plugins\:service\:.+/ }) {
 	afterEvaluate { Project pluginProject ->
-		rootProject.copyData {
+		rootProject.copyPlugins {
 			into ('services') {
 				from pluginProject.tasks.shadowJar
 			}
@@ -368,6 +376,7 @@ configure(subprojects.findAll { it.path ==~ /\:mocks\:.+/ }) {
 
 task createTool(type: Zip) {
 	dependsOn copyData
+	dependsOn copyPlugins
 	dependsOn copyMocks
 
 	destinationDir = file('.')

@@ -16,10 +16,6 @@ archivesBaseName = 'jackfish-core'
 compileJava.options.encoding = 'UTF-8'
 
 repositories {
-    maven {
-			name "ExactproArtifactory"
-			url "http://arti.exactpro.com/libs-release/"
-	}
 	mavenCentral()
 }
 
