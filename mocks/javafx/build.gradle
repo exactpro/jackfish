@@ -8,8 +8,12 @@
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
 description = "JavaFx Mock"
-ext.jarName = "mock_javafx.jar"
 ext.javaVersion = 1.8
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+archivesBaseName = 'mock_javafx'
 
 dependencies {
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'
@@ -31,6 +35,6 @@ jar {
     }
 }
 
-distribute.doLast {
-    copyTo(project, rootProject.rootDir.path + '/mocks/javafx')
+distribute {
+    dependsOn shadowJar
 }

@@ -8,7 +8,11 @@
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
 description = 'Plugin for service matrix'
-ext.jarName = 'test.jar'
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+archivesBaseName = 'test'
 
 dependencies {
 	compile project(':api')
@@ -31,6 +35,6 @@ jar {
 	}
 }
 
-distribute.doLast {
-	copyTo(project, rootProject.servicesDir)
+distribute {
+	dependsOn shadowJar
 }

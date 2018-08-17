@@ -60,6 +60,3 @@ jar {
 	exclude ('**/*.SF')
 
 }
-distribute.doLast {
-	rootProject.copyTo(project, rootProject.jfSourceDir)
-}

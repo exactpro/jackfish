@@ -64,12 +64,6 @@ project.ext {
 	reportsDir	= jfSourceDir + '/reports';
 	sharedDir   = file("${project.rootDir}/shared");
 	coreProject	= 'core';
-
-	copyTo		= { Project proj, String dest ->
-		def s = Paths.get(proj.buildDir.path + '/libs/' + proj.archivesBaseName + '-' + proj.version + '.jar')
-		def d = Paths.get(dest + '/' + proj.ext.jarName)
-		Files.copy(s, d, StandardCopyOption.REPLACE_EXISTING)
-	}
 }
 
 
@@ -80,11 +74,11 @@ allprojects {
 			revision = '00000' // mark local builds
 		}
 		if (!project.hasProperty('build_number')) {
-	    	build_number = '0000' // mark local builds
+			build_number = '0000' // mark local builds
 		}
 		if (!project.hasProperty('git_hash')) {
-	        git_hash = 'local_build'
-	    }
+			git_hash = 'local_build'
+		}
 	}
 }
 
@@ -109,32 +103,37 @@ subprojects {
 	def buildDir = dir('/build');
 
 	repositories {
+		
+		maven {
+			name "ArtifactoryLocal" //used for local builds
+			url "${project.rootDir}/artifactory"
+		}
 		mavenCentral()
 	}
 	
 	buildscript { // artifacrory plugin
-	    configurations.all {
-	       resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-	    }
+		configurations.all {
+		   resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+		}
 	}
 
 	configurations.all {
-       resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-    }
+	   resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	}
 
 	clean << {
 		file(releaseDir).deleteDir()
 	}
 
 	eclipse {
-	    classpath {
-	        file {
-	            whenMerged {
-	                def jre = entries.find { it.path.contains 'org.eclipse.jdt.launching.JRE_CONTAINER' }
-	                jre.accessRules.add(new AccessRule('3', '**'))
-	            }
-	        }
-	    }
+		classpath {
+			file {
+				whenMerged {
+					def jre = entries.find { it.path.contains 'org.eclipse.jdt.launching.JRE_CONTAINER' }
+					jre.accessRules.add(new AccessRule('3', '**'))
+				}
+			}
+		}
 	}
 
 	idea {
@@ -153,31 +152,31 @@ subprojects {
 	}
 	
 	jar {
-    	manifest {
-        	attributes('Implementation-Version': "${revision}")
-        	attributes('Git_Hash': "${git_hash}")
-        }
-    }
+		manifest {
+			attributes('Implementation-Version': "${revision}")
+			attributes('Git_Hash': "${git_hash}")
+		}
+	}
 
 	uploadArchives {
-	    repositories.mavenDeployer {
-	        uniqueVersion = false // publish non unique snapshots to local repository
-	        repository(url: "file://${sharedDir}")
-	        doLast {
-		    // Remove any invalid maven-metadata.xml files that may have been created
-		    // for SNAPSHOT versions that are *not* uniquely versioned.
-			    pom*.each { pom ->
-			        if (pom.version.endsWith('-SNAPSHOT')) {
-			            final File artifactDir = new File(rootProject.ext.sharedDir,
-			                    pom.groupId.replace('.', '/')
-			                    + '/' + pom.artifactId
-			                    + '/' + pom.version)
-			            delete fileTree(dir: artifactDir, include: 'maven-metadata.xml*')
-			        }
-			    }
+		repositories.mavenDeployer {
+			uniqueVersion = false // publish non unique snapshots to local repository
+			repository(url: "file://${sharedDir}")
+			doLast {
+			// Remove any invalid maven-metadata.xml files that may have been created
+			// for SNAPSHOT versions that are *not* uniquely versioned.
+				pom*.each { pom ->
+					if (pom.version.endsWith('-SNAPSHOT')) {
+						final File artifactDir = new File(rootProject.ext.sharedDir,
+								pom.groupId.replace('.', '/')
+								+ '/' + pom.artifactId
+								+ '/' + pom.version)
+						delete fileTree(dir: artifactDir, include: 'maven-metadata.xml*')
+					}
+				}
 			}
-	    }
-	    doFirst { sharedDir.mkdirs() }
+		}
+		doFirst { sharedDir.mkdirs() }
 	}
 }
 
@@ -198,108 +197,109 @@ def linuxDriversDir = new File (seleniumDir, 'unix')
 def windowsDriversDir = new File(seleniumDir, 'win')
 
 task getChromeDrivers << {
-    def baseUrl = "https://chromedriver.storage.googleapis.com/${chromeDriverVersion}"
-    
-    [   [ os: 'linux64', dest: linuxDriversDir ],
-        [ os: 'mac64', dest: macDriversDir ],
-        [ os: 'win32', dest: windowsDriversDir ]
-    ].each { spec ->
-        def archiveName = "chromedriver_${spec.os}.zip"
-    
-	    download {
-	        src "${baseUrl}/${archiveName}"
-	        dest buildDir
-	        overwrite false
-	    }
+	def baseUrl = "https://chromedriver.storage.googleapis.com/${chromeDriverVersion}"
 	
-	    copy {
-	        from zipTree(new File(buildDir, archiveName))
-	        include 'chromedriver'
-	        include 'chromedriver.*'
-	        into spec.dest
-	        rename ~/^chromedriver(|\..+)$/, "chromedriver_${chromeDriverVersion}\$1"
-	    }
-    }
+	[   [ os: 'linux64', dest: linuxDriversDir ],
+		[ os: 'mac64', dest: macDriversDir ],
+		[ os: 'win32', dest: windowsDriversDir ]
+	].each { spec ->
+		def archiveName = "chromedriver_${spec.os}.zip"
+
+		download {
+			src "${baseUrl}/${archiveName}"
+			dest buildDir
+			overwrite false
+		}
+	
+		copy {
+			from zipTree(new File(buildDir, archiveName))
+			include 'chromedriver'
+			include 'chromedriver.*'
+			into spec.dest
+			rename ~/^chromedriver(|\..+)$/, "chromedriver_${chromeDriverVersion}\$1"
+		}
+	}
 }
 
 task getGeckoDrivers << {
-    def baseUrl = "https://github.com/mozilla/geckodriver/releases/download/v${geckoDriverVersion}"
-    
-    [   [ os: 'linux32', dest: linuxDriversDir, format: 'tgz' ],
-        [ os: 'linux64', dest: linuxDriversDir, format: 'tgz'  ],
-        [ os: 'macos', dest: macDriversDir, format: 'tgz'  ],
-        [ os: 'win32', dest: windowsDriversDir ],
-        [ os: 'win64', dest: windowsDriversDir ]
-    ].each { spec ->
-        def format = spec.get('format', 'zip') 
-        String ext
-        switch (format) {
-            case 'zip':
-                ext = 'zip'
-                break
-            case 'tgz':
-                ext = 'tar.gz'
-                break
-        }
-        def archiveName = "geckodriver-v${geckoDriverVersion}-${spec.os}.${ext}"
-    
-	    download {
-	        src "${baseUrl}/${archiveName}"
-	        dest buildDir
-	        overwrite false
-	    }
+	def baseUrl = "https://github.com/mozilla/geckodriver/releases/download/v${geckoDriverVersion}"
 	
-	    def archiveFile = new File(buildDir, archiveName)
-	    copy {
-	        switch (format) {
-	            case 'zip':
-	                from zipTree(archiveFile)
-	                break
-	            case 'tgz':
-	                from tarTree(archiveFile)
-	                break
-	        }
-	        include 'geckodriver'
-	        include 'geckodriver.*'
-	        into spec.dest
-	        rename ~/^geckodriver(|\..+)$/, "geckodriver-v${geckoDriverVersion}-${spec.os}\$1"
-	    }
-    }
+	[   [ os: 'linux32', dest: linuxDriversDir, format: 'tgz' ],
+		[ os: 'linux64', dest: linuxDriversDir, format: 'tgz'  ],
+		[ os: 'macos', dest: macDriversDir, format: 'tgz'  ],
+		[ os: 'win32', dest: windowsDriversDir ],
+		[ os: 'win64', dest: windowsDriversDir ]
+	].each { spec ->
+		def format = spec.get('format', 'zip') 
+		String ext
+		switch (format) {
+			case 'zip':
+				ext = 'zip'
+				break
+			case 'tgz':
+				ext = 'tar.gz'
+				break
+		}
+		def archiveName = "geckodriver-v${geckoDriverVersion}-${spec.os}.${ext}"
+	
+		download {
+			src "${baseUrl}/${archiveName}"
+			dest buildDir
+			overwrite false
+		}
+	
+		def archiveFile = new File(buildDir, archiveName)
+		copy {
+			switch (format) {
+				case 'zip':
+					from zipTree(archiveFile)
+					break
+				case 'tgz':
+					from tarTree(archiveFile)
+					break
+			}
+			include 'geckodriver'
+			include 'geckodriver.*'
+			into spec.dest
+			rename ~/^geckodriver(|\..+)$/, "geckodriver-v${geckoDriverVersion}-${spec.os}\$1"
+		}
+	}
 }
 
 task getIEDrivers << {
-    def ieDriverFolder = ieDriverVersion.split('\\.')[0..1].join('.')
-    def baseUrl = "https://selenium-release.storage.googleapis.com/${ieDriverFolder}"
-    def ieDriverExeName = 'IEDriverServer.exe'
-    
-    [   [ os: 'Win32', dest: windowsDriversDir ],
-        [ os: 'x64', dest: windowsDriversDir ]
-    ].each { spec ->
-        def archiveName = "IEDriverServer_${spec.os}_${ieDriverVersion}.zip"
-    
-	    download {
-	        src "${baseUrl}/${archiveName}"
-	        dest buildDir
-	        overwrite false
-	    }
+	def ieDriverFolder = ieDriverVersion.split('\\.')[0..1].join('.')
+	def baseUrl = "https://selenium-release.storage.googleapis.com/${ieDriverFolder}"
+	def ieDriverExeName = 'IEDriverServer.exe'
 	
-	    copy {
-	        from zipTree(new File(buildDir, archiveName))
-	        include 'IEDriverServer'
-	        include 'IEDriverServer.*'
-	        into spec.dest
-	        rename ~/^IEDriverServer(|\..+)$/, "IEDriverServer_${spec.os}_${ieDriverVersion}\$1"
-	    }
-    }
+	[   [ os: 'Win32', dest: windowsDriversDir ],
+		[ os: 'x64', dest: windowsDriversDir ]
+	].each { spec ->
+		def archiveName = "IEDriverServer_${spec.os}_${ieDriverVersion}.zip"
+	
+		download {
+			src "${baseUrl}/${archiveName}"
+			dest buildDir
+			overwrite false
+		}
+	
+		copy {
+			from zipTree(new File(buildDir, archiveName))
+			include 'IEDriverServer'
+			include 'IEDriverServer.*'
+			into spec.dest
+			rename ~/^IEDriverServer(|\..+)$/, "IEDriverServer_${spec.os}_${ieDriverVersion}\$1"
+		}
+	}
 }
 
 task getSeleniumDrivers {
-    dependsOn getChromeDrivers
-    dependsOn getGeckoDrivers
-    dependsOn getIEDrivers
+	dependsOn getChromeDrivers
+	dependsOn getGeckoDrivers
+	dependsOn getIEDrivers
 }
 
 task copyData(type: Copy) {
+
 	dependsOn makeTool
 	dependsOn getSeleniumDrivers
 	
@@ -310,29 +310,77 @@ task copyData(type: Copy) {
 	}
 	
 	into ('apps') {
-	    from seleniumDir
+		from seleniumDir
 	}
 	fileMode 0755
 }
 
+task copyPlugins(type: Copy) {
+
+	destinationDir = project(':core').projectDir
+
+	rename '(.+)-[^-]+-SNAPSHOT-all\\.jar', '$1.jar'
+	fileMode 0755
+}
+
+task copyMocks(type: Copy) {
+	
+	destinationDir = project(':mocks').projectDir
+	rename '(.+)-[^-]+-SNAPSHOT-all\\.jar', '$1.jar'
+
+	fileMode 0755
+}
+
 configure(subprojects.findAll { it.path ==~ /\:plugins\:app\:.+/ }) {
-    afterEvaluate { Project pluginProject ->
-	    rootProject.copyData {
+	afterEvaluate { Project pluginProject ->
+		rootProject.copyData {
 			into ('apps') {
-			    from pluginProject.tasks.shadowJar
+				from pluginProject.tasks.shadowJar
 			}
-			rename ~/${pluginProject.name}-.+-all\.jar/, "${pluginProject.name}.jar"
-	    }
+		}
+	}
+}
+
+configure(subprojects.findAll { it.path ==~ /\:plugins\:client\:.+/ }) {
+	afterEvaluate { Project pluginProject ->
+		rootProject.copyPlugins {
+			into ('clients') {
+				from pluginProject.tasks.shadowJar
+			}
+		}
+	}
+}
+
+configure(subprojects.findAll { it.path ==~ /\:plugins\:service\:.+/ }) {
+	afterEvaluate { Project pluginProject ->
+		rootProject.copyPlugins {
+			into ('services') {
+				from pluginProject.tasks.shadowJar
+			}
+		}
+	}
+}
+
+configure(subprojects.findAll { it.path ==~ /\:mocks\:.+/ }) {
+	afterEvaluate { Project pluginProject ->
+		if (pluginProject.tasks.hasProperty('shadowJar')) {
+			rootProject.copyMocks {
+				into (pluginProject.name) {
+					from pluginProject.tasks.shadowJar
+				}
+			}
+		}
 	}
 }
 
 task createTool(type: Zip) {
 	dependsOn copyData
+	dependsOn copyPlugins
+	dependsOn copyMocks
 
 	destinationDir = file('.')
 	archiveName = 'build_' + rootProject.ext.version + '.zip'
 
-//    exclude('build_' + rootProject.ext.version + '.zip');
 	from (jfSourceDir) {
 		exclude("build*")
 		exclude(".*")

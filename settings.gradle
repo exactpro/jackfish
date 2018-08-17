@@ -17,20 +17,12 @@ pluginManagement {
 }
 
 include	'core',
-		'api',
-		//app plugins
-		'plugins:app:javafx',
-		'plugins:app:web',
-		'plugins:app:swing',
-		'plugins:app:win',
-		//app mocks
-		'mocks:swing',
-		'mocks:win',
-		'mocks:javafx',
-		//clients
-		//'plugins:client:dts',
-		//'plugins:client:fix',
-		//'plugins:client:sfclient',
-		//services
-		'plugins:service:matrix'//,
-		//'plugins:service:sailfish'
+		'api'
+
+['mocks', 'plugins/app', 'plugins/client', 'plugins/service'].each{pluginDir -> 
+    file(pluginDir).eachDir() { dir ->
+    	if (new File(dir, 'build.gradle').exists()) {
+			include ":"+java.nio.file.Paths.get(pluginDir, dir.name).toList().join(":")
+        }
+    }
+}
