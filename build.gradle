@@ -331,9 +331,19 @@ task copyMocks(type: Copy) {
 	fileMode 0755
 }
 
+configure(subprojects.findAll { it.path ==~ /\:core/ }) {
+	afterEvaluate { Project pluginProject ->
+		rootProject.copyPlugins {
+			into ('.') {
+				from pluginProject.tasks.shadowJar
+			}
+		}
+	}
+}
+
 configure(subprojects.findAll { it.path ==~ /\:plugins\:app\:.+/ }) {
 	afterEvaluate { Project pluginProject ->
-		rootProject.copyData {
+		rootProject.copyPlugins {
 			into ('apps') {
 				from pluginProject.tasks.shadowJar
 			}

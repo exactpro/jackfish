@@ -9,11 +9,12 @@
  ******************************************************************************/
 
 description = "Core of JackFish"
-ext.jarName = "jackfish.jar"
 ext.javaVersion = 1.8;
 
-archivesBaseName = 'jackfish-core'
 compileJava.options.encoding = 'UTF-8'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+archivesBaseName = 'jackfish'
 
 repositories {
 	mavenCentral()
@@ -59,4 +60,8 @@ jar {
 	exclude ('**/*.RSA')
 	exclude ('**/*.SF')
 
+}
+
+distribute {
+    dependsOn shadowJar
 }
