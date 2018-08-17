@@ -19,20 +19,7 @@ repositories {
     maven {
 			name "ExactproArtifactory"
 			url "http://arti.exactpro.com/libs-release/"
-		}
-		//*/
-		maven {
-			name "ArtifactoryLocal" //used for local builds
-			url "${project.rootDir}/artifactory"
-		}
-		/**/
-		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
-		/**/
-		maven {
-	    	name "Maven 4.8 artifactory"
-		    url "https://repo.maven.apache.org/maven2/"
-		}
-		//*/
+	}
 	mavenCentral()
 }
 

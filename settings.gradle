@@ -21,10 +21,8 @@ include	'core',
 
 ['mocks', 'plugins/app', 'plugins/client', 'plugins/service'].each{pluginDir -> 
     file(pluginDir).eachDirMatch(~/^((?!\.|bin|build).)+$/) { dir ->
-    	if (new File(dir.path+'/build.gradle').exists()) {
-        	def projectName = ":"+pluginDir.replace(/\//, ":")+":"+dir.name;
-        	include projectName
-        	project(projectName).projectDir = dir
+    	if (new File(dir.path, 'build.gradle').exists()) {
+			include ":"+java.nio.file.Paths.get(pluginDir, dir.name).toList().join(":")
         }
     }
 }

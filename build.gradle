@@ -34,23 +34,6 @@ configurations {
 
 repositories {
 	mavenCentral()
-	maven {
-			name "ExactproArtifactory"
-			url "http://arti.exactpro.com/libs-release/"
-		}
-		//*/
-		maven {
-			name "ArtifactoryLocal" //used for local builds
-			url "${project.rootDir}/artifactory"
-		}
-		/**/
-		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
-		/**/
-		maven {
-			name "Maven 4.8 artifactory"
-			url "https://repo.maven.apache.org/maven2/"
-		}
-		//*/
 }
 
 dependencies {
@@ -120,23 +103,11 @@ subprojects {
 	def buildDir = dir('/build');
 
 	repositories {
-	maven {
-			name "ExactproArtifactory"
-			url "http://arti.exactpro.com/libs-release/"
-		}
-		//*/
+		
 		maven {
 			name "ArtifactoryLocal" //used for local builds
 			url "${project.rootDir}/artifactory"
 		}
-		/**/
-		maven { url "http://arti.exactpro.com/libs-snapshot-local" }
-		/**/
-		maven {
-			name "Maven 4.8 artifactory"
-			url "https://repo.maven.apache.org/maven2/"
-		}
-		//*/
 		mavenCentral()
 	}
 	
@@ -341,22 +312,14 @@ task copyData(type: Copy) {
 	into ('apps') {
 		from seleniumDir
 	}
-	rename '(.+)-([^-]+)-([^-]+)-all\\.jar', '$1.jar'
-	fileMode 0755
-}
-
-task copyPlugins(type: Copy) {
-
-	destinationDir = project(':core').projectDir
-	rename '(.+)-([^-]+)-([^-]+)-all\\.jar', '$1.jar'
-
+	rename '(.+)-[^-]+-[^-]+-all\\.jar', '$1.jar'
 	fileMode 0755
 }
 
 task copyMocks(type: Copy) {
 	
 	destinationDir = project(':mocks').projectDir
-	rename '(.+)-([^-]+)-([^-]+)-all\\.jar', '$1.jar'
+	rename '(.+)-[^-]+-[^-]+-all\\.jar', '$1.jar'
 
 	fileMode 0755
 }
@@ -373,7 +336,7 @@ configure(subprojects.findAll { it.path ==~ /\:plugins\:app\:.+/ }) {
 
 configure(subprojects.findAll { it.path ==~ /\:plugins\:client\:.+/ }) {
 	afterEvaluate { Project pluginProject ->
-		rootProject.copyPlugins {
+		rootProject.copyData {
 			into ('clients') {
 				from pluginProject.tasks.shadowJar
 			}
@@ -383,7 +346,7 @@ configure(subprojects.findAll { it.path ==~ /\:plugins\:client\:.+/ }) {
 
 configure(subprojects.findAll { it.path ==~ /\:plugins\:service\:.+/ }) {
 	afterEvaluate { Project pluginProject ->
-		rootProject.copyPlugins {
+		rootProject.copyData {
 			into ('services') {
 				from pluginProject.tasks.shadowJar
 			}
@@ -394,7 +357,7 @@ configure(subprojects.findAll { it.path ==~ /\:plugins\:service\:.+/ }) {
 configure(subprojects.findAll { it.path ==~ /\:mocks\:.+/ }) {
 	afterEvaluate { Project pluginProject ->
 		if (pluginProject.tasks.hasProperty('shadowJar')) {
-			rootProject.copyPlugins {
+			rootProject.copyMocks {
 				into (pluginProject.name) {
 					from pluginProject.tasks.shadowJar
 				}
@@ -405,7 +368,6 @@ configure(subprojects.findAll { it.path ==~ /\:mocks\:.+/ }) {
 
 task createTool(type: Zip) {
 	dependsOn copyData
-	dependsOn copyPlugins
 	dependsOn copyMocks
 
 	destinationDir = file('.')
