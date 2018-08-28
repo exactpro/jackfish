@@ -70,7 +70,7 @@
         <name>WEB_Unix</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>unix/chromedriver-linux-2.37-x64.</value>
+            <value>unix/chromedriver_2.40</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
@@ -102,7 +102,7 @@
         </parameters>
         <parameters>
             <key>GeckoDriverPath</key>
-            <value>unix/geckodriver-linux-0.19.1-x64.</value>
+            <value>unix/geckodriver-v0.21.0-linux64</value>
         </parameters>
         <parameters>
             <key>LogLevel</key>
@@ -122,11 +122,11 @@
         <name>WEB_Windows</name>
         <parameters>
             <key>ChromeDriverPath</key>
-            <value>win/chromedriver-win-2.37-x86.exe</value>
+            <value>win/chromedriver_2.40.exe</value>
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
-            <value>win/iedriverserver-3.8.0-x64.exe</value>
+            <value>win/IEDriverServer_x64_3.13.0.exe</value>
         </parameters>
         <parameters>
             <key>ChromeDriverBinary</key>
@@ -154,7 +154,7 @@
         </parameters>
         <parameters>
             <key>GeckoDriverPath</key>
-            <value>win/geckodriver-win-0.19.1-x64.exe</value>
+            <value>win/geckodriver-v0.21.0-win64.exe</value>
         </parameters>
         <parameters>
             <key>LogLevel</key>
