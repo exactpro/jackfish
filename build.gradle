@@ -168,6 +168,16 @@ subprojects {
 
 	repositories {
 		maven {
+			name "ExactproNewArtifactory"
+			url "http://artifactory5.exp.exactpro.com/artifactory/list/libs-release/"
+		}
+
+		maven {
+			name "ExactproNewArtifactory"
+			url "http://artifactory5.exp.exactpro.com/artifactory/list/libs-snapshot-local/"
+		}
+
+		maven {
 			name "ExactproArtifactory"
 			url "http://arti.exactpro.com/libs-release/"
 		}
@@ -258,6 +268,15 @@ subprojects {
 	    doFirst { sharedDir.mkdirs() }
 	}
 }
+
+//project(":plugins:client:sfclient") {
+//	repositories {
+//		maven {
+//			name "ExactproArtifactory"
+//			url "http://artifactory5.exp.exactpro.com/list-release"
+//		}
+//	}
+//}
 
 task makeTool() {
 	subprojects.each {
