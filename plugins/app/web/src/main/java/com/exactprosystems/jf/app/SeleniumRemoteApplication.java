@@ -10,15 +10,40 @@
 
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.common.Converter;
-import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-import com.exactprosystems.jf.api.error.app.TimeoutException;
-import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
-import org.apache.log4j.*;
-import org.openqa.selenium.*;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.GeckoDriverService;
@@ -29,18 +54,27 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.imageio.ImageIO;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
+import com.exactprosystems.jf.api.app.CheckingLayoutResult;
+import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.CookieBean;
+import com.exactprosystems.jf.api.app.IRemoteApplication;
+import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.app.LocatorAndOperation;
+import com.exactprosystems.jf.api.app.NavigateKind;
+import com.exactprosystems.jf.api.app.Operation;
+import com.exactprosystems.jf.api.app.OperationResult;
+import com.exactprosystems.jf.api.app.PerformKind;
+import com.exactprosystems.jf.api.app.PluginInfo;
+import com.exactprosystems.jf.api.app.RemoteApplication;
+import com.exactprosystems.jf.api.app.Resize;
+import com.exactprosystems.jf.api.app.Spec;
+import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
+import com.exactprosystems.jf.api.error.app.TimeoutException;
+import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
 
 public class SeleniumRemoteApplication extends RemoteApplication
 {

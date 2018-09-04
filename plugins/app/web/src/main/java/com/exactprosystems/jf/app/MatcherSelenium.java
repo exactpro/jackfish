@@ -10,6 +10,11 @@
 
 package com.exactprosystems.jf.app;
 
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
@@ -21,9 +26,6 @@ import com.exactprosystems.jf.api.app.LocatorFieldKind;
 import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.app.Visibility;
 import com.exactprosystems.jf.api.error.app.NullParameterException;
-
-import java.rmi.RemoteException;
-import java.util.*;
 
 public class MatcherSelenium extends By
 {

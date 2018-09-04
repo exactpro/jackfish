@@ -10,14 +10,22 @@
 
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.w3c.dom.Node;
+
+import com.exactprosystems.jf.api.app.AbstractApplicationFactory;
+import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.IApplication;
+import com.exactprosystems.jf.api.app.LocatorFieldKind;
+import com.exactprosystems.jf.api.app.PluginInfo;
 import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
 import com.exactprosystems.jf.api.common.i18n.R;
-import org.w3c.dom.Node;
-
-import java.util.*;
 
 @PluginDescription(
 		pluginName = "WEB",

@@ -10,20 +10,36 @@
 
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.app.*;
-import com.exactprosystems.jf.api.client.ICondition;
-import com.exactprosystems.jf.api.common.Converter;
-import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
-import com.exactprosystems.jf.api.error.app.TooManyElementsException;
-import com.exactprosystems.jf.api.error.app.WrongParameterException;
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.io.ByteArrayInputStream;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.imageio.ImageIO;
+
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -31,16 +47,19 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import javax.imageio.ImageIO;
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.io.ByteArrayInputStream;
-import java.rmi.RemoteException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.exactprosystems.jf.api.app.AbstractOperationExecutor;
+import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.Keyboard;
+import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.app.MouseAction;
+import com.exactprosystems.jf.api.app.ValueAndColor;
+import com.exactprosystems.jf.api.client.ICondition;
+import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
+import com.exactprosystems.jf.api.error.app.ElementNotFoundException;
+import com.exactprosystems.jf.api.error.app.TooManyElementsException;
+import com.exactprosystems.jf.api.error.app.WrongParameterException;
 
 public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElement>
 {

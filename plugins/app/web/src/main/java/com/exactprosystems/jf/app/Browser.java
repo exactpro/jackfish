@@ -10,8 +10,10 @@
 
 package com.exactprosystems.jf.app;
 
-import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api.common.i18n.R;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -27,9 +29,8 @@ import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
 
 public enum Browser
 {
