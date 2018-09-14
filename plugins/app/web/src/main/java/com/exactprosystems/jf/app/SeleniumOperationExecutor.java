@@ -43,6 +43,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -83,11 +84,15 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	private boolean isControlDown = false;
 	private boolean isControlPressed = false;
 
+	private int majorVersion;
+	private int minorVersion;
+
 	public SeleniumOperationExecutor(WebDriverListenerNew driver, Logger logger, boolean useTrimText)
 	{
 		super(useTrimText);
 		this.driver = driver;
 		this.logger = logger;
+		parseDriverVersion();
 	}
 
 	@Override
@@ -196,6 +201,11 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				}
 				else
 				{
+					if ((this.driver.getWrappedDriver() instanceof InternetExplorerDriver)
+							&& this.majorVersion >= 3 && this.minorVersion > 8)
+					{
+						x2 = x2-drag.getSize().width/2;
+					}
 					actions.moveToElement(drop, x2, y2);
 				}
 				actions.release().perform();
@@ -2118,6 +2128,23 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			throw new Exception(R.SELENIUM_OPERATION_EXECUTOR_CANT_FIND_TAG_IN_TABLE.get());
 		}
 		return first.children();
+	}
+
+	private void parseDriverVersion()
+	{
+		String driver = System.getProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY);
+		if (!Str.IsNullOrEmpty(driver))
+		{
+			String[] arr = driver.split("_");
+			String[] version = arr[arr.length-1].split("\\.");
+			try {
+				this.majorVersion = Integer.parseInt(version[0]);
+				this.minorVersion = Integer.parseInt(version[1]);
+			} catch(NumberFormatException e)
+			{
+				this.logger.error("Invalid driver version: "+arr[arr.length-1]);
+			}
+		}
 	}
 
 	private CharSequence getKey(Keyboard keyboard)
