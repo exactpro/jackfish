@@ -43,7 +43,7 @@ dependencies {
 	sqlData(group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.1.0.jre8', transitive : false)
 }
 
-def ieDriverVersion = '3.13.0'
+def ieDriverVersion = '3.14.0'
 def chromeDriverVersion = '2.40'
 def geckoDriverVersion = '0.21.0'
 

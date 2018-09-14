@@ -92,7 +92,6 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 		super(useTrimText);
 		this.driver = driver;
 		this.logger = logger;
-		parseDriverVersion();
 	}
 
 	@Override
@@ -201,10 +200,14 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				}
 				else
 				{
-					if ((this.driver.getWrappedDriver() instanceof InternetExplorerDriver)
-							&& this.majorVersion >= 3 && this.minorVersion > 8)
+					if (this.driver.getWrappedDriver() instanceof InternetExplorerDriver)
 					{
-						x2 = x2-drag.getSize().width/2;
+						obtainDriverVersion();
+						if(hasPositionBug())
+						{
+							x2 = x2-drag.getSize().width/2;
+							y2 = y2-drag.getSize().height/2;
+						}
 					}
 					actions.moveToElement(drop, x2, y2);
 				}
@@ -2130,21 +2133,32 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 		return first.children();
 	}
 
-	private void parseDriverVersion()
+	private void obtainDriverVersion() throws Exception
 	{
-		String driver = System.getProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY);
-		if (!Str.IsNullOrEmpty(driver))
+		if (this.majorVersion == 0 && this.minorVersion == 0)
 		{
+			String driver = System.getProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY);
+			if (Str.IsNullOrEmpty(driver))
+			{
+				throw new Exception("Internet Explorer driver name is expected");
+			}
 			String[] arr = driver.split("_");
 			String[] version = arr[arr.length-1].split("\\.");
-			try {
+			try
+			{
 				this.majorVersion = Integer.parseInt(version[0]);
 				this.minorVersion = Integer.parseInt(version[1]);
-			} catch(NumberFormatException e)
+			}
+			catch(NumberFormatException e)
 			{
-				this.logger.error("Invalid driver version: "+arr[arr.length-1]);
+				throw new Exception("Invalid driver version: "+arr[arr.length-1]);
 			}
 		}
+	}
+	
+	private boolean hasPositionBug()
+	{
+		return this.majorVersion >= 3 && this.minorVersion > 8;
 	}
 
 	private CharSequence getKey(Keyboard keyboard)
