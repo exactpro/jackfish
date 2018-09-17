@@ -13,6 +13,8 @@ package com.exactprosystems.jf.app;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.ByteArrayInputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,15 +85,23 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 
 	private boolean isControlDown = false;
 	private boolean isControlPressed = false;
+	
+	private int majorVersion = -1;
+	private int minorVersion = -1;
+	
+	//TODO need normal scroll to function
+	private static final String SCROLL_TO_SCRIPT = loadScript("js/scrollTo.js");
+	private static final String SCROLL_COMBOBOX_IE_SCRIPT = loadScript("js/comboboxScroll.js");
 
-	private int majorVersion;
-	private int minorVersion;
+	private String markAttribute = "seleniummarkattribute";
+	private WebDriverListenerNew driver;
+	
+	private static final Logger logger = Logger.getLogger(SeleniumOperationExecutor.class);
 
-	public SeleniumOperationExecutor(WebDriverListenerNew driver, Logger logger, boolean useTrimText)
+	public SeleniumOperationExecutor(WebDriverListenerNew driver, boolean useTrimText)
 	{
 		super(useTrimText);
 		this.driver = driver;
-		this.logger = logger;
 	}
 
 	@Override
@@ -187,7 +197,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	@Override
 	public boolean dragNdrop(WebElement drag, int x1, int y1, WebElement drop, int x2, int y2, boolean moveCursor) throws Exception
 	{
-		Exception real = null;
+		StaleElementReferenceException noElementException = null;
 		int repeat = 1;
 		do
 		{
@@ -200,33 +210,26 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 				}
 				else
 				{
-					if (this.driver.getWrappedDriver() instanceof InternetExplorerDriver)
-					{
-						obtainDriverVersion();
-						if(hasPositionBug())
-						{
-							x2 = x2-drag.getSize().width/2;
-							y2 = y2-drag.getSize().height/2;
-						}
-					}
-					actions.moveToElement(drop, x2, y2);
+					Point pt = fixPointForAction(drag, x2, y2);
+					actions.moveToElement(drop, pt.x, pt.y);
 				}
 				actions.release().perform();
 				return true;
 			}
 			catch (StaleElementReferenceException e)
 			{
-				real = e;
-				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat);
+				noElementException = e;
+				logger.debug("Element is no longer attached to the DOM. Try in SeleniumOperationExecutor : " + repeat, e);
 			}
 			catch (Exception e)
 			{
-				logger.error(e.getMessage(), e);
+				logger.error("Unable to perform DragNDrop operation", e); // TODO log parameters
 				throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_ERROR_DRAG_AND_DROP.get());
 			}
 		}
 		while (++repeat < repeatLimit);
-		throw real;
+		logger.error("Unable to perform DragNDrop operation", noElementException); // TODO log parameters
+		throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_ERROR_DRAG_AND_DROP.get());
 	}
 
 	@Override
@@ -726,7 +729,8 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 						}
 						else
 						{
-							actions.moveToElement(component, x, y).perform();
+							Point pt = fixPointForAction(component, x, y);
+							actions.moveToElement(component, pt.x, pt.y).perform();
 						}
 						break;
 
@@ -761,7 +765,8 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 							}
 							else
 							{
-								actions.moveToElement(component, x, y).click().perform();
+								Point pt = fixPointForAction(component, x, y);
+								actions.moveToElement(component, pt.x, pt.y).click().perform();
 							}
 						}
 						break;
@@ -773,6 +778,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 						}
 						if (driver.getWrappedDriver() instanceof ChromeDriver)
 						{
+							// FIXME click coordinates aren't used
 							driver.executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('dblclick',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", component);
 						}
 						else
@@ -783,7 +789,8 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 							}
 							else
 							{
-								actions.moveToElement(component, x, y).doubleClick().perform();
+								Point pt = fixPointForAction(component, x, y);
+								actions.moveToElement(component, pt.x, pt.y).doubleClick().perform();
 							}
 						}
 						break;
@@ -799,12 +806,14 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 						}
 						else
 						{
-							actions.moveToElement(component, x, y).contextClick().perform();
+							Point pt = fixPointForAction(component, x, y);
+							actions.moveToElement(component, pt.x, pt.y).contextClick().perform();
 						}
 						break;
 
 					case RightDoubleClick:
 						return false;
+						
 				}
 				return true;
 			}
@@ -1118,32 +1127,34 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			try
 			{
 				scrollToElement(component);
-				Actions customAction = new Actions(this.driver.getKeyboard(), this.driver.getMouse());
-				int height = component.getSize().getHeight();
-				int width = component.getSize().getWidth();
-				double step = width/100d;
+				Actions customAction = new Actions(this.driver);
+				Dimension componentSize = component.getSize(); 
+				int height = componentSize.height;
+				int width = componentSize.width;
+				double step = width / 100d;
 				int offset = 30;
 				int valueWithOffset = value + offset > 100 ? (int)value + offset - 100 : (int)value + offset;
-
+				
+				Point from;
+				Point to;
 				if (height > width)
 				{
-					customAction
-							.moveToElement(component, width/2, (int)((valueWithOffset)*step))
-							.clickAndHold()
-							.moveToElement(component, width/2, (int)(value*step))
-							.release()
-							.perform();
+					// vertical slider
+					from = this.fixPointForAction(componentSize, width/2, (int) (valueWithOffset * step));
+					to = this.fixPointForAction(componentSize, width/2, (int) (value * step));
 				}
-				//horizontal slider
 				else
 				{
-					customAction
-							.moveToElement(component, (int)((valueWithOffset)*step), height/2)
-							.clickAndHold()
-							.moveToElement(component, (int)(value*step), height/2)
-							.release()
-							.perform();
+					// horizontal slider
+					from = this.fixPointForAction(componentSize, (int) (valueWithOffset * step), height / 2);
+					to = this.fixPointForAction(componentSize, (int) (value * step), height / 2);
 				}
+				customAction
+						.moveToElement(component, from.x, from.y)
+						.clickAndHold()
+						.moveToElement(component, to.x, to.y)
+						.release()
+						.perform();
 
 				return true;
 			}
@@ -1413,14 +1424,14 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 					headers = getHeaders(table, columns);
 				}
 
-				this.logger.debug("Found headers : " + headers);
+				logger.debug("Found headers : " + headers);
 				List<WebElement> rows = findRows(additional, table);
-				this.logger.debug("Found rows. Rows size : " + rows.size());
+				logger.debug("Found rows. Rows size : " + rows.size());
 				if (i > rows.size() - 1 || i < 0)
 				{
 					throw new RemoteException("Invalid index : " + i + ", max index : " + (rows.size() - 1));
 				}
-				this.logger.debug("rows.get(i).getText() : " + rows.get(i).getText());
+				logger.debug("rows.get(i).getText() : " + rows.get(i).getText());
 				return getRowValues(rows.get(i), headers);
 			}
 			catch (StaleElementReferenceException e)
@@ -1701,7 +1712,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			{
 				Map<String, String> result = new LinkedHashMap<>();
 				List<WebElement> cells = row.findElements(By.xpath("child::"+tag_td));
-				this.logger.debug("Found cells : " + cells.size());
+				logger.debug("Found cells : " + cells.size());
 
 				for (int i = 0; i < headers.size(); i++)
 				{
@@ -1775,7 +1786,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 			{
 				if (columns != null)
 				{
-					this.logger.debug("Columns : " + Arrays.toString(columns));
+					logger.debug("Columns : " + Arrays.toString(columns));
 				}
 
 				List<WebElement> theadSections = grid.findElements(By.xpath("child::"+tag_thead)); // find only on child
@@ -2077,7 +2088,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	{
 		if(!(element instanceof DummyWebElement))
 		{
-			driver.executeScript(SCROLL_TO_SCRIPT,element);
+			driver.executeScript(SCROLL_TO_SCRIPT, element);
 		}
 	}
 
@@ -2114,13 +2125,15 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 
 	private static String loadScript(String path)
 	{
-		Scanner scanner = new Scanner(SeleniumOperationExecutor.class.getResourceAsStream(path));
-		StringBuilder ret = new StringBuilder();
-		while (scanner.hasNextLine())
-		{
-			ret.append(scanner.nextLine()).append("\n");
+		// FIXME specify character encoding
+		try (Scanner scanner = new Scanner(SeleniumOperationExecutor.class.getResourceAsStream(path))) {
+			StringBuilder ret = new StringBuilder();
+			while (scanner.hasNextLine())
+			{
+				ret.append(scanner.nextLine()).append("\n");
+			}
+			return ret.toString();
 		}
-		return ret.toString();
 	}
 
 	private static Elements findRows(Document doc) throws Exception
@@ -2133,32 +2146,48 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 		return first.children();
 	}
 
-	private void obtainDriverVersion() throws Exception
+	private void obtainIEDriverVersion()
 	{
-		if (this.majorVersion == 0 && this.minorVersion == 0)
+		if ((this.majorVersion < 0) && (this.minorVersion < 0))
 		{
-			String driver = System.getProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY);
-			if (Str.IsNullOrEmpty(driver))
-			{
-				throw new Exception("Internet Explorer driver name is expected");
-			}
-			String[] arr = driver.split("_");
-			String[] version = arr[arr.length-1].split("\\.");
+			Path driverPath = Paths.get(System.getProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY));
+			String driverName = driverPath.getFileName().toString();
 			try
 			{
-				this.majorVersion = Integer.parseInt(version[0]);
-				this.minorVersion = Integer.parseInt(version[1]);
+				String[] parts = driverName.split("_");
+				String[] versions = parts[parts.length-1].split("\\.");
+				this.majorVersion = Integer.parseInt(versions[0]);
+				this.minorVersion = Integer.parseInt(versions[1]);
 			}
-			catch(NumberFormatException e)
+			catch (Exception e)
 			{
-				throw new Exception("Invalid driver version: "+arr[arr.length-1]);
+				throw new RuntimeException("Unable to deduce IE driver version from driver file name: " + driverName);
 			}
 		}
 	}
 	
+	private Point fixPointForAction(WebElement element, int x, int y) {
+		if (this.hasPositionBug()) {
+			Dimension elementSize = element.getSize();
+			return new Point(x - elementSize.width / 2, y - elementSize.height / 2);
+		}
+		return new Point(x, y);
+	}
+	
+	private Point fixPointForAction(Dimension elementSize, int x, int y) {
+		if (this.hasPositionBug()) {
+			return new Point(x - elementSize.width / 2, y - elementSize.height / 2);
+		}
+		return new Point(x, y);
+	}
+	
 	private boolean hasPositionBug()
 	{
-		return this.majorVersion >= 3 && this.minorVersion > 8;
+		if (this.driver.getWrappedDriver() instanceof InternetExplorerDriver) {
+			this.obtainIEDriverVersion();
+			return this.majorVersion >= 3 && this.minorVersion > 8;
+		}
+		return false;
 	}
 
 	private CharSequence getKey(Keyboard keyboard)
@@ -2268,11 +2297,4 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 	}
 	//endregion
 
-	//TODO need normal scroll to function
-	private static final String SCROLL_TO_SCRIPT = loadScript("js/scrollTo.js");
-	private static final String SCROLL_COMBOBOX_IE_SCRIPT = loadScript("js/comboboxScroll.js");
-
-	private String markAttribute = "seleniummarkattribute";
-	private WebDriverListenerNew driver;
-	private Logger logger;
 }

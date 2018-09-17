@@ -44,10 +44,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.GeckoDriverService;
-import org.openqa.selenium.ie.InternetExplorerDriverService;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -129,7 +126,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			"return go(arguments[0]); \n";
 
 	private Alert currentAlert;
-	private	Exception te = null;
+	private	Exception threadException = null;
 	private static long time = System.currentTimeMillis();
 
 	private WebDriverListenerNew driver;
@@ -137,8 +134,7 @@ public class SeleniumRemoteApplication extends RemoteApplication
 
 	private final int repeatLimit = 5;
 	private SeleniumOperationExecutor operationExecutor;
-	private Logger logger = null;
-
+	private static Logger logger = Logger.getLogger(SeleniumRemoteApplication.class);
 
 	public SeleniumRemoteApplication()
 	{
@@ -147,14 +143,12 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected void createLoggerDerived(String logName, String serverLogLevel, String serverLogPattern) throws Exception
 	{
-		logger = Logger.getLogger(SeleniumRemoteApplication.class);
-
+		System.out.println(String.format("createLoggerDerived(%s, %s, %s) is called", logName, serverLogLevel, serverLogPattern));
+		Logger rootLogger = Logger.getRootLogger();
 		Layout layout = new PatternLayout(serverLogPattern);
 		Appender appender = new FileAppender(layout, logName);
-		logger.addAppender(appender);
-		logger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
-
-		MatcherSelenium.setLogger(logger);
+		rootLogger.addAppender(appender);
+		rootLogger.setLevel(Level.toLevel(serverLogLevel, Level.ALL));
 	}
 
     @Override
@@ -260,68 +254,30 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	{
 		try
 		{
+			// XXX change to something meaningful
 			logger.info("##########################################################################################################");
-			String browserName = args.get(WebAppFactory.browserName);
-			String url = args.get(WebAppFactory.urlName);
-			if (Str.IsNullOrEmpty(browserName) || browserName.equals("null"))
+			
+			WebPluginArguments arguments = new WebPluginArguments();
+			arguments.setBrowserName(args.get(WebAppFactory.browserName));
+			arguments.setStartUrl(args.get(WebAppFactory.urlName));
+			arguments.setChromeDriverPath(args.get(WebAppFactory.chromeDriverPathName));
+			arguments.setChromeDriverBinary(args.get(WebAppFactory.chromeDriverBinary));
+			arguments.setGeckoDriverPath(args.get(WebAppFactory.geckoDriverPathName));
+			arguments.setIEDriverPath(args.get(WebAppFactory.ieDriverPathName));
+			arguments.setFirefoxProfileDirectory(args.get(WebAppFactory.firefoxProfileDir));
+			arguments.setUsePrivateMode(Boolean.valueOf(args.get(WebAppFactory.usePrivateMode))); // TODO allow to omit it
+			arguments.setDriverLogging(Boolean.valueOf(args.get(WebAppFactory.isDriverLogging))); // TODO allow to omit it
+			
+			if (arguments.getBrowserName() == null)
 			{
 				throw new Exception(R.SELENIUM_REMOTE_APP_EMPTY_BROWSER_EXCEPTION.get());
 			}
-			if (Str.IsNullOrEmpty(url) || url.equals("null"))
+			if (arguments.getStartUrl() == null)
 			{
 				throw new Exception(R.SELENIUM_REMOTE_APP_EMPTY_URL_EXCEPTION.get());
 			}
-
-			String chromeDriverPath = args.get(WebAppFactory.chromeDriverPathName);
-			if (chromeDriverPath != null && !chromeDriverPath.isEmpty())
-			{
-				logger.info(WebAppFactory.chromeDriverPathName + " = " + chromeDriverPath);
-				System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath);
-			}
-
-			String geckoDriverPath = args.get(WebAppFactory.geckoDriverPathName);
-			if (geckoDriverPath != null && !geckoDriverPath.isEmpty())
-			{
-				logger.info(WebAppFactory.geckoDriverPathName + " = " + geckoDriverPath);
-				System.setProperty(GeckoDriverService.GECKO_DRIVER_EXE_PROPERTY, geckoDriverPath);
-			}
 			
-			String ieDriverPath = args.get(WebAppFactory.ieDriverPathName);
-			if (ieDriverPath != null && !ieDriverPath.isEmpty())
-			{
-				logger.info(WebAppFactory.ieDriverPathName + " = " + ieDriverPath);
-				System.setProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY, ieDriverPath);
-			}
-			String chromeDriverBinary = args.get(WebAppFactory.chromeDriverBinary);
-			if (chromeDriverBinary != null && !chromeDriverBinary.isEmpty())
-			{
-				logger.info(WebAppFactory.chromeDriverBinary + " = " + chromeDriverBinary);
-			}
-
-			String firefoxProfileDirectory = args.get(WebAppFactory.firefoxProfileDir);
-			if (!Str.IsNullOrEmpty(firefoxProfileDirectory))
-			{
-				logger.info(WebAppFactory.firefoxProfileDir + " = " + firefoxProfileDirectory);
-			}
-
-			boolean usePrivateMode = Boolean.valueOf(args.get(WebAppFactory.usePrivateMode));
-			if (usePrivateMode)
-			{
-				logger.info("Use private mode for browser");
-			}
-
-			boolean isDriverLogging = Boolean.valueOf(args.get(WebAppFactory.isDriverLogging));
-			if (isDriverLogging)
-			{
-				logger.info("isDriverLogging = true" );
-			}
-			else
-			{
-				logger.info("isDriverLogging = false" );
-			}
-
-
-			logger.info("Starting " + browserName + " on " + url);
+			logger.info("Starting " + arguments.getBrowserName() + " on " + arguments.getStartUrl());
 
             Thread t = new Thread(new Runnable()
             {
@@ -329,62 +285,60 @@ public class SeleniumRemoteApplication extends RemoteApplication
                 {
                     try
                     {
-
                     	Browser browser = null;
-                    	try {
-							browser = Browser.valueOf(browserName.toUpperCase());
-						} catch (Exception e){
-							te =  new Exception(R.SELENIUM_REMOTE_APP_WRONG_BROWSER_NAME.get());
-							throw te;
-						}
-                        driver = new WebDriverListenerNew(browser.createDriver(chromeDriverBinary, firefoxProfileDirectory, usePrivateMode, isDriverLogging));
-                        operationExecutor = new SeleniumOperationExecutor(driver, logger, SeleniumRemoteApplication.super.useTrimText);
+                    	try
+                    	{
+            				browser = Browser.valueOf(arguments.getBrowserName().toUpperCase());
+            			}
+                    	catch (Exception e)
+                    	{
+            				throw new Exception(R.SELENIUM_REMOTE_APP_WRONG_BROWSER_NAME.get());
+            			}
+                    	
+                        driver = new WebDriverListenerNew(browser.createDriver(arguments));
+                        operationExecutor = new SeleniumOperationExecutor(driver, SeleniumRemoteApplication.super.useTrimText);
 
-                        logger.info("Before driver.get(" + url + ")");
-                        driver.get(url);
-                        logger.info("After driver.get(" + url + ")");
-                        if(!browser.equals(Browser.ANDROIDBROWSER) && !browser.equals(Browser.ANDROIDCHROME))
+                        logger.debug("Before driver.get(" + arguments.getStartUrl() + ")");
+                        driver.get(arguments.getStartUrl());
+                        logger.debug("After driver.get(" + arguments.getStartUrl() + ")");
+                        if (browser != Browser.ANDROIDBROWSER && browser != Browser.ANDROIDCHROME)
                         {
                             driver.manage().window().maximize();
-                            logger.info("After driver.maximize()");
+                            logger.debug("After driver.maximize()");
                         }
-						if (driver.getWrappedDriver() instanceof RemoteWebDriver)
-						{
-							logger.debug("Current session id : " + ((RemoteWebDriver) driver.getWrappedDriver()).getSessionId());
-						}
+						logger.info("Selenium session id : " + ((RemoteWebDriver) driver.getWrappedDriver()).getSessionId());
 					}
                     catch (Exception e)
                     {
-                    	te = e;
-                        logger.error(e.getMessage(), e);
+                    	threadException = e;
                     }
-                    
                 }
             });
             try
             {
                 t.start();
-                logger.info("Before join");
-                t.join(60000);
-                if (te != null){
-                	Exception ne = te;
-                	te = null;
-					throw ne;
+                logger.debug("Before join");
+                t.join(60 * 1000);
+                if (threadException != null)
+                {
+                	Exception ex = threadException;
+                	threadException = null;
+					throw ex;
 				}
-                logger.info("After join");
+                logger.debug("After join");
             }
             catch (InterruptedException e)
             { 
                 // ignore
-                logger.error(e.getMessage());
+                logger.warn("Selenium driver start up thread was interrupted", e);
             }
             if (t.isAlive())
             { 
-                // Thread still alive, we need to abort and it means that timeout expired
-                logger.info("Before interrupt");
+                // Thread is still alive. It means that timeout is expired and we need to abort the thread 
+                logger.debug("Before interrupt");
                 t.interrupt();
                 this.driver = null;
-                logger.info("Before throw");
+                logger.debug("Before throw");
                 throw new TimeoutException(R.SELENIUM_REMOTE_APP_PAGE_LOADING.get());
             }			
             
@@ -395,8 +349,8 @@ public class SeleniumRemoteApplication extends RemoteApplication
 		}
 		catch (Exception e)
 		{
-			logger.error(e.getMessage(), e);
-			throw new Exception(e.getMessage());
+			logger.error("Unable to start selenium driver", e);
+			throw new Exception("Unable to start selenium driver: " + e.getMessage());
 		}
 		
 		return -1;

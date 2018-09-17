@@ -203,11 +203,7 @@ public class MatcherSelenium extends By
 	
 	private String xpath;
 	private Visibility visibility;
-	public static void setLogger(Logger log)
-	{
-		logger = log;
-	}
 
-	protected static Logger logger = null;
+	private static Logger logger = Logger.getLogger(MatcherSelenium.class);
 
 }
