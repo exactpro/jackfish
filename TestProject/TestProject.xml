@@ -126,7 +126,7 @@
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
-            <value>win/IEDriverServer_x64_3.13.0.exe</value>
+            <value>win/IEDriverServer_x64_3.14.0.exe</value>
         </parameters>
         <parameters>
             <key>ChromeDriverBinary</key>
