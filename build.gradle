@@ -432,7 +432,7 @@ tasks.whenTaskAdded { aTask -> if (aTask.name == 'farmIntegrationTest') {
 } }
 
 embeddedMysql {
-    url = 'jdbc:mysql://localhost:3306/jfIntegrationTest'
+    url = 'jdbc:mysql://localhost:3307/jfIntegrationTest'
     username = 'jf'
     password = ''
     version = 'v5_7_latest'
