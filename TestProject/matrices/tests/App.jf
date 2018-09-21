@@ -803,7 +803,7 @@ Application Resize;;;
         IMGGET1.Out.getImage().getHeight() == height-128;'Height is wrong ' + IMGGET1.Out.getImage().getHeight()
 
         #Assert;#Message
-        IMGGET1.Out.getImage().getWidth() == width-10;'Width is wrong ' + IMGGET1.Out.getImage().getWidth()
+        IMGGET1.Out.getImage().getWidth() == width-8;'Width is wrong ' + IMGGET1.Out.getImage().getWidth()
 
         #Id;#Action;$AppConnection
         APPSTP1;ApplicationStop;CALL_1
