@@ -16,7 +16,12 @@ plugins {
 	id 'com.ullink.msbuild' version '2.19' apply false // more recent versions may require .NET 4.6
 	id 'com.ullink.nuget' version '2.15' apply false
 	id 'de.undercouch.download' version '3.4.3'
+    id 'org.gretty' version '2.2.0' apply false
+    id 'com.github.michaelruocco.embedded-mysql-plugin' version '2.1.7' apply false
 }
+
+apply plugin: 'org.gretty'
+apply plugin: 'com.github.michaelruocco.embedded-mysql-plugin' 
 
 artifactoryPublish.skip = true
 
@@ -33,7 +38,7 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+	jcenter()
 }
 
 dependencies {
@@ -403,4 +408,36 @@ task createTool(type: Zip) {
 }
 
 clean {
+}
+
+farm {
+    webapp ':mocks:web', contextPath: '/web', inplace: true
+}
+
+tasks.whenTaskAdded { aTask -> if (aTask.name == 'farmIntegrationTest') {
+    farmIntegrationTest {
+        dependsOn startEmbeddedMysql
+        finalizedBy stopEmbeddedMysql
+        doFirst {
+            mkdir 'reports'
+        }
+        doLast {
+            exec {
+                executable 'java'
+                args '-Dmvel2.disable.jit=true'
+                args '-Xmx2g', '-Xms2g'
+                args '-jar', 'jackfish.jar'
+                args '-console', '-config=../TestProject/TestProject.xml', '-input=matrices/Main.jf', '-output=../reports', '-verbose=None'
+                workingDir project(':core').projectDir
+            }
+        }
+    }
+} }
+
+embeddedMysql {
+    url = 'jdbc:mysql://localhost:3307/jfIntegrationTest'
+    username = 'jf'
+    password = ''
+    version = 'v5_7_latest'
+    timeoutSeconds = 120
 }

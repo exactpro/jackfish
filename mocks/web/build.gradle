@@ -7,22 +7,12 @@
  * This is unpublished, licensed software, confidential and proprietary
  * information which is the property of Exactpro Systems LLC or its licensors.
  ******************************************************************************/
-pluginManagement {
-    repositories {
-        maven {
-		    url 'shared'
-	    }
-	    gradlePluginPortal()
-	}
+
+plugins {
+    id 'war'
+    id 'org.gretty'  
 }
 
-include	'core',
-		'api'
-
-['mocks', 'plugins/app', 'plugins/client', 'plugins/service'].each { pluginDir -> 
-    file(pluginDir).eachDir() { dir ->
-    	if (new File(dir, 'build.gradle').exists()) {
-			include ":"+java.nio.file.Paths.get(pluginDir, dir.name).toList().join(":")
-        }
-    }
+repositories {
+    jcenter()
 }
