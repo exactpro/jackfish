@@ -17,15 +17,16 @@ obj
 
 #JF files
 #files contains generated .jar files
-core/apps
-core/clients
-core/services
-core/sql
+/core/apps
+/core/clients
+/core/services
+/core/sql
 
 logs
 .settings.xml
 /.log.xml
 /TestProject/.log.xml
+/reports
 
 version.properties
 # don't ignore everything in src

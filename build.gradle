@@ -418,6 +418,9 @@ tasks.whenTaskAdded { aTask -> if (aTask.name == 'farmIntegrationTest') {
     farmIntegrationTest {
         dependsOn startEmbeddedMysql
         finalizedBy stopEmbeddedMysql
+        doFirst {
+            mkdir 'reports'
+        }
         doLast {
             exec {
                 executable 'java'
