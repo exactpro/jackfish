@@ -776,7 +776,7 @@ public class SeleniumOperationExecutor extends AbstractOperationExecutor<WebElem
 						{
 							throw new RemoteException(R.SELENIUM_OPERATION_EXECUTOR_DONT_SUPPORT.get());
 						}
-						if (driver.getWrappedDriver() instanceof ChromeDriver)
+						if (driver.getWrappedDriver() instanceof ChromeDriver || driver.getWrappedDriver() instanceof InternetExplorerDriver)
 						{
 							// FIXME click coordinates aren't used
 							driver.executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('dblclick',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", component);
