@@ -327,7 +327,7 @@ Application GetProperties;;;
         APPSTR3;ApplicationStart;mockWebBrowser;altURL;mockWebApp
 
         #Id;#Action;#Assert;URL;Title;$AppConnection
-        APPPAR1;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('Title').contains('Mock html') && This.Out.get('URL').contains('mocks/web/mock.html');;;APPSTR3.Out
+        APPPAR1;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('Title').contains('Mock html') && This.Out.get('URL').contains('web/mock.html');;;APPSTR3.Out
 
         #Id;#Action;#Assert;new Date();new Date();$AppConnection
         APPPAR2;ApplicationGetProperties;This.Result == Result.Passed && This.Out.get('URL') == null && This.Out.get('Title') == null;;;APPSTR3.Out
@@ -451,7 +451,7 @@ Application New Instance;;;
             APPPAR4.Out.AllTitles.size() == 1;'Number of titiles is wroing ' + APPPAR4.Out.AllTitles
 
             #Assert;#Message
-            APPPAR4.Out.URL.contains('mocks/web/mock.html');'Url is wrong ' + APPPAR4.Out.URL
+            APPPAR4.Out.URL.contains('web/mock.html');'Url is wrong ' + APPPAR4.Out.URL
 
             #Id;#Action;$AppConnection
             APPSTP3;ApplicationStop;CALL_3
