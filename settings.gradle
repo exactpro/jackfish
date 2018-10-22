@@ -25,10 +25,24 @@ pluginManagement {
 include	'core',
 		'api'
 
-['mocks', 'plugins/app', 'plugins/client', 'plugins/service'].each { pluginDir -> 
-    file(pluginDir).eachDir() { dir ->
-    	if (new File(dir, 'build.gradle').exists()) {
-			include ":"+java.nio.file.Paths.get(pluginDir, dir.name).toList().join(":")
-        }
-    }
+def pluginDirs = ['mocks', 'plugins/app', 'plugins/client', 'plugins/service']
+def JF_EXTRAS = []
+pluginDirs.addAll(JF_EXTRAS)
+pluginDirs.each { pluginDir -> 
+	file(pluginDir).eachDir() { dir ->
+		if (new File(dir, 'build.gradle').exists()) {
+			def pluginName = pluginDir.toString();
+			if (pluginName.contains('plugins'))
+			{
+				pluginName = pluginName.substring(pluginName.indexOf('plugins'))
+			}
+			else if (pluginName.contains('mocks'))
+			{
+				pluginName = pluginName.substring(pluginName.indexOf('mocks'))
+			}
+			def includeName=":"+java.nio.file.Paths.get(pluginName, dir.name).toList().join(":")
+			include includeName
+			project(includeName).projectDir = dir
+		}
+	}
 }
