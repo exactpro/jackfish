@@ -26,21 +26,18 @@ include	'core',
 		'api'
 
 def pluginDirs = ['mocks', 'plugins/app', 'plugins/client', 'plugins/service']
-def JF_EXTRAS = []
-pluginDirs.addAll(JF_EXTRAS)
-pluginDirs.each { pluginDir -> 
-	file(pluginDir).eachDir() { dir ->
-		if (new File(dir, 'build.gradle').exists()) {
+def JF_EXTRAS = System.getProperty("JF_EXTRAS") != null ? System.getProperty("JF_EXTRAS").toString().split(';') : []
+def searchDirs = ['.']
+searchDirs.addAll(JF_EXTRAS)
+searchDirs.each { searchDir ->
+	pluginDirs.each { pluginDir -> 
+		if (!new File(searchDir, pluginDir).exists()) return
+
+		file(searchDir+"/"+pluginDir).eachDir() { dir ->
+			if (!new File(dir, 'build.gradle').exists()) return
+
 			def pluginName = pluginDir.toString();
-			if (pluginName.contains('plugins'))
-			{
-				pluginName = pluginName.substring(pluginName.indexOf('plugins'))
-			}
-			else if (pluginName.contains('mocks'))
-			{
-				pluginName = pluginName.substring(pluginName.indexOf('mocks'))
-			}
-			def includeName=":"+java.nio.file.Paths.get(pluginName, dir.name).toList().join(":")
+			def includeName=":"+java.nio.file.Paths.get(pluginDir, dir.name).toList().join(":")
 			include includeName
 			project(includeName).projectDir = dir
 		}
