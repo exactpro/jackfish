@@ -342,6 +342,10 @@ task copyMocks(type: Copy) {
 	fileMode 0755
 }
 
+task copyDistro(type: Copy) {
+	destinationDir = project(':core').projectDir
+}
+
 configure(subprojects.findAll { it.path ==~ /\:core/ }) {
 	afterEvaluate { Project pluginProject ->
 		rootProject.copyPlugins {
@@ -394,10 +398,24 @@ configure(subprojects.findAll { it.path ==~ /\:mocks\:.+/ }) {
 	}
 }
 
+configure(subprojects.findAll { it.path ==~ /\:plugins\:.+/ }) {
+	afterEvaluate { Project pluginProject ->
+		def resourcesDir = pluginProject.projectDir.toPath().resolve(Paths.get('src', 'distro', 'resources')).toFile()
+		if (resourcesDir.exists()) {
+			rootProject.copyDistro {
+				into ('.') {
+					from resourcesDir
+				}
+			}
+		}
+	}
+}
+
 task createTool(type: Zip) {
 	dependsOn copyData
 	dependsOn copyPlugins
 	dependsOn copyMocks
+	dependsOn copyDistro
 
 	destinationDir = file('.')
 	archiveName = 'build_' + rootProject.ext.version + '.zip'
@@ -446,4 +464,4 @@ embeddedMysql {
     password = ''
     version = 'v5_7_latest'
     timeoutSeconds = 120
-}
+}
