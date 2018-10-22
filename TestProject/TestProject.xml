@@ -54,13 +54,6 @@
         <sqlJar>${JF}/sql/mssql-jdbc-6.1.0.jre8.jar</sqlJar>
         <sqlConnection>jdbc:sqlserver://${SERVER}\SQLEXPRESS;databaseName=${BASE};</sqlConnection>
     </sqlEntry>
-    <clientEntry>
-        <name>TestClient</name>
-        <clientDescription>Test dts client</clientDescription>
-        <clientJar>${JF}/clients/fix.jar</clientJar>
-        <clientLimit>0</clientLimit>
-        <clientDictionary>clientDic/FIX50.xml</clientDictionary>
-    </clientEntry>
     <serviceEntry>
         <name>TestService</name>
         <serviceDescription>Test service</serviceDescription>
@@ -126,7 +119,7 @@
         </parameters>
         <parameters>
             <key>IEDriverPath</key>
-            <value>win/IEDriverServer_x64_3.14.0.exe</value>
+            <value>win/IEDriverServer_Win32_3.14.0.exe</value>
         </parameters>
         <parameters>
             <key>ChromeDriverBinary</key>
@@ -159,6 +152,14 @@
         <parameters>
             <key>LogLevel</key>
             <value>ERROR</value>
+        </parameters>
+        <parameters>
+            <key>IsDriverLogging</key>
+            <value>true</value>
+        </parameters>
+        <parameters>
+            <key>TrimText</key>
+            <value></value>
         </parameters>
         <appDescription>Web applications for windows</appDescription>
         <appDicPath>dic/mock_web_dic.xml</appDicPath>
