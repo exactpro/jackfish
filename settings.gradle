@@ -25,10 +25,13 @@ pluginManagement {
 include	'core',
 		'api'
 
+def PATH_SEPARATOR = System.getProperty("path.separator")
+		
 def pluginDirs = ['mocks', 'plugins/app', 'plugins/client', 'plugins/service']
-def JF_EXTRAS = System.getProperty("JF_EXTRAS") != null ? System.getProperty("JF_EXTRAS").toString().split(';') : []
 def searchDirs = ['.']
-searchDirs.addAll(JF_EXTRAS)
+if (System.getProperty("JF_EXTRAS") != null) {
+	searchDirs.addAll(System.getProperty("JF_EXTRAS").split(PATH_SEPARATOR))
+}
 searchDirs.each { searchDir ->
 	pluginDirs.each { pluginDir -> 
 		if (!new File(searchDir, pluginDir).exists()) return
