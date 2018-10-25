@@ -56,7 +56,7 @@ dependencies {
 
 def ieDriverVersion = '3.14.0'
 def chromeDriverVersion = '2.40'
-def geckoDriverVersion = '0.21.0'
+def geckoDriverVersion = '0.23.0'
 
 project.ext {
 	jfVersion = '4.5.12'
@@ -446,16 +446,35 @@ tasks.whenTaskAdded { aTask -> if (aTask.name == 'farmIntegrationTest') {
             mkdir 'reports'
         }
         doLast {
-            exec {
-                executable 'java'
-                args '-Dmvel2.disable.jit=true'
-                args '-Xmx2g', '-Xms2g'
-                args '-jar', 'jackfish.jar'
-                args '-console', '-config=../TestProject/TestProject.xml', '-input=matrices/Main.jf', '-output=../reports', '-verbose=None'
-                workingDir project(':core').projectDir
-            }
-        }
-    }
+			def JF_EXTRAS = System.getProperty("JF_EXTRAS")
+			def searchDirs = ['.']
+			if (JF_EXTRAS != null) {
+				searchDirs.addAll(JF_EXTRAS.split(File.pathSeparator))
+			}
+			searchDirs.each { searchDir ->
+				def integrationDir = new File(searchDir, 'integrationTests')
+
+				if (!integrationDir.exists()) return
+
+				file(integrationDir).eachDir() { testDir ->
+					def configFile = testDir.toPath().resolve(testDir.getName()+'.xml').toFile()
+
+					if (!configFile.exists()) return
+					if (!testDir.toPath().resolve('matrices').resolve('Main.jf').toFile().exists()) return
+
+					def reportsDir = new File('reports').getAbsolutePath()
+					exec {
+						executable 'java'
+						args '-Dmvel2.disable.jit=true'
+						args '-Xmx2g', '-Xms2g'
+						args '-jar', 'jackfish.jar'
+						args '-console', '-config='+configFile, '-input=matrices/Main.jf', '-output='+reportsDir, '-verbose=None'
+						workingDir project(':core').projectDir
+					}
+				}
+			}
+		}
+	}
 } }
 
 embeddedMysql {
