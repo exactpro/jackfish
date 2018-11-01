@@ -205,13 +205,13 @@ IMAGE_SAVE;ImageSave;;;
     DSK2;DesktopScreenshot
 
     #Id;#Action;$Image;$Dir
-    IMGSV1;ImageSave;DSK2.Out;'../reports'
+    IMGSV1;ImageSave;DSK2.Out;'../../reports'
 
     #Assert;#Message
     Sys.exists(IMGSV1.Out);'Image is not saved'
 
     #Id;#Let
-    fileName;'../reports/saved.jpg'
+    fileName;'../../reports/saved.jpg'
 
     #Id;#Action;$Image;$File
     IMGSV2;ImageSave;DSK2.Out;fileName

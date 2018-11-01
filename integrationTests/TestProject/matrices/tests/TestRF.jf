@@ -36,7 +36,7 @@ Global variables and subcases;;;
     #Id;#SubCase;callName
     findReport;find report file by call name. return file.getAbsolutePath();'Details '
         #Id;#Let
-        reportFolder;new File('../../reports')
+        reportFolder;new File('../../../reports')
 
         #Id;#Let
         reports;reportFolder.listFiles()
@@ -63,7 +63,7 @@ Global variables and subcases;;;
     #Id;#SubCase;fileName
     findFile;return file.getAbsolutePath;testSetMatrix2 + DateTime.strDate(runId.create_time, '_yyyyMMdd_HHmmss')
         #Id;#Let
-        reportFolder;new File('../../reports')
+        reportFolder;new File('../../../reports')
 
         #Id;#Let
         reports;reportFolder.listFiles()
@@ -238,16 +238,16 @@ Check exportToXml;;;
     matrixName;'my_name' + System.currentTimeMillis()
 
     #Call;date;pathToSave;matrixName
-    RF.repXmlExport2;;'../../reports';matrixName
+    RF.repXmlExport2;;'../../../reports';matrixName
 
     #Assert;#Message
-    new File('../../reports/regression ' + matrixName+'.xml').exists();'Xml does not created'
+    new File('../../../reports/regression ' + matrixName+'.xml').exists();'Xml does not created'
 
 
 #TestCase;#Kind;#Depends;#For
 Check repCsvExport;;;
     #Call;date;pathToSave
-    RF.repCsvExport;;'../../reports'
+    RF.repCsvExport;;'../../../reports'
 
     #Id;#Call
     SQL;RF.Connect
