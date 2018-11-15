@@ -124,12 +124,6 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable
 		return this.source;
 	}
 
-	@Override
-	public String toString()
-	{
-		return MapMessage.class.getSimpleName() + " [" + messageTypeName + ":" + getMessageType() + "]";
-	}
-
 	public static String humanToString(MapMessage mapMessage)
 	{
 		StringBuilder sb = new StringBuilder("MessageType : ")
@@ -342,5 +336,11 @@ public class MapMessage implements Map<String, Object>, Serializable, Mutable
 	public Set<java.util.Map.Entry<String, Object>> entrySet()
 	{
 		return this.fields.entrySet();
+	}
+
+
+	@Override
+	public String toString() {
+		return humanToString(this);
 	}
 }
