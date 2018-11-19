@@ -59,7 +59,7 @@ def chromeDriverVersion = '2.40'
 def geckoDriverVersion = '0.23.0'
 
 project.ext {
-	jfVersion = '4.5.12'
+	jfVersion = '4.5.13'
 	version = jfVersion + '.' + (System.getProperty('revision') ?: 'local_build')
 	println version
 
