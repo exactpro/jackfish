@@ -16,13 +16,6 @@
 
 package com.exactprosystems.jf.app;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.w3c.dom.Node;
-
 import com.exactprosystems.jf.api.app.AbstractApplicationFactory;
 import com.exactprosystems.jf.api.app.ControlKind;
 import com.exactprosystems.jf.api.app.IApplication;
@@ -32,6 +25,12 @@ import com.exactprosystems.jf.api.common.ParametersKind;
 import com.exactprosystems.jf.api.common.PluginDescription;
 import com.exactprosystems.jf.api.common.PluginFieldDescription;
 import com.exactprosystems.jf.api.common.i18n.R;
+import org.w3c.dom.Node;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @PluginDescription(
 		pluginName = "WEB",
@@ -88,6 +87,10 @@ public class WebAppFactory extends AbstractApplicationFactory
     public static final String   propertyRemoveCookie     = "RemoveCookie";
 	@PluginFieldDescription(parameter = "RemoveAllCookies", description = R.WEB_PLUGIN_PROPERTY_REMOVE_ALL_COOKIES, example = "")
     public static final String   propertyRemoveAllCookies = "RemoveAllCookies";
+
+
+	@PluginFieldDescription(parameter = "AdditionalParameters", description = R.WEB_PLUGIN_PROPERTY_ADDITIONAL_PARAMETERS, example = "--disable-init-reload --enable-chromium-window-alert")
+	public static final String additionalParameters = "AdditionalParameters";
 	
 	private static String[]      empty = {  };
 
@@ -160,7 +163,7 @@ public class WebAppFactory extends AbstractApplicationFactory
 		switch (kind)
 		{
 			case LOAD:		    return new String[] { jreExecName, jreArgsName, chromeDriverPathName, geckoDriverPathName, ieDriverPathName, 
-			        chromeDriverBinary, firefoxProfileDir, usePrivateMode, isDriverLogging, logLevel, trimTextName };
+			        chromeDriverBinary, additionalParameters, firefoxProfileDir, usePrivateMode, isDriverLogging, logLevel, trimTextName };
 			case START:         return new String[] { browserName, urlName };
 			case GET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyAllTitles, propertyCookie, propertyAllCookies };
             case SET_PROPERTY:  return new String[] { propertyUrlName, propertyTitle, propertyAddCookie, propertyRemoveCookie, propertyRemoveAllCookies };

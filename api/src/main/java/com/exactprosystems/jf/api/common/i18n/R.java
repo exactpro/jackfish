@@ -16,15 +16,25 @@
 
 package com.exactprosystems.jf.api.common.i18n;
 
-import com.exactprosystems.jf.api.common.Str;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -2257,6 +2267,7 @@ public enum R
 	WEB_PLUGIN_PROPERTY_REMOVE_COOKIE,
 	WEB_PLUGIN_PROPERTY_REMOVE_ALL_COOKIES,
 	WEB_PLUGIN_PROPERTY_TAB,
+	WEB_PLUGIN_PROPERTY_ADDITIONAL_PARAMETERS,
 	BROWSER_SET_CHROME_PATH_EXCEPTION,
 	BROWSER_SET_IE_PATH_EXCEPTION,
 	BROWSER_UNKNOWN, CUSTOM_IE_DRIVER_OS_EXCEPTON,

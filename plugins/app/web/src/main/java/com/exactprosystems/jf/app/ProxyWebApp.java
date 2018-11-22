@@ -131,5 +131,8 @@ public class ProxyWebApp extends ProxyApplication
 		{
 			parameters.put(WebAppFactory.isDriverLogging, "false");
 		}
+
+		String additionParameters = driverParameters.get(WebAppFactory.additionalParameters);
+		parameters.put(WebAppFactory.additionalParameters, additionParameters);
 	}
 }
