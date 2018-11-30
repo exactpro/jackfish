@@ -708,46 +708,52 @@ namespace UIAdapter
                     element = FindByRuntimeId(id);
                     if (element != null)
                     {
-                        switch (part)
+                        try
                         {
-                            case AttributeKind.ID:
-                                str = IdFromStr(str, element.Current.Name);
-                                str = IdFromStr(str, element.Current.AutomationId);
-                                str = IdFromStr(str, element.Current.ClassName);
-                                str = IdFromStr(str, element.Current.HelpText);
-                                break;
+                            switch (part)
+                            {
+                                case AttributeKind.ID:
+                                    str = IdFromStr(str, element.Current.Name);
+                                    str = IdFromStr(str, element.Current.AutomationId);
+                                    str = IdFromStr(str, element.Current.ClassName);
+                                    str = IdFromStr(str, element.Current.HelpText);
+                                    break;
 
-                            case AttributeKind.UID:
-                                str = element.Current.AutomationId;
-                                break;
+                                case AttributeKind.UID:
+                                    str = element.Current.AutomationId;
+                                    break;
 
-                            case AttributeKind.CLASS:
-                                str = element.Current.ClassName;
-                                break;
+                                case AttributeKind.CLASS:
+                                    str = element.Current.ClassName;
+                                    break;
 
-                            case AttributeKind.TEXT:
-                                str = element.Current.HelpText;
-                                break;
+                                case AttributeKind.TEXT:
+                                    str = element.Current.HelpText;
+                                    break;
 
-                            case AttributeKind.NAME:
-                                str = element.Current.Name;
-                                break;
+                                case AttributeKind.NAME:
+                                    str = element.Current.Name;
+                                    break;
 
-                            case AttributeKind.TYPE_NAME:
-                                string name = element.Current.ControlType.ProgrammaticName;
-                                str = name.Substring(name.IndexOf('.') + 1);
-                                break;
+                                case AttributeKind.TYPE_NAME:
+                                    string name = element.Current.ControlType.ProgrammaticName;
+                                    str = name.Substring(name.IndexOf('.') + 1);
+                                    break;
 
-                            case AttributeKind.ENABLED:
-                                str = "" + element.Current.IsEnabled;
-                                break;
+                                case AttributeKind.ENABLED:
+                                    str = "" + element.Current.IsEnabled;
+                                    break;
 
-                            case AttributeKind.VISIBLE:
-                                str = "" + !element.Current.IsOffscreen;
-                                break;
+                                case AttributeKind.VISIBLE:
+                                    str = "" + !element.Current.IsOffscreen;
+                                    break;
 
-                            default:
-                                break;
+                                default:
+                                    break;
+                            }
+                        } catch (Exception e)
+                        {
+                            str = e.Message;
                         }
                     }
                 }
@@ -1195,8 +1201,15 @@ namespace UIAdapter
                     var currentValue = rangePattern.Current.Value;
                     return ConvertString.replaceNonASCIIToUnicode("" + currentValue);
                 }
-
-                object ret = element.GetCurrentPropertyValue(property);
+                object ret = null;
+                try
+                {
+                    ret = element.GetCurrentPropertyValue(property);
+                }
+                catch(Exception e)
+                {
+                    logger.Error(e.Message, e);
+                }
                 if (ret == null)
                 {
                     return null;
@@ -2029,4 +2042,4 @@ namespace UIAdapter
         }
         #endregion
     }
-}
+}

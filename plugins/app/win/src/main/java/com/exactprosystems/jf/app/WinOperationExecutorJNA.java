@@ -756,14 +756,15 @@ public class WinOperationExecutorJNA extends AbstractOperationExecutor<UIProxyJN
 
 			switch (patterns)
             {
-                case VALUE_PATTERN:                     return this.driver.getProperty(component, WindowProperty.ValueProperty);
-				case VALUE_PATTERN + TEXT_PATTERN:      return this.driver.getProperty(component, WindowProperty.ValueProperty);
-                case VALUE_PATTERN + SELECTION_PATTERN: return this.driver.getProperty(component, WindowProperty.ValueProperty);
-                case SELECTION_PATTERN:           	    return this.driver.getProperty(component, WindowProperty.SelectionProperty);
-                case TOGGLE_PATTERN:                 	return this.driver.getProperty(component, WindowProperty.NameProperty);
-                case TEXT_PATTERN:                     	return this.driver.getProperty(component, WindowProperty.IsTextPatternAvailableProperty);
-                case RANGE_PATTERN:                   	return this.driver.getProperty(component, WindowProperty.IsRangeValuePatternAvailableProperty);
-                default:                            	return this.driver.getProperty(component, WindowProperty.NameProperty);
+                case VALUE_PATTERN:                     		return this.driver.getProperty(component, WindowProperty.ValueProperty);
+				case VALUE_PATTERN + TEXT_PATTERN:      		return this.driver.getProperty(component, WindowProperty.ValueProperty);
+                case VALUE_PATTERN + SELECTION_PATTERN: 		return this.driver.getProperty(component, WindowProperty.ValueProperty);
+                case VALUE_PATTERN + SELECTION_ITEM_PATTERN: 	return this.driver.getProperty(component, WindowProperty.ValueProperty);
+                case SELECTION_PATTERN:           	    		return this.driver.getProperty(component, WindowProperty.SelectionProperty);
+                case TOGGLE_PATTERN:                 			return this.driver.getProperty(component, WindowProperty.NameProperty);
+                case TEXT_PATTERN:                     			return this.driver.getProperty(component, WindowProperty.IsTextPatternAvailableProperty);
+                case RANGE_PATTERN:                   			return this.driver.getProperty(component, WindowProperty.IsRangeValuePatternAvailableProperty);
+                default:                            			return this.driver.getProperty(component, WindowProperty.NameProperty);
             }
 		}
 		catch (RemoteException e)
