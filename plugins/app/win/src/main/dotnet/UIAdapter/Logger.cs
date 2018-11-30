@@ -60,7 +60,6 @@ namespace UIAdapter.Logger
     {
         private static readonly String filePath = "log.txt";
         private FileInfo file = new FileInfo(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filePath));
-        private readonly FileStream fileStream;
 
         private readonly Action<StringWithParams> allLogger;
         private readonly Action<StringWithParams> errorLogger;
@@ -94,7 +93,6 @@ namespace UIAdapter.Logger
                     errorLogger = (str) => { };
                     break;
             }
-            this.fileStream = new FileStream(file.FullName, FileMode.Append, FileAccess.Write, FileShare.Write);
         }
 
         public void All(String message, params Object[] parameters)
@@ -162,8 +160,7 @@ namespace UIAdapter.Logger
 
         public void Dispose()
         {
-            fileStream.Dispose();
-            fileStream.Close();
+
         }
     }
 }
