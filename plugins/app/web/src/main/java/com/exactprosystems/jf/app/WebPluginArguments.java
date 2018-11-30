@@ -29,6 +29,7 @@ public class WebPluginArguments {
 	private String ieDriverPath;
 	private boolean usePrivateMode = false;
 	private boolean isDriverLogging = false;
+	private String additionalParameters;
 	
 	public String getBrowserName()
 	{
@@ -119,7 +120,15 @@ public class WebPluginArguments {
 	{
 		this.isDriverLogging = isDriverLogging;
 	}
-	
+
+	public String getAdditionalParameters() {
+		return this.additionalParameters;
+	}
+
+	public void setAdditionalParameters(String additionalParameters) {
+		this.additionalParameters = additionalParameters;
+	}
+
 	private static Pattern WHITE_SPACE_PATTERN = Pattern.compile("\\s*");
 	
 	private static boolean isEmptyOrWhiteSpaceOnly(String str)

@@ -16,24 +16,27 @@
 
 package com.exactprosystems.jf.app;
 
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.imageio.ImageIO;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.exactprosystems.jf.api.app.CheckingLayoutResult;
+import com.exactprosystems.jf.api.app.ControlKind;
+import com.exactprosystems.jf.api.app.CookieBean;
+import com.exactprosystems.jf.api.app.IRemoteApplication;
+import com.exactprosystems.jf.api.app.ImageWrapper;
+import com.exactprosystems.jf.api.app.Locator;
+import com.exactprosystems.jf.api.app.LocatorAndOperation;
+import com.exactprosystems.jf.api.app.NavigateKind;
+import com.exactprosystems.jf.api.app.Operation;
+import com.exactprosystems.jf.api.app.OperationResult;
+import com.exactprosystems.jf.api.app.PerformKind;
+import com.exactprosystems.jf.api.app.PluginInfo;
+import com.exactprosystems.jf.api.app.RemoteApplication;
+import com.exactprosystems.jf.api.app.Resize;
+import com.exactprosystems.jf.api.app.Spec;
+import com.exactprosystems.jf.api.common.Converter;
+import com.exactprosystems.jf.api.common.Str;
+import com.exactprosystems.jf.api.common.i18n.R;
+import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
+import com.exactprosystems.jf.api.error.app.TimeoutException;
+import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
@@ -57,27 +60,22 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.exactprosystems.jf.api.app.CheckingLayoutResult;
-import com.exactprosystems.jf.api.app.ControlKind;
-import com.exactprosystems.jf.api.app.CookieBean;
-import com.exactprosystems.jf.api.app.IRemoteApplication;
-import com.exactprosystems.jf.api.app.ImageWrapper;
-import com.exactprosystems.jf.api.app.Locator;
-import com.exactprosystems.jf.api.app.LocatorAndOperation;
-import com.exactprosystems.jf.api.app.NavigateKind;
-import com.exactprosystems.jf.api.app.Operation;
-import com.exactprosystems.jf.api.app.OperationResult;
-import com.exactprosystems.jf.api.app.PerformKind;
-import com.exactprosystems.jf.api.app.PluginInfo;
-import com.exactprosystems.jf.api.app.RemoteApplication;
-import com.exactprosystems.jf.api.app.Resize;
-import com.exactprosystems.jf.api.app.Spec;
-import com.exactprosystems.jf.api.common.Converter;
-import com.exactprosystems.jf.api.common.Str;
-import com.exactprosystems.jf.api.common.i18n.R;
-import com.exactprosystems.jf.api.error.app.FeatureNotSupportedException;
-import com.exactprosystems.jf.api.error.app.TimeoutException;
-import com.exactprosystems.jf.app.WebAppFactory.WhereToOpen;
+import javax.imageio.ImageIO;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SeleniumRemoteApplication extends RemoteApplication
 {
@@ -273,16 +271,13 @@ public class SeleniumRemoteApplication extends RemoteApplication
 			arguments.setFirefoxProfileDirectory(args.get(WebAppFactory.firefoxProfileDir));
 			arguments.setUsePrivateMode(Boolean.valueOf(args.get(WebAppFactory.usePrivateMode))); // TODO allow to omit it
 			arguments.setDriverLogging(Boolean.valueOf(args.get(WebAppFactory.isDriverLogging))); // TODO allow to omit it
-			
+			arguments.setAdditionalParameters(args.get(WebAppFactory.additionalParameters));
+
 			if (arguments.getBrowserName() == null)
 			{
 				throw new Exception(R.SELENIUM_REMOTE_APP_EMPTY_BROWSER_EXCEPTION.get());
 			}
-			if (arguments.getStartUrl() == null)
-			{
-				throw new Exception(R.SELENIUM_REMOTE_APP_EMPTY_URL_EXCEPTION.get());
-			}
-			
+
 			logger.info("Starting " + arguments.getBrowserName() + " on " + arguments.getStartUrl());
 
             Thread t = new Thread(new Runnable()
@@ -300,14 +295,16 @@ public class SeleniumRemoteApplication extends RemoteApplication
                     	{
             				throw new Exception(R.SELENIUM_REMOTE_APP_WRONG_BROWSER_NAME.get());
             			}
-                    	
+
                         driver = new WebDriverListenerNew(browser.createDriver(arguments));
                         operationExecutor = new SeleniumOperationExecutor(driver, SeleniumRemoteApplication.super.useTrimText);
 
                         logger.debug("Before driver.get(" + arguments.getStartUrl() + ")");
-                        driver.get(arguments.getStartUrl());
-                        logger.debug("After driver.get(" + arguments.getStartUrl() + ")");
-                        if (browser != Browser.ANDROIDBROWSER && browser != Browser.ANDROIDCHROME)
+						if (!Str.IsNullOrEmpty(arguments.getStartUrl())) {
+							driver.get(arguments.getStartUrl());
+						}
+						logger.debug("After driver.get(). Current url : " + driver.getCurrentUrl());
+                        if (browser != Browser.ANDROIDBROWSER && browser != Browser.ANDROIDCHROME && !Str.IsNullOrEmpty(arguments.getStartUrl()))
                         {
                             driver.manage().window().maximize();
                             logger.debug("After driver.maximize()");
@@ -365,21 +362,21 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	@Override
 	protected void stopDerived(boolean needKill) throws Exception
 	{
-		try
-		{
-			if (this.driver != null)
-			{
-				for (String handle : this.driver.getWindowHandles())
-				{
+		if (driver != null) {
+			try {
+				for (String handle : this.driver.getWindowHandles()) {
 					this.driver.switchTo().window(handle);
 					break;
 				}
+			}
+			catch(WebDriverException e)
+			{
+				logger.error("Browser has been closed");
+				logger.error(e.getMessage(), e);
+			}
+			finally {
 				this.driver.quit();
 			}
-		}
-		catch (WebDriverException e)
-		{
-			logger.error("Browser has been closed");
 		}
 	}
 
@@ -387,9 +384,6 @@ public class SeleniumRemoteApplication extends RemoteApplication
 	protected void refreshDerived() throws Exception
 	{
 		this.driver.navigate().refresh();
-
-		//		Actions actions = new Actions(driver);
-		//		actions.keyDown(Keys.CONTROL).sendKeys(Keys.F5).perform();
 	}
 
 	@Override

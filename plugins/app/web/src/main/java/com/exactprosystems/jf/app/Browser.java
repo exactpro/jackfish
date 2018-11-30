@@ -16,10 +16,7 @@
 
 package com.exactprosystems.jf.app;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import com.exactprosystems.jf.api.common.Str;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -36,6 +33,10 @@ import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.safari.SafariDriver;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public enum Browser
 {
@@ -132,7 +133,12 @@ public enum Browser
 				options.setBinary(new File(arguments.getChromeDriverBinary()));
 				logger.info(String.format("Chrome binary location is set to %s", arguments.getChromeDriverBinary()));
 			}
-			
+			if (!Str.IsNullOrEmpty(arguments.getAdditionalParameters())) {
+				String parameters = arguments.getAdditionalParameters();
+				options.addArguments(parameters.split(" "));
+			}
+
+			logger.info(String.format("Using parameters for chrome : %s", options.asMap()));
 			return new ChromeDriver(options);
 		}
 	},
@@ -211,7 +217,7 @@ public enum Browser
 					formatAbsentArgumentText(WebAppFactory.chromeDriverPathName, arguments.getBrowserName()));
 		}
 		System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, driverPath);
-		logger.info(String.format("Using chrome driver binary at %s", driverPath));
+		logger.info(String.format("Using chrome driver at %s", driverPath));
 	}
 
 	private static void setGeckoDriverPath(WebPluginArguments arguments) throws Exception

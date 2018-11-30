@@ -85,7 +85,7 @@ public class WinAppFactory extends AbstractApplicationFactory
         info.addTypes(ControlKind.CheckBox,     ControlType.CheckBox.name());
         info.addTypes(ControlKind.ComboBox,     ControlType.ComboBox.name());
         info.addTypes(ControlKind.Dialog,       ControlType.Window.name());
-        info.addTypes(ControlKind.Label,        ControlType.Text.name());
+        info.addTypes(ControlKind.Label,        ControlType.Text.name(), ControlType.DataItem.name(), ControlType.HeaderItem.name());
         info.addTypes(ControlKind.MenuItem,     ControlType.MenuItem.name());
         info.addTypes(ControlKind.Panel,        ControlType.Pane.name());
         info.addTypes(ControlKind.RadioButton,  ControlType.RadioButton.name());
