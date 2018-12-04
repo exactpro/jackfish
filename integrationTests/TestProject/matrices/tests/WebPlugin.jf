@@ -23,13 +23,6 @@ Negative testing;;;
     #EndStep
 
     #Step;#Kind;#For;#Depends
-    'Test start without url';;;
-        #Id;#Action;#Assert;$AppId;Browser
-        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;'Chrome'
-
-    #EndStep
-
-    #Step;#Kind;#For;#Depends
     'Test start with inavlid browser';;;
         #Id;#Action;#Assert;$AppId;Browser;URL
         APPSTR2;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;new Date();'http://google.ru'

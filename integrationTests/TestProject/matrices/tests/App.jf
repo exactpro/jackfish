@@ -95,19 +95,6 @@ Apllication Start;Never;;
     #EndStep
 
     #Step;#Kind;#For;#Depends
-    'Negative testing with wrong parameters';;;
-        #Id;#Action;#Assert;$AppId;Browser;URL
-        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;mockWebBrowser;''
-
-        #Id;#Action;#Assert;$AppId;Browser;URL
-        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;mockWebApp;'ndx';mockWebURL
-
-        #Id;#Action;#Assert;$AppId;Browser;URL
-        APPSTR1;ApplicationStart;This.Result == Result.Failed && This.Kind == ErrorKind.EXCEPTION;new Date();mockWebBrowser;mockWebURL
-
-    #EndStep
-
-    #Step;#Kind;#For;#Depends
     'Positive testing';;;
         #Id;#Action;#Assert;$AppId;Browser;URL
         APPSTR1;ApplicationStart;This.Result == Result.Passed && This.Out.isGood();mockWebApp;mockWebBrowser;mockWebURL
