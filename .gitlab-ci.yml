@@ -1,0 +1,8 @@
+stages:
+  - external
+
+dummy:
+  stage: external
+  script: echo 'dummy'
+  only:
+    - /$never^/
