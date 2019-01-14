@@ -87,9 +87,9 @@
       <xs:enumeration value="java.util.Date"/>
       <xs:enumeration value="java.lang.Character"/>
       <xs:enumeration value="java.math.BigDecimal"/>
-      <xs:enumeration value="org.threeten.bp.LocalDateTime"/>
-      <xs:enumeration value="org.threeten.bp.LocalDate"/>
-      <xs:enumeration value="org.threeten.bp.LocalTime"/>
+      <xs:enumeration value="java.time.LocalDateTime"/>
+      <xs:enumeration value="java.time.LocalDate"/>
+      <xs:enumeration value="java.time.LocalTime"/>
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>

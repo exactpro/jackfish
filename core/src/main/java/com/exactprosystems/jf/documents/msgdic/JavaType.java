@@ -22,8 +22,10 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
-import java.util.Date;
 
 
 @XmlType(name = "JavaType")
@@ -46,18 +48,18 @@ public enum JavaType implements IType
 	JAVA_LANG_DOUBLE(Double.class),
 	@XmlEnumValue("java.lang.String")
 	JAVA_LANG_STRING(String.class),
-	@XmlEnumValue("java.util.Date")
-	JAVA_UTIL_DATE(Date.class),
+//	@XmlEnumValue("java.util.Date")
+//	JAVA_UTIL_DATE(Date.class),
 	@XmlEnumValue("java.lang.Character")
 	JAVA_LANG_CHARACTER(Character.class),
 	@XmlEnumValue("java.math.BigDecimal")
 	JAVA_MATH_BIG_DECIMAL(BigDecimal.class),
-	@XmlEnumValue("org.threeten.bp.LocalDateTime")
-	ORG_THREETEN_BP_LOCALDATETIME(org.threeten.bp.LocalDateTime.class),
-	@XmlEnumValue("org.threeten.bp.LocalDate")
-	ORG_THREETEN_BP_LOCALDATE(org.threeten.bp.LocalDate.class),
-	@XmlEnumValue("org.threeten.bp.LocalTime")
-	ORG_THREETEN_BP_LOCALTIME(org.threeten.bp.LocalTime.class)
+	@XmlEnumValue("java.time.LocalDateTime")
+	JAVA_TIME_LOCAL_DATE_TIME(LocalDateTime.class),
+	@XmlEnumValue("java.time.LocalDate")
+	JAVA_TIME_LOCAL_DATE(LocalDate.class),
+	@XmlEnumValue("java.time.LocalTime")
+	JAVA_TIME_LOCAL_TIME(LocalTime.class)
 	;
 
 	private final Class<?> type;
