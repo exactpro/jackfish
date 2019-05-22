@@ -27,6 +27,8 @@ include	'core',
 
 def JF_EXTRAS = System.getProperty("JF_EXTRAS")
 
+
+
 def pluginDirs = ['mocks', 'plugins/app', 'plugins/client', 'plugins/service']
 def searchDirs = ['.']
 if (JF_EXTRAS != null) {
