@@ -28,14 +28,6 @@ import java.util.Map;
 
 public class ProxyWinGuiApp extends ProxyApplication
 {
-	public ProxyWinGuiApp() throws Exception
-	{
-		if (!isWindows())
-		{
-			throw new Exception(R.PROXY_WIN_GUI_APP_NEED_WINDOWS.get());
-		}
-	}
-	
 	@Override
 	public int reconnect(Map<String, String> parameters) throws Exception
 	{
