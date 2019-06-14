@@ -96,11 +96,11 @@ processResources.dependsOn copyUIAdapterDll
 jar {
     manifest {
         attributes(
-            'Main-class' : 'com.exactprosystems.jf.app.WinRemoteApplication',
+            'Main-class' : 'com.exactprosystems.jf.app.WinRemoteApplicationJNA',
         )
     }
 }
 
 distribute {
     dependsOn shadowJar
-}
+}

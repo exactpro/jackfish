@@ -45,6 +45,12 @@ public class AppEntry extends Entry
 	@XmlElement(name = Configuration.appStartPort)
 	protected String appStartPortValue;
 
+	@XmlElement(name = Configuration.remoteAppHost)
+	protected String remoteAppHost;
+
+	@XmlElement(name = Configuration.remoteAppPort)
+	protected int remoteAppPort;
+
 	@Override
 	protected String getDerived(String name)
 	{
@@ -55,6 +61,8 @@ public class AppEntry extends Entry
 			case Configuration.appJar: 			return this.appJarNameValue;
 			case Configuration.appWorkDir: 		return this.appWorkDirValue;
 			case Configuration.appStartPort:	return this.appStartPortValue;
+            case Configuration.remoteAppHost: return remoteAppHost;
+            case Configuration.remoteAppPort: return String.valueOf(remoteAppPort);
 			default: return null;
 		}
 	}
@@ -69,7 +77,9 @@ public class AppEntry extends Entry
 			case Configuration.appJar: 			this.appJarNameValue	= "" + value;	return;
 			case Configuration.appWorkDir: 		this.appWorkDirValue	= "" + value;	return;
 			case Configuration.appStartPort:	this.appStartPortValue	= "" + value;	return;
+            case Configuration.remoteAppHost: remoteAppHost = "" + value; break;
+            case Configuration.remoteAppPort: remoteAppPort = value == null ? 0 :Integer.parseInt(String.valueOf(value));
 			default: return;
 		}
 	}
-}
+}

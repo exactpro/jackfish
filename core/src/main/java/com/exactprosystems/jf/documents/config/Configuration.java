@@ -143,6 +143,8 @@ public class Configuration extends AbstractDocument
 	public static final String appJar				= "appJar";
 	public static final String appWorkDir			= "appWorkDir";
 	public static final String appStartPort			= "appStartPort";
+	public static final String remoteAppHost = "remoteAppHost";
+	public static final String remoteAppPort = "remoteAppPort";
 
 	public static final String parametersEntry		= "parameters";
 	public static final String parametersKey		= "key";
@@ -1184,4 +1186,4 @@ public class Configuration extends AbstractDocument
 		}
 	}
 	//endregion
-}
+}

@@ -29,14 +29,38 @@ public interface IApplication
     int                 reconnect(Map<String, String> parameters) throws Exception;
     /**
 	 * key   : pid <br>
-	 * value : port
+	 * value : port <br>
+     * Deprecated use {@link IApplication#connect(ConnectionConfiguration, Map, Map)}
      */
-	SerializablePair<Integer, Integer> connect(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
+    @Deprecated
+    default SerializablePair<Integer, Integer> connect(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception {
+        ConnectionConfiguration configuration = new ConnectionConfiguration();
+        configuration.setJar(jar);
+        configuration.setStartPort(startPort);
+        configuration.setWorkDirectory(work);
+        configuration.setRemoteClassName(remoteClassName);
+
+        return connect(configuration, driverParameters, parameters);
+    }
+
+	SerializablePair<Integer, Integer> connect(ConnectionConfiguration configuration, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
 	/**
 	 * key   : pid <br>
-	 * value : port
+	 * value : port <br>
+     * Deprecated {@link IApplication#start(ConnectionConfiguration, Map, Map)}
 	 */
-	SerializablePair<Integer, Integer> start(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
+	@Deprecated
+    default SerializablePair<Integer, Integer> start(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception {
+        ConnectionConfiguration configuration = new ConnectionConfiguration();
+        configuration.setJar(jar);
+        configuration.setStartPort(startPort);
+        configuration.setWorkDirectory(work);
+        configuration.setRemoteClassName(remoteClassName);
+
+        return start(configuration, driverParameters, parameters);
+    }
+
+	SerializablePair<Integer, Integer> start(ConnectionConfiguration configuration, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception;
 	void 				stop(boolean needKill) throws Exception;
 
 	IRemoteApplication 	service();

@@ -17,6 +17,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.AbstractApplicationFactory;
+import com.exactprosystems.jf.api.app.ConnectionConfiguration;
 import com.exactprosystems.jf.api.app.ProxyApplication;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
@@ -27,10 +28,10 @@ import java.util.Map;
 public class ProxyFxApp extends ProxyApplication
 {
 	@Override
-	public SerializablePair<Integer, Integer> start(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer, Integer> start(ConnectionConfiguration configuration, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
 		tune(driverParameters, parameters);
-		SerializablePair<Integer, Integer> start = super.start(startPort, jar, work, remoteClassName, driverParameters, parameters);
+		SerializablePair<Integer, Integer> start = super.start(configuration, driverParameters, parameters);
 		System.out.println("FxApp.start() " + start.getValue() + "  " + Arrays.toString(parameters.values().toArray()));
 		return start;
 	}
