@@ -119,12 +119,8 @@ public class ApplicationPool implements IApplicationPool
 			final IApplicationFactory applicationFactory = this.loadFactory(id, entry);
 			final IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
-			String remoteClassName = applicationFactory.getRemoteClassName();
-			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar)); 
-			String work = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir));
-
-			Integer startPort = Integer.parseInt(entry.get(Configuration.appStartPort));
-			SerializablePair<Integer, Integer> pair = application.connect(startPort, jarPath, work, remoteClassName, driverParameters, parameters);
+            ConnectionConfiguration configuration = getConnectionConfiguration(applicationFactory, entry, parameters);
+            SerializablePair<Integer, Integer> pair = application.connect(configuration, driverParameters, parameters);
 
 			return new AppConnection(application, id, pair.getValue(), applicationFactory, pair.getKey());
 		}
@@ -157,12 +153,8 @@ public class ApplicationPool implements IApplicationPool
 			final IApplicationFactory applicationFactory = this.loadFactory(id, entry);
 			final IApplication application = applicationFactory.createApplication();
 			application.init(this, applicationFactory);
-			String remoteClassName = applicationFactory.getRemoteClassName();
-			String jarPath = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar));
-			String work = MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir));
-
-			Integer startPort = Integer.parseInt(entry.get(Configuration.appStartPort));
-			SerializablePair<Integer, Integer> pair = application.start(startPort, jarPath, work, remoteClassName, driverParameters, parameters);
+            ConnectionConfiguration configuration = getConnectionConfiguration(applicationFactory, entry, parameters);
+            SerializablePair<Integer, Integer> pair = application.start(configuration, driverParameters, parameters);
 			AppConnection connection = new AppConnection(application, id, pair.getValue(), applicationFactory, pair.getKey());
 
 			this.connections.add(connection);
@@ -266,6 +258,25 @@ public class ApplicationPool implements IApplicationPool
 		return dictionary;
 	}
 
+    private ConnectionConfiguration getConnectionConfiguration(IApplicationFactory applicationFactory, AppEntry entry, Map<String, String> parameters) {
+        ConnectionConfiguration configuration = new ConnectionConfiguration();
+        configuration.setRemoteClassName(applicationFactory.getRemoteClassName());
+        configuration.setJar(MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appJar)));
+        configuration.setWorkDirectory(MainRunner.makeDirWithSubstitutions(entry.get(Configuration.appWorkDir)));
+
+        configuration.setStartPort(Integer.parseInt(entry.get(Configuration.appStartPort)));
+        String remoteHost = parameters.getOrDefault(Configuration.remoteAppHost, entry.get(Configuration.remoteAppHost));
+        if (!Str.IsNullOrEmpty(remoteHost)) {
+            String portValue = parameters.getOrDefault(Configuration.remoteAppPort, entry.get(Configuration.remoteAppPort));
+            if (Str.IsNullOrEmpty(portValue)) {
+                throw new IllegalArgumentException("Remote host was specified but port wasn't");
+            }
+            configuration.setRemoteHost(remoteHost);
+            configuration.setRemotePort(getValidPort(portValue));
+        }
+        return configuration;
+    }
+
 	//region private methods
 	private IApplicationFactory loadFactory(String id) throws Exception
 	{
@@ -315,4 +326,12 @@ public class ApplicationPool implements IApplicationPool
 				.collect(Collectors.toMap(Parameter::getKey, par -> MainRunner.makeDirWithSubstitutions(par.getValue())));
 	}
 	//endregion
+
+    private int getValidPort(String value) {
+        int port = Integer.parseInt(value);
+        if (port <= 0) {
+            throw new IllegalArgumentException("invalid port value " + port);
+        }
+        return port;
+    }
 }

@@ -29,6 +29,7 @@ import com.exactprosystems.jf.tool.helpers.DialogsHelper;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationFx;
 import com.exactprosystems.jf.tool.newconfig.ConfigurationTreeView;
 import com.exactprosystems.jf.tool.newconfig.TablePair;
+import com.exactprosystems.jf.tool.newconfig.TablePair.TablePairBuilder;
 import com.exactprosystems.jf.tool.wizard.WizardButton;
 import javafx.concurrent.Task;
 import javafx.scene.Node;
@@ -251,6 +252,8 @@ public class AppTreeNode extends TreeNode
 						.build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.appWorkDir, getEntry().get(Configuration.appWorkDir)).edit(true).required().build());
 				list.add(TablePair.TablePairBuilder.create(Configuration.appStartPort, getEntry().get(Configuration.appStartPort)).edit(true).required().build());
+				list.add(TablePairBuilder.create(Configuration.remoteAppHost, getEntry().get(Configuration.remoteAppHost)).edit(true).build());
+				list.add(TablePairBuilder.create(Configuration.remoteAppPort, getEntry().get(Configuration.remoteAppPort)).edit(true).build());
 				getEntry().getParameters().stream()
 						.map(parameter -> new TablePair(parameter.getKey(), parameter.getValue()))
 						.forEach(list::add);
@@ -358,4 +361,4 @@ public class AppTreeNode extends TreeNode
 			);
 		}
 	}
-}
+}

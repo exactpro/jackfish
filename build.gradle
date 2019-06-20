@@ -18,7 +18,7 @@ plugins {
 	id 'java'
 	id 'maven'
 	id 'com.github.johnrengelman.shadow' version '2.0.4' apply false
-	id 'com.jfrog.artifactory' version '2.2.5'
+	id 'com.jfrog.artifactory' version '4.8.1'
 	id 'com.ullink.msbuild' version '2.19' apply false // more recent versions may require .NET 4.6
 	id 'com.ullink.nuget' version '2.15' apply false
 	id 'de.undercouch.download' version '3.4.3'
@@ -98,7 +98,7 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'idea'
 	apply plugin: 'eclipse'
-	apply plugin: 'artifactory'
+	apply plugin: 'com.jfrog.artifactory'
 
 	group = 'com.exactprosystems.jf'
 	version = rootProject.ext.jfVersion + '-SNAPSHOT'

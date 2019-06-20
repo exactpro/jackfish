@@ -17,6 +17,7 @@
 package com.exactprosystems.jf.app;
 
 import com.exactprosystems.jf.api.app.AbstractApplicationFactory;
+import com.exactprosystems.jf.api.app.ConnectionConfiguration;
 import com.exactprosystems.jf.api.app.ProxyApplication;
 import com.exactprosystems.jf.api.common.SerializablePair;
 import com.exactprosystems.jf.api.common.Str;
@@ -27,14 +28,6 @@ import java.util.Map;
 
 public class ProxyWinGuiApp extends ProxyApplication
 {
-	public ProxyWinGuiApp() throws Exception
-	{
-		if (!isWindows())
-		{
-			throw new Exception(R.PROXY_WIN_GUI_APP_NEED_WINDOWS.get());
-		}
-	}
-	
 	@Override
 	public int reconnect(Map<String, String> parameters) throws Exception
 	{
@@ -43,19 +36,19 @@ public class ProxyWinGuiApp extends ProxyApplication
 	}
 
 	@Override
-	public SerializablePair<Integer, Integer> connect(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer, Integer> connect(ConnectionConfiguration configuration, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
-		System.out.println("WinGuiApp.connect() " + startPort + "  " + Arrays.toString(parameters.values().toArray()));
+		System.out.println("WinGuiApp.connect() " + configuration + "  " + Arrays.toString(parameters.values().toArray()));
 		tune(driverParameters, parameters);
-		return super.connect(startPort, jar, work, remoteClassName, driverParameters, parameters);
+		return super.connect(configuration, driverParameters, parameters);
 	}
 
 	@Override
-	public SerializablePair<Integer, Integer> start(int startPort, String jar, String work, String remoteClassName, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
+	public SerializablePair<Integer, Integer> start(ConnectionConfiguration configuration, Map<String, String> driverParameters, Map<String, String> parameters) throws Exception
 	{
-		System.out.println("WinGuiApp.start() " + startPort + "  " + Arrays.toString(parameters.values().toArray()));
+		System.out.println("WinGuiApp.start() " + configuration + "  " + Arrays.toString(parameters.values().toArray()));
 		tune(driverParameters, parameters);
-		return super.start(startPort, jar, work, remoteClassName, driverParameters, parameters);
+		return super.start(configuration, driverParameters, parameters);
 	}
 
 	@Override
